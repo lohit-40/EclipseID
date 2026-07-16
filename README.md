@@ -23,6 +23,12 @@ To run this project locally, you must have the Midnight toolchain installed.
    npm install
    npm run build:compact
    ```
+   *Expected Output:*
+   ```text
+   Compiling src/eclipse_id.compact...
+   Done.
+   Circuits: add_issuer, verify_and_claim
+   ```
 4. To run the local proof server:
    ```bash
    docker-compose up -d
