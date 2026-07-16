@@ -1,0 +1,8 @@
+{
+  "name": "eclipse-id",
+  "version": "1.0.0",
+  "description": "Confidential Credentials on Midnight",
+  "scripts": {
+    "build:compact": "compactc compile src/eclipse_id.compact"
+  }
+}

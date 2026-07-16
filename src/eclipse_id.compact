@@ -1,0 +1,26 @@
+pragma compact-1.0;
+
+export ledger issuers: Map<Bytes<32>, boolean>;
+export ledger used_nullifiers: Map<Bytes<32>, boolean>;
+
+export circuit add_issuer(issuer: Bytes<32>): [] {
+    // In a production app, this would check an admin signature or similar.
+    // For Level 1, we just demonstrate public ledger state modification.
+    issuers.insert(issuer, true);
+}
+
+export circuit verify_and_claim(
+    issuer: Bytes<32>,
+    nullifier: Bytes<32>
+): [] {
+    // Check if issuer is authorized (public state check)
+    assert issuers.member(issuer) "Issuer not authorized";
+    
+    // Check if nullifier has been used
+    assert !used_nullifiers.member(nullifier) "Identity already verified/used";
+    
+    // Disclose the nullifier to the public ledger so it can't be used again
+    // This explicitly demonstrates using disclose() to control what becomes public
+    disclose(nullifier);
+    used_nullifiers.insert(nullifier, true);
+}
