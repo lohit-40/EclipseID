@@ -3,6 +3,20 @@
   "version": "1.0.0",
   "description": "Confidential Credentials on Midnight",
   "scripts": {
-    "build:compact": "compactc compile src/eclipse_id.compact"
+    "build:compact": "compactc compile src/eclipse_id.compact",
+    "deploy:preprod": "ts-node scripts/deploy.ts",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@midnight-ntwrk/ledger": "^4.0.0",
+    "@midnight-ntwrk/midnight-js": "^4.1.1",
+    "@midnight-ntwrk/wallet-api": "^5.0.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^26.1.1",
+    "dotenv": "^17.4.2",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
   }
 }
