@@ -23,3 +23,7 @@ To run this project locally, you must have the Midnight toolchain installed.
    npm install
    npm run build:compact
    ```
+4. To run the local proof server:
+   ```bash
+   docker-compose up -d
+   ```
