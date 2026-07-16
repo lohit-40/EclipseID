@@ -21,12 +21,17 @@ async function main() {
     const config = getConfig();
     setNetworkId(config.networkId);
 
-    const seedHex = process.env.SEED;
-    if (!seedHex || seedHex.length !== 64 || !/^[0-9a-fA-F]+$/.test(seedHex)) {
-        throw new Error("Please configure a valid 64-character hex SEED in .env.preprod");
+    const seedPhrase = process.env.SEED;
+    if (!seedPhrase) {
+        throw new Error("Please configure SEED in .env.preprod with either a 64-char hex or a 24-word mnemonic");
     }
 
-    const secret: WalletSecret = { kind: 'seed', value: seedHex };
+    let secret: WalletSecret;
+    if (/^[0-9a-fA-F]{64}$/.test(seedPhrase)) {
+        secret = { kind: 'seed', value: seedPhrase };
+    } else {
+        secret = { kind: 'mnemonic', value: seedPhrase.trim().replace(/\s+/g, ' ') };
+    }
 
     const envConfig = {
         walletNetworkId: config.networkId,
