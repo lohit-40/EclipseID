@@ -18,7 +18,7 @@ describe('EclipseID Smart Contract', () => {
     expect(usedNullifiers.has(mockNullifier)).toBeFalsy(); // assert(!used_nullifiers.member(nullifier))
     
     // Simulate disclose() and insertion
-    used_nullifiers.add(mockNullifier);
+    usedNullifiers.add(mockNullifier);
     expect(usedNullifiers.has(mockNullifier)).toBeTruthy();
   });
 
