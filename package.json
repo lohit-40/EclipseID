@@ -2,10 +2,29 @@
   "name": "eclipse-id",
   "version": "1.0.0",
   "description": "Confidential Credentials on Midnight",
+  "type": "module",
   "scripts": {
-    "build:compact": "compactc compile src/eclipse_id.compact",
-    "deploy:preprod": "ts-node scripts/deploy.ts",
+    "build:compact": "node scripts/compile.js",
+    "deploy:preview": "tsx scripts/deploy.ts",
     "test": "jest"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/midnight-js-protocol": "4.1.1",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-node-zk-config-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-contracts": "4.1.1",
+    "@midnight-ntwrk/midnight-js-network-id": "4.1.1",
+    "@midnight-ntwrk/midnight-js-types": "4.1.1",
+    "@midnight-ntwrk/midnight-js-utils": "4.1.1",
+    "@midnight-ntwrk/testkit-js": "4.1.1",
+    "@midnight-ntwrk/wallet-sdk": "1.2.0",
+    "axios": "^1.15.0",
+    "pino": "^9.0.0",
+    "pino-pretty": "^13.0.0",
+    "rxjs": "^7.8.2",
+    "ws": "^8.14.2"
   },
   "devDependencies": {
     "@midnight-ntwrk/ledger": "^4.0.0",
@@ -17,6 +36,7 @@
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
     "ts-node": "^10.9.2",
-    "typescript": "^7.0.2"
+    "tsx": "^4.23.1",
+    "typescript": "^5.9.3"
   }
 }
