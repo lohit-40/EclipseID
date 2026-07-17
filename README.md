@@ -40,8 +40,10 @@ This project was built for the Midnight Level 1 Submission. All requirements hav
 
 - [x] **Public GitHub repository with a README.md:** Completed.
 - [x] **Setup instructions (how to run locally):** Provided above.
-- [x] **Screenshot: successful compile output (circuits listed):** Attached in the repository / submission.
-- [x] **Screenshot: contract deployed with address shown:** Attached in the repository / submission.
+- [x] **Screenshot: successful compile output (circuits listed):**
+  ![Compile Output](./assets/compile.png)
+- [x] **Screenshot: contract deployed with address shown:**
+  ![Deploy Output](./assets/deploy.png)
 - [x] **README section explaining public state vs private witness:** See the [Public State vs Private Witness](#public-state-vs-private-witness) section above.
 - [x] **Initial product idea paragraph:** See the introductory paragraph.
 - [x] **Minimum 5 meaningful commits:** Completed (currently 10+ meaningful commits).
