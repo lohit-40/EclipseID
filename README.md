@@ -43,6 +43,9 @@ This project was built for the Midnight Level 1 Submission. All requirements hav
 - [x] **Screenshot: successful compile output (circuits listed):**
   ![Compile Output](./assets/compile.png)
 - [x] **Screenshot: contract deployed with address shown:**
+
+      CONTRACT DEPLOYMENT SUCCESSFUL! = Address: 3258fc8cfaaf43cfdd2a4e3e296bc65a5764d3c7defd14384fbe9f0d9418f5e6
+
   ![Deploy Output](./assets/deploy.png)
 - [x] **README section explaining public state vs private witness:** See the [Public State vs Private Witness](#public-state-vs-private-witness) section above.
 - [x] **Initial product idea paragraph:** See the introductory paragraph.
