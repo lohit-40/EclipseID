@@ -1,0 +1,8 @@
+{
+  "version": 3,
+  "file": "index.js",
+  "sourceRoot": "../../",
+  "sources": ["src/eclipse_id.compact"],
+  "names": [],
+  "mappings": ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;EAAA;;;;;;;;;;MAMA,AAAA,UAIC;;;;;cAJyB,QAAiB;;;;;;;;;;;;;;;;;;yCAAjB,QAAiB;;;;;;;uEAAjB,QAAiB;;;OAI1C;MAED,AAAA,gBAaC;;;;;cAZG,QAAiB;cACjB,WAAoB;;;;;;;;;;;;;;;;;;;;;;;;;yCADpB,QAAiB,+BACjB,WAAoB;;;;;;;;;kDADpB,QAAiB;kDACjB,WAAoB;;;OAWvB;;;;;;;;;;GACA;EA1BD;;;;;;;;;;;;;;;;;;;;;;;;;;;;IAGA;;;;;;;;;;yEAA+C;IAC/C;;;;;;;;;;yEAAuD;;;;;;;GAsBtD;EApBD,AAAA,aAIC,4BAJyB,QAAiB;IAGvC;;;;;;;;;;2HAAwB,QAAM;;;;;;wEAAvB;;GACV;EAED,AAAA,mBAaC,4BAZG,QAAiB,EACjB,WAAoB;oDAGb;;;;;;;;;;;2KAAwB,QAAM;;;;yHAAvB;;qDAGN;;;;;;;;;;;4KAAgC,WAAS;;;;0HAA1B;;IAIvB;;;;;;;;;;2HAAgC,WAAS;;;;;;wEAA1B;;GAClB;;;;;;;;;;;;;;;;IAtBD;;;;;uCAAA;;;;;;;;;;;;;;;;4GAA+C;;;;;;uCAA/C;;;;;;;;;;;;4GAA+C;;;;;;;;;;;;;;uCAA/C;;;;;;;;;;;;;;;4GAA+C;;;;;;;;;;;;;;uCAA/C;;;;;;;;;;;;;;;;;4GAA+C;;;;;;;;;KAAA;IAC/C;;;;;uCAAA;;;;;;;;;;;;;;;;4GAAuD;;;;;;uCAAvD;;;;;;;;;;;;4GAAuD;;;;;;;;;;;;;;uCAAvD;;;;;;;;;;;;;;;4GAAuD;;;;;;;;;;;;;;uCAAvD;;;;;;;;;;;;;;;;;4GAAuD;;;;;;;;;KAAA;;;;;;;;;;"
+}

@@ -1,0 +1,2 @@
+[21:59:25.708] INFO (5188): Initializing wallet builder for preview
+[21:59:25.819] INFO (5188): Creating dust wallet with params: {"indexerClientConnection":{"indexerHttpUrl":"https://indexer.preview.midnight.network/api/v4/graphql","indexerWsUrl":"wss://indexer.preview.midnight.network/api/v4/graphql/ws"},"provingServerUrl":"http://127.0.0.1:6300/","networkId":"preview","relayURL":"wss://rpc.preview.midnight.network/","txHistoryStorage":{"storage":{}},"costParameters":{"ledgerParams":{"__wbg_ptr":4654560},"additionalFeeOverhead":"1000","feeBlocksMargin":5}}

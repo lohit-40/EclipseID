@@ -34,6 +34,22 @@ To run this project locally, you must have the Midnight toolchain installed.
    docker-compose up -d
    ```
 
+## Privacy Claim
+
+**What is proven?**
+The `verify_and_claim` circuit proves that the user possesses a valid, unrevealed credential (issued by an authorized `issuer` stored on the ledger). 
+**What remains private?**
+The user's actual identity, the raw credential data, and the signature itself remain entirely off-chain as a private witness. The only data exposed to the ledger is a unique `nullifier` hash, which prevents replay attacks without linking the transaction back to the user's wallet or real-world identity.
+
+## Level 2 - Waxing Crescent Submission Checklist
+
+- [x] **Public GitHub repository with README**
+- [ ] **Live demo link (Vercel, Netlify, or similar):** (To be added)
+- [ ] **Deployed Preprod contract address (verifiable on-chain):** (To be added)
+- [ ] **Demo video (wallet connect + a successful circuit call):** (To be added)
+- [x] **README documenting the privacy claim:** See the [Privacy Claim](#privacy-claim) section above.
+- [ ] **Minimum 8 meaningful commits:** In progress.
+
 ## Level 1 - New Moon Submission Checklist
 
 This project was built for the Midnight Level 1 Submission. All requirements have been successfully met:

@@ -1,0 +1,9 @@
+[23:22:37.117] INFO (31952): Initializing wallet builder for preview
+[23:22:37.275] INFO (31952): Creating dust wallet with params: {"indexerClientConnection":{"indexerHttpUrl":"https://indexer.preview.midnight.network/api/v4/graphql","indexerWsUrl":"wss://indexer.preview.midnight.network/api/v4/graphql/ws"},"provingServerUrl":"http://127.0.0.1:6300/","networkId":"preview","relayURL":"wss://rpc.preview.midnight.network/","txHistoryStorage":{"storage":{}},"costParameters":{"ledgerParams":{"__wbg_ptr":4654560},"additionalFeeOverhead":"1000","feeBlocksMargin":5}}
+[23:22:57.489] INFO (31952): Your wallet address is: mn_addr_preview1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxdyh4q, waiting for NIGHT funds...
+[23:22:57.491] INFO (31952): Syncing wallet...
+[23:22:57.509] INFO (31952): Wallet synced state emission: { shielded=true, unshielded=true, dust=true }
+[23:22:57.510] INFO (31952): Wallet synced state emission (synced=true): { shielded=true, unshielded=true, dust=true }
+[23:22:57.511] INFO (31952): Sync complete
+[23:22:57.513] INFO (31952): Wallet balances after sync - Shielded: {}, Unshielded: {"0000000000000000000000000000000000000000000000000000000000000000":"5000000000"}, Dust: "237469574999999999"
+[23:22:57.515] INFO (31952): Your wallet NIGHT balance is: 5000000000

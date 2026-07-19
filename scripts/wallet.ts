@@ -160,7 +160,6 @@ export async function syncWallet(
       Rx.filter(
         (state: FacadeState) =>
           isProgressStrictlyComplete(state.shielded.state.progress) &&
-          isProgressStrictlyComplete(state.dust.state.progress) &&
           isProgressStrictlyComplete(state.unshielded.progress),
       ),
       Rx.tap(() => logger.info(`Wallet sync complete after ${emissionCount} emissions`)),
