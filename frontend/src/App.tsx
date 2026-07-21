@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { type WalletConnectedAPI } from '@midnight-ntwrk/dapp-connector-api';
 import { createMidnightProviders } from './providers';
 import { Contract } from './contract/index.js';
@@ -21,6 +22,33 @@ function App() {
   const [verifyIssuer, setVerifyIssuer] = useState<string>('');
   const [verifyNullifier, setVerifyNullifier] = useState<string>('');
   const [txResult, setTxResult] = useState<string>('');
+
+  // 3D Tilt Effect State
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+  
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
 
   /**
    * Connects to the user's Midnight wallet (e.g., Lace) using the DApp Connector API.
@@ -204,11 +232,24 @@ function App() {
   return (
     <div className="min-h-screen bg-black text-white selection:bg-cyan-500/30 overflow-hidden relative font-sans">
       {/* Background gradients */}
-      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-600/10 blur-[150px] pointer-events-none" />
+      <motion.div 
+        animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }} 
+        transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} 
+        className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none" 
+      />
+      <motion.div 
+        animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }} 
+        transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }} 
+        className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-600/10 blur-[150px] pointer-events-none" 
+      />
 
       {/* Navbar with Skiper UI Components */}
-      <nav className="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto relative z-10 border-b border-white/5">
+      <motion.nav 
+        initial={{ y: -20, opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }} 
+        transition={{ duration: 0.5 }} 
+        className="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto relative z-10 border-b border-white/5"
+      >
         <div className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
           EclipseID
         </div>
@@ -217,11 +258,16 @@ function App() {
           <Link002 href="#" className="hover:text-white transition-colors">Contract</Link002>
           <Link003 href="#" className="hover:text-white transition-colors">SDK</Link003>
         </div>
-      </nav>
+      </motion.nav>
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-8 pt-20 pb-24 relative z-10">
-        <div className="text-center mb-16 space-y-4">
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }} 
+          animate={{ y: 0, opacity: 1 }} 
+          transition={{ duration: 0.5, delay: 0.1 }} 
+          className="text-center mb-16 space-y-4"
+        >
           <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-tight">
             Next-gen Identity on <br/>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400">
@@ -231,12 +277,25 @@ function App() {
           <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto">
             Deploy your zero-knowledge smart contracts instantly. Verify claims without revealing underlying data using Lace wallet.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-          
-          {!wallet ? (
+        <motion.div 
+          initial={{ y: 40, opacity: 0 }} 
+          animate={{ y: 0, opacity: 1 }} 
+          transition={{ duration: 0.6, delay: 0.2, type: "spring", bounce: 0.3 }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+          style={{
+            rotateY,
+            rotateX,
+            transformStyle: "preserve-3d",
+          }}
+          className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl relative group"
+        >
+          <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }} className="relative z-10 w-full h-full">
+            <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+            
+            {!wallet ? (
             <div className="flex flex-col items-center py-12 text-center relative z-10">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20">
                 <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -345,9 +404,10 @@ function App() {
                   </button>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
+              </div>
+            )}
+          </div>
+        </motion.div>
 
         {txResult && (
           <div className="mt-6 bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-2xl w-full text-center text-sm font-medium backdrop-blur-md">
