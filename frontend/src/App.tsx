@@ -250,9 +250,24 @@ function App() {
         transition={{ duration: 0.5 }} 
         className="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto relative z-10 border-b border-white/5"
       >
-        <div className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
-          EclipseID
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8, filter: "blur(10px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, type: "spring", bounce: 0.5 }}
+          className="text-2xl font-black tracking-tighter flex"
+        >
+          {"EclipseID".split("").map((char, index) => (
+            <motion.span
+              key={index}
+              initial={{ y: -20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: index * 0.05 + 0.2, type: "spring" }}
+              className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600 inline-block hover:scale-125 transition-transform cursor-default"
+            >
+              {char}
+            </motion.span>
+          ))}
+        </motion.div>
         <div className="flex gap-8 text-sm font-medium text-zinc-400">
           <Link001 href="#" className="hover:text-white transition-colors">Documentation</Link001>
           <Link002 href="#" className="hover:text-white transition-colors">Contract</Link002>
@@ -268,11 +283,28 @@ function App() {
           transition={{ duration: 0.5, delay: 0.1 }} 
           className="text-center mb-16 space-y-4"
         >
-          <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-tight">
-            Next-gen Identity on <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400">
+          <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-tight flex flex-col items-center">
+            <div className="flex flex-wrap justify-center overflow-hidden">
+              {"Next-gen Identity on".split(" ").map((word, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ y: "100%", opacity: 0, filter: "blur(10px)" }}
+                  animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+                  transition={{ duration: 0.6, delay: i * 0.1 + 0.3, ease: "easeOut" }}
+                  className="mr-4 inline-block"
+                >
+                  {word}
+                </motion.span>
+              ))}
+            </div>
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
+              animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+              transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+              className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 mt-2 block"
+            >
               Midnight Network.
-            </span>
+            </motion.span>
           </h1>
           <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto">
             Deploy your zero-knowledge smart contracts instantly. Verify claims without revealing underlying data using Lace wallet.
@@ -297,21 +329,29 @@ function App() {
             
             {!wallet ? (
             <div className="flex flex-col items-center py-12 text-center relative z-10">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20">
+              <motion.div 
+                animate={{ y: [-10, 10, -10], rotate: [0, 5, -5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/50"
+              >
                 <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-              </div>
+              </motion.div>
               <h2 className="text-2xl font-bold mb-2">Connect to Get Started</h2>
               <p className="text-zinc-400 mb-8 max-w-sm">
                 Connect your Lace wallet to deploy and interact with the EclipseID smart contract.
               </p>
-              <button 
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                animate={{ boxShadow: ["0px 0px 0px rgba(255,255,255,0)", "0px 0px 30px rgba(255,255,255,0.4)", "0px 0px 0px rgba(255,255,255,0)"] }}
+                transition={{ boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } }}
                 onClick={connectWallet}
-                className="bg-white text-black hover:bg-zinc-200 font-semibold py-3 px-8 rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] cursor-pointer"
+                className="bg-white text-black font-bold py-3 px-10 rounded-full cursor-pointer"
               >
                 Connect Lace Wallet
-              </button>
+              </motion.button>
             </div>
           ) : (
             <div className="relative z-10 space-y-8">
