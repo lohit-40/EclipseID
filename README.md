@@ -48,11 +48,11 @@ The user's actual identity, the raw credential data, and the signature itself re
 ## Level 2 - Waxing Crescent Submission Checklist
 
 - [x] **Public GitHub repository with README**
-- [ ] **Live demo link (Vercel, Netlify, or similar):** (To be added)
-- [ ] **Deployed Preprod contract address (verifiable on-chain):** (To be added)
-- [ ] **Demo video (wallet connect + a successful circuit call):** (To be added)
+- [ ] **Live demo link (Vercel, Netlify, or similar):** (Running locally)
+- [x] **Deployed Preprod contract address (verifiable on-chain):** `00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c`
+- [x] **Demo video (wallet connect + a successful circuit call):** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
 - [x] **README documenting the privacy claim:** See the [Privacy Claim](#privacy-claim) section above.
-- [ ] **Minimum 8 meaningful commits:** In progress.
+- [x] **Minimum 8 meaningful commits:** Completed.
 
 ## Level 1 - New Moon Submission Checklist
 
