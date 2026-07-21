@@ -22,6 +22,10 @@ function App() {
   const [verifyNullifier, setVerifyNullifier] = useState<string>('');
   const [txResult, setTxResult] = useState<string>('');
 
+  /**
+   * Connects to the user's Midnight wallet (e.g., Lace) using the DApp Connector API.
+   * This is required to sign transactions and interact with the network.
+   */
   const connectWallet = async () => {
     try {
       setError('');
@@ -52,6 +56,9 @@ function App() {
     }
   };
 
+  /**
+   * Disconnects the wallet and clears the current session state.
+   */
   const disconnectWallet = () => {
     setWallet(null);
     setAddress('');
@@ -59,6 +66,10 @@ function App() {
 
   const [deployedAddress, setDeployedAddress] = useState<string>(CONTRACT_ADDRESS);
 
+  /**
+   * Instantiates the Midnight Contract using the provided address and the 
+   * user's connected wallet providers (for signing and indexing).
+   */
   const getContractInstance = async () => {
     if (!wallet) throw new Error('Wallet not connected');
     if (!deployedAddress) throw new Error('Contract address not set in environment (VITE_CONTRACT_ADDRESS) or deployed yet');
@@ -78,6 +89,10 @@ function App() {
     });
   };
 
+  /**
+   * Deploys a new instance of the EclipseID contract to the Midnight Preprod network.
+   * Note: In a real-world scenario, this is typically done once by an admin.
+   */
   const handleDeploy = async () => {
     if (!wallet) return;
     try {
@@ -124,6 +139,10 @@ function App() {
     }
   };
 
+  /**
+   * Invokes the `add_issuer` circuit.
+   * Modifies the public ledger state to authorize a new credential issuer.
+   */
   const handleAddIssuer = async () => {
     if (!issuerId) {
       setError('Please provide an issuer ID (hex string)');
@@ -150,6 +169,10 @@ function App() {
     }
   };
 
+  /**
+   * Invokes the `verify_and_claim` circuit using Zero-Knowledge Proofs.
+   * Proves the user holds a valid credential without revealing their secret identity.
+   */
   const handleVerify = async () => {
     if (!verifyIssuer || !verifyNullifier) {
       setError('Please provide both issuer and nullifier (hex strings)');
@@ -256,8 +279,9 @@ function App() {
                     <button
                       onClick={handleDeploy}
                       disabled={loading}
-                      className="text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-50 font-semibold py-1.5 px-4 rounded-full transition-colors border border-blue-500/20 cursor-pointer"
+                      className="flex items-center justify-center gap-2 text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-50 font-semibold py-1.5 px-4 rounded-full transition-colors border border-blue-500/20 cursor-pointer"
                     >
+                      {loading && <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />}
                       {loading ? 'Deploying...' : 'Deploy Now'}
                     </button>
                   )}
@@ -286,8 +310,9 @@ function App() {
                   <button
                     onClick={handleAddIssuer}
                     disabled={loading || !deployedAddress}
-                    className="bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-colors w-full text-sm cursor-pointer"
+                    className="flex justify-center items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-colors w-full text-sm cursor-pointer"
                   >
+                    {loading && <div className="w-4 h-4 border-2 border-white/80 border-t-transparent rounded-full animate-spin" />}
                     Submit Issuer
                   </button>
                 </div>
@@ -313,9 +338,10 @@ function App() {
                   <button
                     onClick={handleVerify}
                     disabled={loading || !deployedAddress}
-                    className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:opacity-90 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-opacity w-full text-sm shadow-lg shadow-blue-500/20 cursor-pointer"
+                    className="flex justify-center items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:opacity-90 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-opacity w-full text-sm shadow-lg shadow-blue-500/20 cursor-pointer"
                   >
-                    Verify Identity
+                    {loading && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                    Verify Identity (ZK Proof)
                   </button>
                 </div>
               </div>

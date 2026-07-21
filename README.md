@@ -4,6 +4,41 @@
 
 EclipseID is a decentralized, privacy-preserving credential verification system built on the Midnight Network. It enables organizations to verify credentials (like KYC or age verification) without forcing users to expose their raw, sensitive data. Using Midnight's Compact language, the contract verifies these claims using a private witness and selective disclosure. This enables high-demand use cases like Sybil-resistant airdrops, private allowlists, and permissioned DeFi access while keeping user identity completely secure and private.
 
+## Ecosystem Fit: Why Confidential Credentials?
+
+The Midnight Network's core value proposition is **data protection**. In the current Web3 landscape, dApps frequently force users to publicly dox themselves to prove compliance (e.g., publicly linking an identity document to a wallet address). 
+
+EclipseID leverages Midnight to fill a massive gap in the ecosystem:
+1. **Sybil-Resistant Airdrops**: Protocols can verify unique humanity without storing biometric data on-chain.
+2. **Permissioned DeFi / RWA**: Institutions can enforce KYC/AML compliance while preserving user privacy and trade secrecy.
+3. **Age-Gating**: Smart contracts can enforce age limits (e.g., > 18) by simply verifying the proof, without learning the user's actual birth date.
+
+## Architecture
+
+```mermaid
+sequenceDiagram
+    participant User as User (Lace Wallet)
+    participant dApp as EclipseID Frontend
+    participant Node as Midnight Node (Proof Server)
+    participant Ledger as Midnight Ledger
+
+    User->>dApp: Connects Wallet
+    dApp->>Node: Fetch Public State (Authorized Issuers)
+    Node-->>dApp: Returns State
+    
+    rect rgb(20, 20, 30)
+    Note over User,dApp: Private Enclave (Off-Chain)
+    User->>dApp: Submits Zero-Knowledge Proof Request
+    dApp->>Node: Proves Circuit `verify_and_claim`
+    Note right of Node: Generates Proof from Private Witness<br>(Secret Identity never leaves device)
+    Node-->>dApp: Returns ZK Proof & Nullifier
+    end
+
+    dApp->>Ledger: Submits Verified Transaction
+    Ledger->>Ledger: Verifies Proof
+    Ledger-->>dApp: State Updated (Nullifier Recorded)
+```
+
 ## Public State vs Private Witness
 
 **Public State (Ledger):**
