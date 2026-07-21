@@ -3,8 +3,11 @@ import { type WalletConnectedAPI } from '@midnight-ntwrk/dapp-connector-api';
 import { createMidnightProviders } from './providers';
 import { Contract } from './contract/index.js';
 import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
-import { findDeployedContract } from '@midnight-ntwrk/midnight-js-contracts';
+import { findDeployedContract, deployContract } from '@midnight-ntwrk/midnight-js-contracts';
 import { fromHex, toHex } from '@midnight-ntwrk/midnight-js-utils';
+import { Link001, Link002, Link003 } from './components/ui/skiper-ui/skiper40';
+import { setNetworkId } from '@midnight-ntwrk/midnight-js-network-id';
+
 // Note: In production, the contract address should be injected via environment variables
 const CONTRACT_ADDRESS = import.meta.env.VITE_CONTRACT_ADDRESS || '';
 
@@ -22,15 +25,14 @@ function App() {
   const connectWallet = async () => {
     try {
       setError('');
+      setNetworkId('preprod');
+      setError('');
       const midnight = (window as any).midnight;
       if (!midnight) {
         throw new Error('Midnight provider not found. Please install a compatible wallet extension like Lace.');
       }
 
-      // Dynamically find any available provider (like 1am/Night Wallet or Lace)
       const keys = Object.keys(midnight);
-      
-      // Grab the first valid provider we find
       let providerKey = keys.find(key => midnight[key] && typeof midnight[key].enable === 'function');
       if (!providerKey) providerKey = keys[0];
 
@@ -39,12 +41,11 @@ function App() {
         throw new Error(`No valid wallet provider found in window.midnight. Available keys: ${keys.join(', ')}`);
       }
 
-      // Enable the provider to connect the wallet
-      const walletApi = await (provider.enable ? provider.enable() : provider.connect());
+      const walletApi = await (provider.enable ? provider.enable('preprod') : provider.connect('preprod'));
       setWallet(walletApi);
       
-      const unshieldedAddr = await walletApi.getUnshieldedAddress();
-      setAddress(unshieldedAddr);
+      const unshieldedAddrObj = await walletApi.getUnshieldedAddress();
+      setAddress(unshieldedAddrObj.unshieldedAddress);
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Failed to connect Lace wallet');
@@ -68,14 +69,12 @@ function App() {
     });
 
     const compiledContract = CompiledContract.make('EclipseIdContract', Contract).pipe(
-      CompiledContract.withVacantWitnesses,
-      CompiledContract.withCompiledFileAssets('') // Will fetch .zkir, .pk, .vk from public directory
+      CompiledContract.withVacantWitnesses
     );
 
     return findDeployedContract(providers, {
       contractAddress: deployedAddress,
       compiledContract,
-      privateStateKey: 'eclipse-id-private-state',
     });
   };
 
@@ -92,13 +91,10 @@ function App() {
       });
 
       const compiledContract = CompiledContract.make('EclipseIdContract', Contract).pipe(
-        CompiledContract.withVacantWitnesses,
-        CompiledContract.withCompiledFileAssets('')
+        CompiledContract.withVacantWitnesses
       );
 
       const deployed = await deployContract(providers, {
-        privateStateId: 'eclipse-id-private-state',
-        initialPrivateState: {},
         compiledContract,
       });
 
@@ -106,8 +102,23 @@ function App() {
       setDeployedAddress(addr);
       setTxResult(`Successfully deployed contract! Address: ${addr}`);
     } catch (err: any) {
-      console.error(err);
-      setError(err.message || 'Failed to deploy contract');
+      console.error('Deployment error:', err);
+      let errorMsg = err instanceof Error ? err.message : String(err);
+      
+      // Decode Effect FiberFailures
+      if (err && err.id === 'FiberFailure' && err.cause) {
+        if (err.cause._tag === 'Fail' && err.cause.failure) {
+          const failure = err.cause.failure;
+          errorMsg = `Effect Failure (${failure._tag || 'Unknown'}): ${failure.message || failure.reason || JSON.stringify(failure)}`;
+        } else {
+          errorMsg = `FiberFailure: ${JSON.stringify(err.cause)}`;
+        }
+      } else if (typeof err === 'object' && err !== null && !(err instanceof Error)) {
+        try { errorMsg = JSON.stringify(err, Object.getOwnPropertyNames(err)); } catch (e) {}
+      }
+      
+      const stack = err instanceof Error && err.stack ? `\n\nStack: ${err.stack}` : '';
+      setError(errorMsg + stack);
     } finally {
       setLoading(false);
     }
@@ -129,7 +140,6 @@ function App() {
         throw new Error('Issuer ID must be 32 bytes (64 hex characters)');
       }
 
-      // Execute circuit
       const { txHash } = await contract.callTx.add_issuer(issuerBytes);
       setTxResult(`Add Issuer Tx Submitted! Hash: ${txHash}`);
     } catch (err: any) {
@@ -158,7 +168,6 @@ function App() {
         throw new Error('Inputs must be 32 bytes (64 hex characters)');
       }
 
-      // Execute circuit
       const { txHash } = await contract.callTx.verify_and_claim(issuerBytes, nullifierBytes);
       setTxResult(`Verify & Claim Tx Submitted! Hash: ${txHash}`);
     } catch (err: any) {
@@ -170,136 +179,162 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8 flex flex-col items-center">
-      <h1 className="text-4xl font-bold mb-8 text-blue-400">Midnight EclipseID</h1>
-      
-      {!wallet ? (
-        <div className="flex flex-col items-center gap-4">
-          <button 
-            onClick={connectWallet}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-lg"
-          >
-            Connect Midnight Wallet
-          </button>
-          <div className="mt-4 text-sm text-gray-400 bg-gray-800 p-4 rounded border border-gray-700 w-full max-w-2xl text-center">
-            <p>Debug Info: Available Midnight Providers:</p>
-            <pre className="mt-2 text-green-400 font-mono text-left">
-              {JSON.stringify((window as any).midnight ? Object.keys((window as any).midnight) : 'window.midnight is undefined', null, 2)}
-            </pre>
-          </div>
-        </div>
-      ) : (
-        <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-2xl border border-gray-700">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-semibold text-green-400">Lace Wallet Connected</h2>
-            <button 
-              onClick={disconnectWallet}
-              className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition-colors"
-            >
-              Disconnect
-            </button>
-          </div>
-          
-          <div className="mb-4">
-            <p className="text-sm text-gray-400 uppercase tracking-wider mb-1">Your Address</p>
-            <p className="font-mono bg-gray-900 p-3 rounded text-sm break-all text-blue-300">
-              {address}
-            </p>
-          </div>
+    <div className="min-h-screen bg-black text-white selection:bg-cyan-500/30 overflow-hidden relative font-sans">
+      {/* Background gradients */}
+      <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-600/10 blur-[150px] pointer-events-none" />
 
-          <div className="mb-4">
-            <p className="text-sm text-gray-400 uppercase tracking-wider mb-1">Contract Address</p>
-            {deployedAddress ? (
-              <p className="font-mono bg-gray-900 p-3 rounded text-sm break-all text-purple-300 border border-purple-500/30">
-                {deployedAddress}
+      {/* Navbar with Skiper UI Components */}
+      <nav className="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto relative z-10 border-b border-white/5">
+        <div className="text-2xl font-black tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600">
+          EclipseID
+        </div>
+        <div className="flex gap-8 text-sm font-medium text-zinc-400">
+          <Link001 href="#" className="hover:text-white transition-colors">Documentation</Link001>
+          <Link002 href="#" className="hover:text-white transition-colors">Contract</Link002>
+          <Link003 href="#" className="hover:text-white transition-colors">SDK</Link003>
+        </div>
+      </nav>
+
+      {/* Main Content */}
+      <main className="max-w-4xl mx-auto px-8 pt-20 pb-24 relative z-10">
+        <div className="text-center mb-16 space-y-4">
+          <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-tight">
+            Next-gen Identity on <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400">
+              Midnight Network.
+            </span>
+          </h1>
+          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto">
+            Deploy your zero-knowledge smart contracts instantly. Verify claims without revealing underlying data using Lace wallet.
+          </p>
+        </div>
+
+        <div className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+          
+          {!wallet ? (
+            <div className="flex flex-col items-center py-12 text-center relative z-10">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/20">
+                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold mb-2">Connect to Get Started</h2>
+              <p className="text-zinc-400 mb-8 max-w-sm">
+                Connect your Lace wallet to deploy and interact with the EclipseID smart contract.
               </p>
-            ) : (
-              <div className="bg-gray-900 p-4 rounded border border-yellow-500/30 flex justify-between items-center">
-                <span className="text-yellow-400 text-sm">No contract deployed yet.</span>
-                <button
-                  onClick={handleDeploy}
-                  disabled={loading}
-                  className="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-bold py-2 px-4 rounded transition-colors text-sm"
+              <button 
+                onClick={connectWallet}
+                className="bg-white text-black hover:bg-zinc-200 font-semibold py-3 px-8 rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_0_40px_-10px_rgba(255,255,255,0.3)] cursor-pointer"
+              >
+                Connect Lace Wallet
+              </button>
+            </div>
+          ) : (
+            <div className="relative z-10 space-y-8">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 pb-6 border-b border-white/10">
+                <div>
+                  <h2 className="text-xl font-semibold text-white flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    Lace Connected
+                  </h2>
+                  <p className="text-sm text-zinc-500 mt-1 font-mono">{address}</p>
+                </div>
+                <button 
+                  onClick={disconnectWallet}
+                  className="text-sm text-zinc-400 hover:text-white transition-colors px-4 py-2 rounded-full border border-white/10 hover:border-white/20 bg-white/5 cursor-pointer"
                 >
-                  {loading ? 'Deploying...' : 'Deploy Contract to Preprod'}
+                  Disconnect
                 </button>
               </div>
-            )}
-          </div>
 
-          <div className="mt-8 space-y-8">
-            {/* Add Issuer Section */}
-            <div className="bg-gray-900 p-4 rounded-lg border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4 text-purple-400">Add Issuer</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Issuer ID (32-byte Hex)</label>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <p className="text-sm font-medium text-zinc-400 uppercase tracking-widest">Contract Status</p>
+                  {!deployedAddress && (
+                    <button
+                      onClick={handleDeploy}
+                      disabled={loading}
+                      className="text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-50 font-semibold py-1.5 px-4 rounded-full transition-colors border border-blue-500/20 cursor-pointer"
+                    >
+                      {loading ? 'Deploying...' : 'Deploy Now'}
+                    </button>
+                  )}
+                </div>
+                {deployedAddress ? (
+                  <div className="font-mono bg-black/50 p-4 rounded-xl text-sm break-all text-cyan-300 border border-cyan-500/20 shadow-inner">
+                    {deployedAddress}
+                  </div>
+                ) : (
+                  <div className="bg-yellow-500/5 text-yellow-500/70 p-4 rounded-xl border border-yellow-500/10 text-sm">
+                    No contract deployed. Deploy to interact with the ZK circuits.
+                  </div>
+                )}
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6 pt-6 border-t border-white/10">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-zinc-200">Add Issuer</h3>
                   <input
                     type="text"
-                    className="w-full bg-gray-800 border border-gray-600 rounded p-2 text-white font-mono"
-                    placeholder="e.g. 0123456789abcdef..."
+                    className="w-full bg-black/50 border border-white/10 focus:border-blue-500/50 outline-none rounded-xl p-3 text-white font-mono text-sm transition-colors"
+                    placeholder="Issuer ID (32-byte Hex)"
                     value={issuerId}
                     onChange={(e) => setIssuerId(e.target.value)}
                   />
+                  <button
+                    onClick={handleAddIssuer}
+                    disabled={loading || !deployedAddress}
+                    className="bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-colors w-full text-sm cursor-pointer"
+                  >
+                    Submit Issuer
+                  </button>
                 </div>
-                <button
-                  onClick={handleAddIssuer}
-                  disabled={loading || !deployedAddress}
-                  className="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 text-white font-bold py-2 px-4 rounded transition-colors w-full"
-                >
-                  {loading ? 'Processing...' : 'Submit Add Issuer'}
-                </button>
-              </div>
-            </div>
 
-            {/* Verify Section */}
-            <div className="bg-gray-900 p-4 rounded-lg border border-gray-700">
-              <h3 className="text-xl font-semibold mb-4 text-green-400">Verify Identity & Claim Nullifier</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Issuer ID (32-byte Hex)</label>
-                  <input
-                    type="text"
-                    className="w-full bg-gray-800 border border-gray-600 rounded p-2 text-white font-mono"
-                    placeholder="e.g. 0123456789abcdef..."
-                    value={verifyIssuer}
-                    onChange={(e) => setVerifyIssuer(e.target.value)}
-                  />
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium text-zinc-200">Verify & Claim</h3>
+                  <div className="space-y-3">
+                    <input
+                      type="text"
+                      className="w-full bg-black/50 border border-white/10 focus:border-cyan-500/50 outline-none rounded-xl p-3 text-white font-mono text-sm transition-colors"
+                      placeholder="Issuer ID (32-byte Hex)"
+                      value={verifyIssuer}
+                      onChange={(e) => setVerifyIssuer(e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      className="w-full bg-black/50 border border-white/10 focus:border-cyan-500/50 outline-none rounded-xl p-3 text-white font-mono text-sm transition-colors"
+                      placeholder="Nullifier (32-byte Hex)"
+                      value={verifyNullifier}
+                      onChange={(e) => setVerifyNullifier(e.target.value)}
+                    />
+                  </div>
+                  <button
+                    onClick={handleVerify}
+                    disabled={loading || !deployedAddress}
+                    className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:opacity-90 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-opacity w-full text-sm shadow-lg shadow-blue-500/20 cursor-pointer"
+                  >
+                    Verify Identity
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1">Nullifier (32-byte Hex)</label>
-                  <input
-                    type="text"
-                    className="w-full bg-gray-800 border border-gray-600 rounded p-2 text-white font-mono"
-                    placeholder="e.g. 0123456789abcdef..."
-                    value={verifyNullifier}
-                    onChange={(e) => setVerifyNullifier(e.target.value)}
-                  />
-                </div>
-                <button
-                  onClick={handleVerify}
-                  disabled={loading || !deployedAddress}
-                  className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white font-bold py-2 px-4 rounded transition-colors w-full"
-                >
-                  {loading ? 'Processing...' : 'Submit Verification'}
-                </button>
               </div>
             </div>
+          )}
+        </div>
+
+        {txResult && (
+          <div className="mt-6 bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-2xl w-full text-center text-sm font-medium backdrop-blur-md">
+            {txResult}
           </div>
-        </div>
-      )}
+        )}
 
-      {txResult && (
-        <div className="mt-6 bg-green-900/50 border border-green-500 text-green-200 p-4 rounded-lg w-full max-w-2xl text-center">
-          {txResult}
-        </div>
-      )}
-
-      {error && (
-        <div className="mt-6 bg-red-900/50 border border-red-500 text-red-200 p-4 rounded-lg w-full max-w-2xl text-center">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div className="mt-6 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl w-full text-center text-sm font-medium backdrop-blur-md">
+            {error}
+          </div>
+        )}
+      </main>
     </div>
   );
 }

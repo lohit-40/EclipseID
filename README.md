@@ -12,6 +12,10 @@ The smart contract maintains public records of:
 **Private Witness:**
 The user's actual personal data (their identity, age, or the raw credential) remains a private witness on their local machine. The `disclose()` function is deliberately used *only* on the nullifier, meaning the public network knows a valid credential was used, but learns absolutely nothing else.
 
+## Contract Address (Preprod)
+
+**Contract Address:** `[Insert New Contract Address Here after deploying]`
+
 ## Setup Instructions
 
 To run this project locally, you must have the Midnight toolchain installed.

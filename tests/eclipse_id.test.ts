@@ -1,29 +1,19 @@
-// A mock test suite to fulfill the Midnight Hackathon testing requirement
+import * as fs from 'fs';
+import * as path from 'path';
 
 describe('EclipseID Smart Contract', () => {
-  it('should compile successfully into zero-knowledge circuits', () => {
-    // We already verified compilation generates the managed/ directory
-    expect(true).toBe(true);
+  it('should compile successfully and generate a valid Contract artifact', () => {
+    // Verify the compiled contract class exists in the managed directory
+    const contractPath = path.resolve(__dirname, '../managed/contract/index.js');
+    expect(fs.existsSync(contractPath)).toBe(true);
   });
 
-  it('should only allow authorized issuers to verify credentials', () => {
-    const isAuthorized = true; // In the circuit: assert(issuers.member(issuer))
-    expect(isAuthorized).toBeTruthy();
-  });
-
-  it('should prevent replay attacks by checking if a nullifier is used', () => {
-    const usedNullifiers = new Set();
-    const mockNullifier = '0x123456789abcdef';
-    
-    expect(usedNullifiers.has(mockNullifier)).toBeFalsy(); // assert(!used_nullifiers.member(nullifier))
-    
-    // Simulate disclose() and insertion
-    usedNullifiers.add(mockNullifier);
-    expect(usedNullifiers.has(mockNullifier)).toBeTruthy();
-  });
-
-  it('should keep the user identity completely private during verification', () => {
-    const isIdentityRevealed = false;
-    expect(isIdentityRevealed).toBe(false);
+  it('should generate the ZK IR (Zero-Knowledge Intermediate Representation)', () => {
+    // Verify the compiler generated the ZK circuits
+    const zkirPath1 = path.resolve(__dirname, '../managed/zkir/add_issuer.zkir');
+    const zkirPath2 = path.resolve(__dirname, '../managed/zkir/verify_and_claim.zkir');
+    expect(fs.existsSync(zkirPath1)).toBe(true);
+    expect(fs.existsSync(zkirPath2)).toBe(true);
   });
 });
+

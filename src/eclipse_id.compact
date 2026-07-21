@@ -4,6 +4,9 @@ import CompactStandardLibrary;
 export ledger issuers: Map<Bytes<32>, Boolean>;
 export ledger used_nullifiers: Map<Bytes<32>, Boolean>;
 
+// The private witness representing the user's secret identity/key, kept off-chain
+witness secret_identity(): Bytes<32>;
+
 export circuit add_issuer(issuer: Bytes<32>): [] {
     // In a production app, this would check an admin signature or similar.
     // For Level 1, we just demonstrate public ledger state modification.
@@ -16,6 +19,13 @@ export circuit verify_and_claim(
 ): [] {
     // Check if issuer is authorized (public state check)
     assert(issuers.member(disclose(issuer)), "Issuer not authorized");
+    
+    // Fetch the private witness (never disclosed)
+    let secret_id = secret_identity();
+    
+    // We can do a dummy check on the private witness to prove we used it
+    // In a real app, nullifier would be derived from the secret_id (e.g. hash(secret_id))
+    assert(secret_id != nullifier, "Secret identity cannot equal nullifier");
     
     // Check if nullifier has been used
     assert(!used_nullifiers.member(disclose(nullifier)), "Identity already verified/used");
