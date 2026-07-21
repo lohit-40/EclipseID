@@ -230,17 +230,17 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-cyan-500/30 overflow-hidden relative font-sans">
+    <div className="min-h-screen bg-[#070410] text-rose-50 selection:bg-orange-500/30 overflow-hidden relative font-sans">
       {/* Background gradients */}
       <motion.div 
-        animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }} 
+        animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.25, 0.15] }} 
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }} 
-        className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[120px] pointer-events-none" 
+        className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-rose-600/20 blur-[120px] pointer-events-none" 
       />
       <motion.div 
         animate={{ scale: [1, 1.2, 1], opacity: [0.1, 0.2, 0.1] }} 
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }} 
-        className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-600/10 blur-[150px] pointer-events-none" 
+        className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-orange-600/15 blur-[150px] pointer-events-none" 
       />
 
       {/* Navbar with Skiper UI Components */}
@@ -262,13 +262,13 @@ function App() {
               initial={{ y: -20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: index * 0.05 + 0.2, type: "spring" }}
-              className="bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-600 inline-block hover:scale-125 transition-transform cursor-default"
+              className="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-rose-600 inline-block hover:scale-125 transition-transform cursor-default"
             >
               {char}
             </motion.span>
           ))}
         </motion.div>
-        <div className="flex gap-8 text-sm font-medium text-slate-400">
+        <div className="flex gap-8 text-sm font-medium text-rose-200/60">
           <Link001 href="#" className="hover:text-white transition-colors">Documentation</Link001>
           <Link002 href="#" className="hover:text-white transition-colors">Contract</Link002>
           <Link003 href="#" className="hover:text-white transition-colors">SDK</Link003>
@@ -301,12 +301,12 @@ function App() {
               initial={{ opacity: 0, scale: 0.9, filter: "blur(20px)" }}
               animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
               transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
-              className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-400 to-indigo-400 mt-2 block"
+              className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 mt-2 block drop-shadow-[0_0_15px_rgba(249,115,22,0.3)]"
             >
               Midnight Network.
             </motion.span>
           </h1>
-          <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto">
+          <p className="text-rose-200/60 text-lg md:text-xl max-w-2xl mx-auto">
             Deploy your zero-knowledge smart contracts instantly. Verify claims without revealing underlying data using Lace wallet.
           </p>
         </motion.div>
@@ -322,7 +322,7 @@ function App() {
             rotateX,
             transformStyle: "preserve-3d",
           }}
-          className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-8 rounded-3xl shadow-2xl relative group"
+          className="bg-[#120a1f]/80 backdrop-blur-xl border border-rose-500/10 p-8 rounded-3xl shadow-2xl relative group shadow-rose-900/10"
         >
           <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }} className="relative z-10 w-full h-full">
             <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -332,23 +332,23 @@ function App() {
               <motion.div 
                 animate={{ y: [-10, 10, -10], rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mb-6 shadow-lg shadow-blue-500/50"
+                className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-orange-500 flex items-center justify-center mb-6 shadow-lg shadow-orange-500/30"
               >
                 <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </motion.div>
               <h2 className="text-2xl font-bold mb-2">Connect to Get Started</h2>
-              <p className="text-slate-400 mb-8 max-w-sm">
+              <p className="text-rose-200/60 mb-8 max-w-sm">
                 Connect your Lace wallet to deploy and interact with the EclipseID smart contract.
               </p>
               <motion.button 
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                animate={{ boxShadow: ["0px 0px 0px rgba(255,255,255,0)", "0px 0px 30px rgba(255,255,255,0.4)", "0px 0px 0px rgba(255,255,255,0)"] }}
+                animate={{ boxShadow: ["0px 0px 0px rgba(249,115,22,0)", "0px 0px 30px rgba(249,115,22,0.4)", "0px 0px 0px rgba(249,115,22,0)"] }}
                 transition={{ boxShadow: { duration: 2, repeat: Infinity, ease: "easeInOut" } }}
                 onClick={connectWallet}
-                className="bg-white text-black font-bold py-3 px-10 rounded-full cursor-pointer"
+                className="bg-gradient-to-r from-orange-500 to-rose-600 text-white font-bold py-3 px-10 rounded-full cursor-pointer border border-orange-400/30"
               >
                 Connect Lace Wallet
               </motion.button>
@@ -361,11 +361,11 @@ function App() {
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                     Lace Connected
                   </h2>
-                  <p className="text-sm text-slate-400 mt-1 font-mono">{address}</p>
+                  <p className="text-sm text-rose-200/60 mt-1 font-mono">{address}</p>
                 </div>
                 <button 
                   onClick={disconnectWallet}
-                  className="text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-full border border-slate-700 hover:border-slate-500 bg-slate-800/50 cursor-pointer"
+                  className="text-sm text-rose-200/60 hover:text-white transition-colors px-4 py-2 rounded-full border border-rose-500/20 hover:border-rose-500/40 bg-rose-500/5 cursor-pointer"
                 >
                   Disconnect
                 </button>
@@ -373,20 +373,20 @@ function App() {
 
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <p className="text-sm font-medium text-slate-400 uppercase tracking-widest">Contract Status</p>
+                  <p className="text-sm font-medium text-rose-200/60 uppercase tracking-widest">Contract Status</p>
                   {!deployedAddress && (
                     <button
                       onClick={handleDeploy}
                       disabled={loading}
-                      className="flex items-center justify-center gap-2 text-xs bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 disabled:opacity-50 font-semibold py-1.5 px-4 rounded-full transition-colors border border-blue-500/20 cursor-pointer"
+                      className="flex items-center justify-center gap-2 text-xs bg-orange-500/10 text-orange-400 hover:bg-orange-500/20 disabled:opacity-50 font-semibold py-1.5 px-4 rounded-full transition-colors border border-orange-500/20 cursor-pointer"
                     >
-                      {loading && <div className="w-3 h-3 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />}
+                      {loading && <div className="w-3 h-3 border-2 border-orange-400 border-t-transparent rounded-full animate-spin" />}
                       {loading ? 'Deploying...' : 'Deploy Now'}
                     </button>
                   )}
                 </div>
                 {deployedAddress ? (
-                  <div className="font-mono bg-slate-950 p-4 rounded-xl text-sm break-all text-cyan-300 border border-cyan-500/20 shadow-inner">
+                  <div className="font-mono bg-[#070410] p-4 rounded-xl text-sm break-all text-orange-300 border border-orange-500/20 shadow-inner">
                     {deployedAddress}
                   </div>
                 ) : (
@@ -401,7 +401,7 @@ function App() {
                   <h3 className="text-lg font-medium text-zinc-200">Add Issuer</h3>
                   <input
                     type="text"
-                    className="w-full bg-slate-950/50 border border-slate-800 focus:border-blue-500/50 outline-none rounded-xl p-3 text-slate-100 font-mono text-sm transition-colors"
+                    className="w-full bg-[#070410]/50 border border-rose-500/10 focus:border-orange-500/50 outline-none rounded-xl p-3 text-rose-50 font-mono text-sm transition-colors"
                     placeholder="Issuer ID (32-byte Hex)"
                     value={issuerId}
                     onChange={(e) => setIssuerId(e.target.value)}
@@ -409,7 +409,7 @@ function App() {
                   <button
                     onClick={handleAddIssuer}
                     disabled={loading || !deployedAddress}
-                    className="flex justify-center items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-colors w-full text-sm cursor-pointer"
+                    className="flex justify-center items-center gap-2 bg-[#120a1f] hover:bg-[#1a0e2d] border border-rose-500/20 disabled:opacity-30 text-rose-100 font-medium py-2.5 px-4 rounded-xl transition-colors w-full text-sm cursor-pointer"
                   >
                     {loading && <div className="w-4 h-4 border-2 border-white/80 border-t-transparent rounded-full animate-spin" />}
                     Submit Issuer
@@ -421,14 +421,14 @@ function App() {
                   <div className="space-y-3">
                     <input
                       type="text"
-                      className="w-full bg-slate-950/50 border border-slate-800 focus:border-cyan-500/50 outline-none rounded-xl p-3 text-slate-100 font-mono text-sm transition-colors"
+                      className="w-full bg-[#070410]/50 border border-rose-500/10 focus:border-orange-500/50 outline-none rounded-xl p-3 text-rose-50 font-mono text-sm transition-colors"
                       placeholder="Issuer ID (32-byte Hex)"
                       value={verifyIssuer}
                       onChange={(e) => setVerifyIssuer(e.target.value)}
                     />
                     <input
                       type="text"
-                      className="w-full bg-slate-950/50 border border-slate-800 focus:border-cyan-500/50 outline-none rounded-xl p-3 text-slate-100 font-mono text-sm transition-colors"
+                      className="w-full bg-[#070410]/50 border border-rose-500/10 focus:border-orange-500/50 outline-none rounded-xl p-3 text-rose-50 font-mono text-sm transition-colors"
                       placeholder="Nullifier (32-byte Hex)"
                       value={verifyNullifier}
                       onChange={(e) => setVerifyNullifier(e.target.value)}
@@ -437,7 +437,7 @@ function App() {
                   <button
                     onClick={handleVerify}
                     disabled={loading || !deployedAddress}
-                    className="flex justify-center items-center gap-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:opacity-90 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-opacity w-full text-sm shadow-lg shadow-blue-500/20 cursor-pointer"
+                    className="flex justify-center items-center gap-2 bg-gradient-to-r from-orange-500 to-rose-600 hover:opacity-90 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-opacity w-full text-sm shadow-lg shadow-orange-500/20 cursor-pointer"
                   >
                     {loading && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
                     Verify Identity (ZK Proof)
