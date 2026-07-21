@@ -230,7 +230,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-cyan-500/30 overflow-hidden relative font-sans">
+    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-cyan-500/30 overflow-hidden relative font-sans">
       {/* Background gradients */}
       <motion.div 
         animate={{ scale: [1, 1.1, 1], opacity: [0.2, 0.3, 0.2] }} 
@@ -268,7 +268,7 @@ function App() {
             </motion.span>
           ))}
         </motion.div>
-        <div className="flex gap-8 text-sm font-medium text-zinc-400">
+        <div className="flex gap-8 text-sm font-medium text-slate-400">
           <Link001 href="#" className="hover:text-white transition-colors">Documentation</Link001>
           <Link002 href="#" className="hover:text-white transition-colors">Contract</Link002>
           <Link003 href="#" className="hover:text-white transition-colors">SDK</Link003>
@@ -306,7 +306,7 @@ function App() {
               Midnight Network.
             </motion.span>
           </h1>
-          <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto">
+          <p className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto">
             Deploy your zero-knowledge smart contracts instantly. Verify claims without revealing underlying data using Lace wallet.
           </p>
         </motion.div>
@@ -322,7 +322,7 @@ function App() {
             rotateX,
             transformStyle: "preserve-3d",
           }}
-          className="bg-zinc-900/50 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl relative group"
+          className="bg-slate-900/80 backdrop-blur-xl border border-slate-800 p-8 rounded-3xl shadow-2xl relative group"
         >
           <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }} className="relative z-10 w-full h-full">
             <div className="absolute inset-0 bg-gradient-to-b from-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
@@ -339,7 +339,7 @@ function App() {
                 </svg>
               </motion.div>
               <h2 className="text-2xl font-bold mb-2">Connect to Get Started</h2>
-              <p className="text-zinc-400 mb-8 max-w-sm">
+              <p className="text-slate-400 mb-8 max-w-sm">
                 Connect your Lace wallet to deploy and interact with the EclipseID smart contract.
               </p>
               <motion.button 
@@ -361,11 +361,11 @@ function App() {
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                     Lace Connected
                   </h2>
-                  <p className="text-sm text-zinc-500 mt-1 font-mono">{address}</p>
+                  <p className="text-sm text-slate-400 mt-1 font-mono">{address}</p>
                 </div>
                 <button 
                   onClick={disconnectWallet}
-                  className="text-sm text-zinc-400 hover:text-white transition-colors px-4 py-2 rounded-full border border-white/10 hover:border-white/20 bg-white/5 cursor-pointer"
+                  className="text-sm text-slate-400 hover:text-white transition-colors px-4 py-2 rounded-full border border-slate-700 hover:border-slate-500 bg-slate-800/50 cursor-pointer"
                 >
                   Disconnect
                 </button>
@@ -373,7 +373,7 @@ function App() {
 
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <p className="text-sm font-medium text-zinc-400 uppercase tracking-widest">Contract Status</p>
+                  <p className="text-sm font-medium text-slate-400 uppercase tracking-widest">Contract Status</p>
                   {!deployedAddress && (
                     <button
                       onClick={handleDeploy}
@@ -386,7 +386,7 @@ function App() {
                   )}
                 </div>
                 {deployedAddress ? (
-                  <div className="font-mono bg-black/50 p-4 rounded-xl text-sm break-all text-cyan-300 border border-cyan-500/20 shadow-inner">
+                  <div className="font-mono bg-slate-950 p-4 rounded-xl text-sm break-all text-cyan-300 border border-cyan-500/20 shadow-inner">
                     {deployedAddress}
                   </div>
                 ) : (
@@ -401,7 +401,7 @@ function App() {
                   <h3 className="text-lg font-medium text-zinc-200">Add Issuer</h3>
                   <input
                     type="text"
-                    className="w-full bg-black/50 border border-white/10 focus:border-blue-500/50 outline-none rounded-xl p-3 text-white font-mono text-sm transition-colors"
+                    className="w-full bg-slate-950/50 border border-slate-800 focus:border-blue-500/50 outline-none rounded-xl p-3 text-slate-100 font-mono text-sm transition-colors"
                     placeholder="Issuer ID (32-byte Hex)"
                     value={issuerId}
                     onChange={(e) => setIssuerId(e.target.value)}
@@ -409,7 +409,7 @@ function App() {
                   <button
                     onClick={handleAddIssuer}
                     disabled={loading || !deployedAddress}
-                    className="flex justify-center items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-colors w-full text-sm cursor-pointer"
+                    className="flex justify-center items-center gap-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 disabled:opacity-30 text-white font-medium py-2.5 px-4 rounded-xl transition-colors w-full text-sm cursor-pointer"
                   >
                     {loading && <div className="w-4 h-4 border-2 border-white/80 border-t-transparent rounded-full animate-spin" />}
                     Submit Issuer
@@ -421,14 +421,14 @@ function App() {
                   <div className="space-y-3">
                     <input
                       type="text"
-                      className="w-full bg-black/50 border border-white/10 focus:border-cyan-500/50 outline-none rounded-xl p-3 text-white font-mono text-sm transition-colors"
+                      className="w-full bg-slate-950/50 border border-slate-800 focus:border-cyan-500/50 outline-none rounded-xl p-3 text-slate-100 font-mono text-sm transition-colors"
                       placeholder="Issuer ID (32-byte Hex)"
                       value={verifyIssuer}
                       onChange={(e) => setVerifyIssuer(e.target.value)}
                     />
                     <input
                       type="text"
-                      className="w-full bg-black/50 border border-white/10 focus:border-cyan-500/50 outline-none rounded-xl p-3 text-white font-mono text-sm transition-colors"
+                      className="w-full bg-slate-950/50 border border-slate-800 focus:border-cyan-500/50 outline-none rounded-xl p-3 text-slate-100 font-mono text-sm transition-colors"
                       placeholder="Nullifier (32-byte Hex)"
                       value={verifyNullifier}
                       onChange={(e) => setVerifyNullifier(e.target.value)}
