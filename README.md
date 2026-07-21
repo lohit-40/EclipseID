@@ -1,6 +1,8 @@
-# EclipseID (zkIdentity)
+# EclipseID
 
-EclipseID is a Confidential Credential system built on the Midnight network designed to solve the Web3 dilemma of compliance versus privacy. The application allows users to prove they hold a valid credential from a trusted issuer (such as passing KYC, being over 18, or proving unique humanity) to dApps without ever revealing their underlying personal data on the public ledger. Using Midnight's Compact language, the contract verifies these claims using a private witness and selective disclosure. This enables high-demand use cases like Sybil-resistant airdrops, private allowlists, and permissioned DeFi access while keeping user identity completely secure and private.
+[![CI](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml/badge.svg)](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml)
+
+EclipseID is a decentralized, privacy-preserving credential verification system built on the Midnight Network. It enables organizations to verify credentials (like KYC or age verification) without forcing users to expose their raw, sensitive data. Using Midnight's Compact language, the contract verifies these claims using a private witness and selective disclosure. This enables high-demand use cases like Sybil-resistant airdrops, private allowlists, and permissioned DeFi access while keeping user identity completely secure and private.
 
 ## Public State vs Private Witness
 
@@ -40,10 +42,16 @@ To run this project locally, you must have the Midnight toolchain installed.
 
 ## Privacy Claim
 
-**What is proven?**
-The `verify_and_claim` circuit proves that the user possesses a valid, unrevealed credential (issued by an authorized `issuer` stored on the ledger). 
-**What remains private?**
-The user's actual identity, the raw credential data, and the signature itself remain entirely off-chain as a private witness. The only data exposed to the ledger is a unique `nullifier` hash, which prevents replay attacks without linking the transaction back to the user's wallet or real-world identity.
+**What an observer CAN learn (Public Data):**
+* That a transaction occurred.
+* The public identity (e.g., wallet address) of the issuer who added a credential.
+* The public ledger state, specifically which issuers are currently authorized (the `issuers` map).
+
+**What an observer CANNOT learn (Private Data):**
+* The actual credential data or underlying PII being verified.
+* The identity of the individual claiming or verifying the credential.
+* The linkage between a specific credential issuance and a subsequent verification event (due to zero-knowledge proofs).
+* The private state elements that satisfy the circuit constraints.
 
 ## Level 2 - Waxing Crescent Submission Checklist
 
@@ -52,7 +60,19 @@ The user's actual identity, the raw credential data, and the signature itself re
 - [x] **Deployed Preprod contract address (verifiable on-chain):** `00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c`
 - [x] **Demo video (wallet connect + a successful circuit call):** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
 - [x] **README documenting the privacy claim:** See the [Privacy Claim](#privacy-claim) section above.
-- [x] **Minimum 8 meaningful commits:** Completed.
+- [x] **Product proposal (from the idea list) submitted for approval:** (Confidential Credentials)
+- [x] **Minimum 10 meaningful commits:** Completed.
+
+## Level 3 - First Quarter Submission Checklist
+
+- [x] **Public GitHub repository with complete README:** (This repository)
+- [x] **Live demo link:** [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app)
+- [x] **Screenshot: test output (3+ tests passing):** Available in submission materials.
+- [x] **CI/CD badge or workflow file with passing runs:** Added to the top of this README.
+- [x] **Demo video (1 minute) showing full functionality:** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
+- [x] **README "privacy model" section: what an observer can and cannot learn:** See the [Privacy Claim](#privacy-claim) section above.
+- [x] **Product proposal (from the idea list) submitted for approval:** Confidential Credentials.
+- [x] **Minimum 10 meaningful commits:** Completed.
 
 ## Level 1 - New Moon Submission Checklist
 
