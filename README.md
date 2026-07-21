@@ -14,7 +14,7 @@ The user's actual personal data (their identity, age, or the raw credential) rem
 
 ## Contract Address (Preprod)
 
-**Contract Address:** `[Insert New Contract Address Here after deploying]`
+**Contract Address:** `00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c`
 
 ## Setup Instructions
 
@@ -64,7 +64,7 @@ This project was built for the Midnight Level 1 Submission. All requirements hav
   ![Compile Output](./assets/compile.png)
 - [x] **Screenshot: contract deployed with address shown:**
 
-      CONTRACT DEPLOYMENT SUCCESSFUL! = Address: 3258fc8cfaaf43cfdd2a4e3e296bc65a5764d3c7defd14384fbe9f0d9418f5e6
+      CONTRACT DEPLOYMENT SUCCESSFUL! = Address: 00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c
 
   ![Deploy Output](./assets/deploy.png)
 - [x] **README section explaining public state vs private witness:** See the [Public State vs Private Witness](#public-state-vs-private-witness) section above.
