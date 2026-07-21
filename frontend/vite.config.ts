@@ -16,6 +16,7 @@ export default defineConfig({
     topLevelAwait(),
     nodePolyfills()
   ],
+  build: { target: 'esnext' },
   optimizeDeps: {
     exclude: [
       '@midnight-ntwrk/ledger-v8',
