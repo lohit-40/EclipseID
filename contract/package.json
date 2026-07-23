@@ -4,7 +4,7 @@
   "description": "Confidential Credentials on Midnight",
   "type": "module",
   "scripts": {
-    "build:compact": "node scripts/compile.js",
+    "build:compact": "compact -c src/eclipse-id.compact -o managed/",
     "deploy:preview": "tsx scripts/deploy.ts",
     "test": "jest"
   },
