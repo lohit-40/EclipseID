@@ -66,14 +66,14 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('add_issuer',
                                      'argument 1 (as invoked from Typescript)',
-                                     'eclipse-id.compact line 7 char 1',
+                                     'EclipseID.compact line 7 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(issuer_0.buffer instanceof ArrayBuffer && issuer_0.BYTES_PER_ELEMENT === 1 && issuer_0.length === 32)) {
           __compactRuntime.typeError('add_issuer',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'eclipse-id.compact line 7 char 1',
+                                     'EclipseID.compact line 7 char 1',
                                      'Bytes<32>',
                                      issuer_0)
         }
@@ -101,21 +101,21 @@ export class Contract {
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
           __compactRuntime.typeError('verify_and_claim',
                                      'argument 1 (as invoked from Typescript)',
-                                     'eclipse-id.compact line 13 char 1',
+                                     'EclipseID.compact line 13 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(issuer_0.buffer instanceof ArrayBuffer && issuer_0.BYTES_PER_ELEMENT === 1 && issuer_0.length === 32)) {
           __compactRuntime.typeError('verify_and_claim',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'eclipse-id.compact line 13 char 1',
+                                     'EclipseID.compact line 13 char 1',
                                      'Bytes<32>',
                                      issuer_0)
         }
         if (!(nullifier_0.buffer instanceof ArrayBuffer && nullifier_0.BYTES_PER_ELEMENT === 1 && nullifier_0.length === 32)) {
           __compactRuntime.typeError('verify_and_claim',
                                      'argument 2 (argument 3 as invoked from Typescript)',
-                                     'eclipse-id.compact line 13 char 1',
+                                     'EclipseID.compact line 13 char 1',
                                      'Bytes<32>',
                                      nullifier_0)
         }
@@ -341,7 +341,7 @@ export function ledger(stateOrChargedState) {
         if (!(key_0.buffer instanceof ArrayBuffer && key_0.BYTES_PER_ELEMENT === 1 && key_0.length === 32)) {
           __compactRuntime.typeError('member',
                                      'argument 1',
-                                     'eclipse-id.compact line 4 char 1',
+                                     'EclipseID.compact line 4 char 1',
                                      'Bytes<32>',
                                      key_0)
         }
@@ -370,7 +370,7 @@ export function ledger(stateOrChargedState) {
         if (!(key_0.buffer instanceof ArrayBuffer && key_0.BYTES_PER_ELEMENT === 1 && key_0.length === 32)) {
           __compactRuntime.typeError('lookup',
                                      'argument 1',
-                                     'eclipse-id.compact line 4 char 1',
+                                     'EclipseID.compact line 4 char 1',
                                      'Bytes<32>',
                                      key_0)
         }
@@ -450,7 +450,7 @@ export function ledger(stateOrChargedState) {
         if (!(key_0.buffer instanceof ArrayBuffer && key_0.BYTES_PER_ELEMENT === 1 && key_0.length === 32)) {
           __compactRuntime.typeError('member',
                                      'argument 1',
-                                     'eclipse-id.compact line 5 char 1',
+                                     'EclipseID.compact line 5 char 1',
                                      'Bytes<32>',
                                      key_0)
         }
@@ -479,7 +479,7 @@ export function ledger(stateOrChargedState) {
         if (!(key_0.buffer instanceof ArrayBuffer && key_0.BYTES_PER_ELEMENT === 1 && key_0.length === 32)) {
           __compactRuntime.typeError('lookup',
                                      'argument 1',
-                                     'eclipse-id.compact line 5 char 1',
+                                     'EclipseID.compact line 5 char 1',
                                      'Bytes<32>',
                                      key_0)
         }

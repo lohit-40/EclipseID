@@ -67,7 +67,7 @@ To run this project locally, you must have the Midnight toolchain installed.
    ```
    *Expected Output:*
    ```text
-   Compiling src/eclipse-id.compact...
+   Compiling src/EclipseID.compact...
    Done.
    Circuits: add_issuer, verify_and_claim
    ```
