@@ -1,3 +1,12 @@
 node_modules/
 .env*
 !.env*.example
+temp_midnight_skills/
+temp_skills/
+test-app/
+logs/
+compact.tar.xz
+compact-x86_64-unknown-linux-musl/
+compact-installer.sh
+contract/midnight-level-db/
+contract/managed/
