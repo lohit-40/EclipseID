@@ -1,10 +1,15 @@
-name: CI
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build-and-test:
@@ -28,6 +33,7 @@ jobs:
         curl -L -o compact.tar.xz https://github.com/midnightntwrk/compact/releases/download/compact-v0.5.1/compact-x86_64-unknown-linux-musl.tar.xz
         tar xf compact.tar.xz
         sudo mv compact-x86_64-unknown-linux-musl/compact /usr/local/bin/
+        compact update
         compact --version
 
     - name: Build Contracts
@@ -41,3 +47,25 @@ jobs:
       
     - name: Build Frontend
       run: cd frontend && npm run build
+
+    - name: Setup Pages
+      if: github.ref == 'refs/heads/main'
+      uses: actions/configure-pages@v5
+
+    - name: Upload artifact
+      if: github.ref == 'refs/heads/main'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: './frontend/dist'
+
+  deploy-frontend:
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
