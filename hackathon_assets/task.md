@@ -1,0 +1,4 @@
+- [x] Install `framer-motion` in the frontend directory
+- [x] Add 3D Tilt Effect and Staggered Animations to `App.tsx`
+- [x] Add Ambient Background Animations to `App.tsx`
+- [x] Commit and push changes to GitHub

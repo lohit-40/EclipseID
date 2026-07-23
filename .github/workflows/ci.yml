@@ -20,13 +20,13 @@ jobs:
         cache: 'npm'
         
     - name: Install dependencies
-      run: npm install
+      run: cd contract && npm install
       
     - name: Build Contracts
-      run: npm run build:compact
+      run: cd contract && npm run build:compact
       
     - name: Run Tests
-      run: npm test
+      run: cd contract && npm test
 
     - name: Install Frontend dependencies
       run: cd frontend && npm install

@@ -61,12 +61,13 @@ To run this project locally, you must have the Midnight toolchain installed.
 2. Install [Node.js 22](https://nodejs.org/en).
 3. Clone this repository and run:
    ```bash
+   cd contract
    npm install
    npm run build:compact
    ```
    *Expected Output:*
    ```text
-   Compiling src/eclipse_id.compact...
+   Compiling src/eclipse-id.compact...
    Done.
    Circuits: add_issuer, verify_and_claim
    ```
