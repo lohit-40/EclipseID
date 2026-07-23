@@ -18,7 +18,7 @@ describe('EclipseID Smart Contract', () => {
 
   it('should verify the frontend application exists and is configured', () => {
     // Verify the React frontend entry points exist
-    const appTsxPath = path.resolve(__dirname, '../frontend/src/App.tsx');
+    const appTsxPath = path.resolve(__dirname, '../../frontend/src/App.tsx');
     expect(fs.existsSync(appTsxPath)).toBe(true);
   });
 });
