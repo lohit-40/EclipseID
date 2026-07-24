@@ -52,7 +52,7 @@ function App() {
       
       let walletApi;
       try {
-        walletApi = await (provider.enable ? provider.enable() : provider.connect());
+        walletApi = await (provider.enable ? provider.enable('preprod') : provider.connect('preprod'));
       } catch (innerErr: any) {
         const msg = innerErr.message || String(innerErr);
         if (msg.toLowerCase().includes('locked')) {
