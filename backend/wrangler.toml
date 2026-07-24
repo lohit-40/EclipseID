@@ -1,0 +1,7 @@
+name = "eclipse-id-backend"
+main = "src/index.ts"
+compatibility_date = "2024-07-24"
+
+# Use modern ES modules format
+# Node.js compatibility is mostly built-in but can be enabled via flags if needed
+# compatibility_flags = [ "nodejs_compat" ]
