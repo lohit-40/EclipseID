@@ -90,9 +90,9 @@ function App() {
     const secretBytes = new TextEncoder().encode(address.substring(0, 32).padEnd(32, '0'));
 
     const compiledContract = CompiledContract.make('EclipseIdContract', Contract).pipe(
-      CompiledContract.withWitnesses(context => ({
+      CompiledContract.withWitnesses({
         secret_identity: () => secretBytes
-      }))
+      })
     );
 
     return findDeployedContract(providers, { contractAddress: deployedAddress, compiledContract });
