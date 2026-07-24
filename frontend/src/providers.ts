@@ -103,24 +103,13 @@ export const createMidnightProviders = async (
   const originalProofProvider = httpClientProofProvider('http://127.0.0.1:6300');
   
     const originalPublicDataProvider = indexerPublicDataProvider(config.indexer, config.indexerWS);
-    const customPublicDataProvider = Object.create(originalPublicDataProvider);
-    customPublicDataProvider.watchForTxData = async (txId: any) => {
-      console.log('MOCKING watchForTxData for txId:', txId);
-      console.log('Due to Preprod indexer v4 incompatibility, we assume the tx was successfully mined!');
-      return {
-        status: 'SucceedEntirely',
-        txId: txId,
-        tx: {} as any
-      };
-    };
-
     return {
       privateStateProvider: levelPrivateStateProvider({
         privateStateStoreName: 'eclipse-id-private-state',
         privateStoragePasswordProvider: async () => 'Str0ngP@ssw0rd_M1dn1ght!2026_SecureKey',
         accountId: unshieldedAddrObj.unshieldedAddress
       }),
-      publicDataProvider: customPublicDataProvider,
+      publicDataProvider: originalPublicDataProvider,
       zkConfigProvider,
     proofProvider: {
       proveTx: async (tx: any) => {
