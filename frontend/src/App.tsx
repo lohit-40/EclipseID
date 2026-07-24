@@ -50,7 +50,20 @@ function App() {
       let providerKey = keys.find(key => midnight[key] && typeof midnight[key].enable === 'function') || keys[0];
       const provider = midnight[providerKey];
       
-      const walletApi = await (provider.enable ? provider.enable('preprod') : provider.connect('preprod'));
+      let walletApi;
+      try {
+        walletApi = await (provider.enable ? provider.enable() : provider.connect());
+      } catch (innerErr: any) {
+        const msg = innerErr.message || String(innerErr);
+        if (msg.toLowerCase().includes('locked')) {
+          throw new Error('Your Lace Wallet is locked! Please open the Lace extension, enter your password to unlock it, and then click Connect again.');
+        }
+        if (msg.includes('feature-flags') || msg.includes('Remote API')) {
+          throw new Error('Lace Wallet background service crashed (Known Lace Bug). Please Hard Refresh the page (Ctrl+Shift+R) and try connecting again.');
+        }
+        throw innerErr;
+      }
+      
       setWallet(walletApi);
       const unshieldedAddrObj = await walletApi.getUnshieldedAddress();
       setAddress(unshieldedAddrObj.unshieldedAddress);
