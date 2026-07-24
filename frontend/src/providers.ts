@@ -100,7 +100,7 @@ export const createMidnightProviders = async (
 
   const zkConfigProvider = new FetchZkConfigProvider(window.location.origin, fetch.bind(window));
   
-  const originalProofProvider = dappConnectorProofProvider(api);
+  const originalProofProvider = httpClientProofProvider('http://127.0.0.1:6300');
   
     const originalPublicDataProvider = indexerPublicDataProvider(config.indexer, config.indexerWS);
     const customPublicDataProvider = Object.create(originalPublicDataProvider);
