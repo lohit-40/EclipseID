@@ -124,14 +124,20 @@ function App() {
       
       // Send the new address to Cloudflare for dynamic discovery
       setLoadingStep('Registering Contract Address to Cloudflare...');
-      await fetch(`${BACKEND_URL}/api/admin/set-contract`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contractAddress: addr })
-      });
+      let discoveryMessage = 'Global Registry Updated!';
+      try {
+        await fetch(`${BACKEND_URL}/api/admin/set-contract`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contractAddress: addr })
+        });
+      } catch (cfErr) {
+        console.error('Cloudflare registry failed:', cfErr);
+        discoveryMessage = 'Warning: Cloudflare registration failed. Please retry deployment or set manually.';
+      }
       
       setDeployedAddress(addr);
-      setTxResult(`Successfully deployed contract and updated Global Registry!\nAddress: ${addr}`);
+      setTxResult(`Successfully deployed contract!\nAddress: ${addr}\n${discoveryMessage}`);
     } catch (err: any) {
       setError(err.message || String(err));
     } finally {
