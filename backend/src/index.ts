@@ -13,8 +13,15 @@ app.get('/health', (c) => {
 // (For a production system this would be KV/Durable Objects, but this is perfect for a hackathon demo)
 let GLOBAL_CONTRACT_ADDRESS = '';
 
+const SECRET_ADMIN_KEY = 'eclipse-hackathon-2026-secure-key';
+
 app.post('/api/admin/set-contract', async (c) => {
   try {
+    const adminKey = c.req.header('X-Admin-Key');
+    if (adminKey !== SECRET_ADMIN_KEY) {
+      return c.json({ success: false, error: 'Unauthorized: Invalid Admin API Key' }, 401);
+    }
+
     const { contractAddress } = await c.req.json();
     if (!contractAddress) return c.json({ success: false, error: 'contractAddress is required' }, 400);
     GLOBAL_CONTRACT_ADDRESS = contractAddress;

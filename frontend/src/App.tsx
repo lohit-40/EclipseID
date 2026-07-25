@@ -20,7 +20,10 @@ function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingStep, setLoadingStep] = useState<string>('');
   const [txResult, setTxResult] = useState<string>('');
-  const [isAdminMode, setIsAdminMode] = useState<boolean>(false);
+  
+  // Web3 Admin Whitelisting
+  const MASTER_ADMIN_WALLET = 'YOUR_LACE_WALLET_ADDRESS_HERE'; // Replace with your actual address
+  const isAdminMode = address === MASTER_ADMIN_WALLET;
   
   // User Flow State
   const [email, setEmail] = useState<string>('');
@@ -110,6 +113,9 @@ function App() {
   const handleAdminDeploy = async () => {
     if (!wallet) return;
     try {
+      const adminKey = window.prompt("Enter the Backend Cloudflare API Key to authorize deployment:");
+      if (!adminKey) return;
+
       setLoading(true); setError(''); setTxResult(''); 
       setLoadingStep('Deploying Contract... (Waiting for Midnight Indexer, this can take a minute)');
       
@@ -126,14 +132,19 @@ function App() {
       setLoadingStep('Registering Contract Address to Cloudflare...');
       let discoveryMessage = 'Global Registry Updated!';
       try {
-        await fetch(`${BACKEND_URL}/api/admin/set-contract`, {
+        const cfRes = await fetch(`${BACKEND_URL}/api/admin/set-contract`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 
+            'Content-Type': 'application/json',
+            'X-Admin-Key': adminKey 
+          },
           body: JSON.stringify({ contractAddress: addr })
         });
-      } catch (cfErr) {
+        const cfData = await cfRes.json();
+        if (!cfData.success) throw new Error(cfData.error);
+      } catch (cfErr: any) {
         console.error('Cloudflare registry failed:', cfErr);
-        discoveryMessage = 'Warning: Cloudflare registration failed. Please retry deployment or set manually.';
+        discoveryMessage = `Warning: Cloudflare registration failed (${cfErr.message}). Please retry deployment or set manually.`;
       }
       
       setDeployedAddress(addr);
@@ -222,23 +233,7 @@ function App() {
         </div>
         <div className="flex gap-8 text-sm font-medium text-rose-200/60 items-center">
           <Link001 href="#">Documentation</Link001>
-          <button 
-            onClick={() => {
-              if (isAdminMode) {
-                setIsAdminMode(false);
-              } else {
-                const pwd = window.prompt("Enter Admin Password:");
-                if (pwd === "eclipse2026") {
-                  setIsAdminMode(true);
-                } else if (pwd !== null) {
-                  alert("Unauthorized: Incorrect admin password.");
-                }
-              }
-            }} 
-            className={`transition-colors text-xs font-mono border px-2 py-1 rounded cursor-pointer ${isAdminMode ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'hover:text-orange-400 border-white/10'}`}
-          >
-            {isAdminMode ? 'Exit Admin Mode' : 'Admin'}
-          </button>
+          {/* Admin button removed. Admin dashboard now appears automatically for the whitelisted wallet. */}
         </div>
       </motion.nav>
 
