@@ -223,7 +223,18 @@ function App() {
         <div className="flex gap-8 text-sm font-medium text-rose-200/60 items-center">
           <Link001 href="#">Documentation</Link001>
           <button 
-            onClick={() => setIsAdminMode(!isAdminMode)} 
+            onClick={() => {
+              if (isAdminMode) {
+                setIsAdminMode(false);
+              } else {
+                const pwd = window.prompt("Enter Admin Password:");
+                if (pwd === "eclipse2026") {
+                  setIsAdminMode(true);
+                } else if (pwd !== null) {
+                  alert("Unauthorized: Incorrect admin password.");
+                }
+              }
+            }} 
             className={`transition-colors text-xs font-mono border px-2 py-1 rounded cursor-pointer ${isAdminMode ? 'bg-rose-500/20 text-rose-300 border-rose-500/40' : 'hover:text-orange-400 border-white/10'}`}
           >
             {isAdminMode ? 'Exit Admin Mode' : 'Admin'}
