@@ -9,6 +9,25 @@ app.get('/health', (c) => {
   return c.json({ status: 'ok', message: 'Cloudflare Backend is awake and healthy' })
 })
 
+// Global in-memory storage for the contract address
+// (For a production system this would be KV/Durable Objects, but this is perfect for a hackathon demo)
+let GLOBAL_CONTRACT_ADDRESS = '';
+
+app.post('/api/admin/set-contract', async (c) => {
+  try {
+    const { contractAddress } = await c.req.json();
+    if (!contractAddress) return c.json({ success: false, error: 'contractAddress is required' }, 400);
+    GLOBAL_CONTRACT_ADDRESS = contractAddress;
+    return c.json({ success: true, message: 'Contract address globally updated' });
+  } catch (err: any) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+
+app.get('/api/contract', (c) => {
+  return c.json({ success: true, contractAddress: GLOBAL_CONTRACT_ADDRESS });
+});
+
 // Helper to hash string to 32-byte hex string
 async function sha256Hex(message: string): Promise<string> {
   const msgBuffer = new TextEncoder().encode(message);
