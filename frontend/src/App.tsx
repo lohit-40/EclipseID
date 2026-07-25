@@ -25,10 +25,6 @@ function App() {
   const MASTER_ADMIN_WALLET = 'mn_addr_preprod1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa'; // Replace with your actual address
   const isAdminMode = address === MASTER_ADMIN_WALLET;
   
-  // Admin Auth State
-  const [showKeyModal, setShowKeyModal] = useState(false);
-  const [adminKeyInput, setAdminKeyInput] = useState('');
-  
   // User Flow State
   const [email, setEmail] = useState<string>('');
   const [isVerified, setIsVerified] = useState<boolean>(false);
@@ -114,13 +110,11 @@ function App() {
   // ============================================================================
   // ADMIN FLOWS
   // ============================================================================
-  const handleAdminDeploy = async (adminKey: string) => {
+  const handleAdminDeploy = async () => {
     if (!wallet) return;
     try {
-      if (!adminKey) return;
-
       setLoading(true); setError(''); setTxResult(''); 
-      setLoadingStep('Deploying Contract... (Waiting for Midnight Indexer, this can take a minute)');
+      setLoadingStep('Generating ZK Proof & Synchronizing Ledger... (This takes ~45 seconds on Preprod)');
       
       const providers = await createMidnightProviders(wallet, {
         indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
@@ -139,7 +133,7 @@ function App() {
           method: 'POST',
           headers: { 
             'Content-Type': 'application/json',
-            'X-Admin-Key': adminKey 
+            'X-Admin-Key': 'eclipse-hackathon-2026-secure-key' 
           },
           body: JSON.stringify({ contractAddress: addr })
         });
@@ -284,7 +278,7 @@ function App() {
                           <span className="font-semibold text-sm">Global Contract Address</span>
                           <span className="font-mono text-xs text-rose-200/50">{deployedAddress || 'Not Deployed'}</span>
                         </div>
-                        <button onClick={() => setShowKeyModal(true)} disabled={loading} className="bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 px-4 py-2 rounded-lg font-semibold border border-orange-500/20 cursor-pointer text-sm transition-colors disabled:opacity-50">
+                        <button onClick={handleAdminDeploy} disabled={loading} className="bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 px-4 py-2 rounded-lg font-semibold border border-orange-500/20 cursor-pointer text-sm transition-colors disabled:opacity-50">
                           Deploy Global Contract
                         </button>
                       </div>
@@ -356,36 +350,6 @@ function App() {
           </motion.div>
         )}
       </main>
-
-      {/* Premium Admin Auth Modal */}
-      {showKeyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md">
-          <motion.div initial={{ scale: 0.9, opacity: 0, y: 20 }} animate={{ scale: 1, opacity: 1, y: 0 }} className="bg-[#120a1f] border border-rose-500/20 p-8 rounded-3xl shadow-2xl max-w-md w-full mx-4">
-            <h3 className="text-2xl font-bold text-rose-100 mb-2">Admin Authorization</h3>
-            <p className="text-sm text-rose-200/60 mb-8">Enter the secure Backend API Key to authorize this global deployment transaction.</p>
-            <input 
-              type="password" 
-              value={adminKeyInput}
-              onChange={(e) => setAdminKeyInput(e.target.value)}
-              className="w-full bg-[#070410]/50 border border-rose-500/20 focus:border-orange-500/50 outline-none rounded-xl p-4 text-rose-50 font-mono tracking-widest transition-colors mb-8"
-              placeholder="••••••••••••••••"
-              autoFocus
-            />
-            <div className="flex justify-end gap-4">
-              <button onClick={() => setShowKeyModal(false)} className="px-4 py-2 text-sm font-medium text-rose-200/60 hover:text-rose-100 transition-colors cursor-pointer">Cancel</button>
-              <button 
-                onClick={() => {
-                  setShowKeyModal(false);
-                  handleAdminDeploy(adminKeyInput);
-                }} 
-                className="bg-gradient-to-r from-orange-500 to-rose-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform cursor-pointer"
-              >
-                Authorize & Deploy
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
     </div>
   );
 }
