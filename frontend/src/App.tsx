@@ -22,7 +22,7 @@ function App() {
   const [txResult, setTxResult] = useState<string>('');
   
   // Web3 Admin Whitelisting
-  const MASTER_ADMIN_WALLET = 'YOUR_LACE_WALLET_ADDRESS_HERE'; // Replace with your actual address
+  const MASTER_ADMIN_WALLET = 'mn_addr_preprod1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa'; // Replace with your actual address
   const isAdminMode = address === MASTER_ADMIN_WALLET;
   
   // User Flow State
