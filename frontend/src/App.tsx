@@ -211,7 +211,7 @@ function App() {
     <div className="min-h-screen bg-[#070410] text-rose-50 overflow-hidden relative font-sans">
       <motion.nav className="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto relative z-10 border-b border-white/5">
         <div className="text-2xl font-black tracking-tighter flex items-center gap-4">
-          <span className="bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-rose-600">EclipseID</span>
+          <span className="text-zinc-100 drop-shadow-md">EclipseID</span>
           {isFetchingContract ? (
             <span className="px-2 py-0.5 rounded-md bg-zinc-500/20 text-zinc-400 text-xs font-bold tracking-widest border border-zinc-500/30">SYNCING...</span>
           ) : deployedAddress ? (
@@ -233,11 +233,11 @@ function App() {
 
       <main className="max-w-4xl mx-auto px-8 pt-16 pb-24 relative z-10">
         <motion.div className="text-center mb-12 space-y-4">
-          <h1 className="text-6xl md:text-7xl font-bold tracking-tighter leading-tight flex flex-col items-center">
-            <span>EclipseID</span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 mt-2 block drop-shadow-[0_0_15px_rgba(249,115,22,0.3)] text-3xl md:text-4xl">Zero-Knowledge Identity for Confidential DeFi</span>
+          <h1 className="text-6xl md:text-7xl font-black tracking-tighter leading-tight flex flex-col items-center">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-rose-500 to-purple-600 drop-shadow-[0_0_20px_rgba(249,115,22,0.3)] pb-2">EclipseID</span>
+            <span className="text-3xl md:text-4xl text-zinc-100 font-bold tracking-tight">Zero-Knowledge Identity for Confidential DeFi</span>
           </h1>
-          <p className="text-rose-200/60 text-lg max-w-2xl mx-auto">
+          <p className="text-zinc-400 text-lg max-w-2xl mx-auto font-medium mt-4">
             The ultimate shield between KYC providers and dApps. Prove you are an accredited investor without ever revealing your real-world identity to the public ledger.
           </p>
         </motion.div>
