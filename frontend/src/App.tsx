@@ -1,357 +1,128 @@
-import { useState, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { type WalletConnectedAPI } from '@midnight-ntwrk/dapp-connector-api';
-import { createMidnightProviders } from './providers';
-import { Contract } from './contract/index.js';
-import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
-import { findDeployedContract, deployContract } from '@midnight-ntwrk/midnight-js-contracts';
-import { fromHex } from '@midnight-ntwrk/midnight-js-utils';
-import { Link001 } from './components/ui/skiper-ui/skiper40';
-import { setNetworkId } from '@midnight-ntwrk/midnight-js-network-id';
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { type DAppConnectorWalletAPI } from '@midnight-ntwrk/dapp-connector-api';
+import { useWallet } from './WalletContext';
 
-const BACKEND_URL = 'https://eclipse-id-backend.lohitmishra25.workers.dev';
+// Pages
+import Landing from './pages/Landing';
+import Darkpool from './pages/Darkpool';
+import Admin from './pages/Admin';
+import Developers from './pages/Developers';
 
-function App() {
-  const [wallet, setWallet] = useState<WalletConnectedAPI | null>(null);
-  const [address, setAddress] = useState<string>('');
-  const [error, setError] = useState<string>('');
+// Link Component for Navbar
+const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
+  const location = useLocation();
+  const isActive = location.pathname === href;
   
-  // Loading & State
-  const [loading, setLoading] = useState<boolean>(false);
-  const [loadingStep, setLoadingStep] = useState<string>('');
-  const [txResult, setTxResult] = useState<string>('');
+  return (
+    <Link 
+      to={href}
+      className={`transition-colors font-medium text-sm ${isActive ? 'text-rose-100 font-bold border-b border-rose-500' : 'text-rose-200/60 hover:text-rose-100'}`}
+    >
+      {children}
+    </Link>
+  );
+};
+
+export default function App() {
+  const { wallet, setWallet, address, setAddress, isConnected, setIsConnected } = useWallet();
+  const location = useLocation();
   
-  // Web3 Admin Whitelisting
-  const MASTER_ADMIN_WALLET = 'mn_addr_preprod1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa'; // Replace with your actual address
+  const MASTER_ADMIN_WALLET = 'mn_addr_preprod1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa';
   const isAdminMode = address === MASTER_ADMIN_WALLET;
-  
-  // User Flow State
-  const [email, setEmail] = useState<string>('');
-  const [isVerified, setIsVerified] = useState<boolean>(false);
 
-  // Dynamic Global Contract State
-  const [deployedAddress, setDeployedAddress] = useState<string>('');
-  const [isFetchingContract, setIsFetchingContract] = useState<boolean>(true);
-
-  // Fetch the dynamic contract address from Cloudflare on load
-  const fetchContractAddress = async () => {
-    try {
-      setIsFetchingContract(true);
-      const res = await fetch(`${BACKEND_URL}/api/contract`);
-      const data = await res.json();
-      if (data.success && data.contractAddress) {
-        setDeployedAddress(data.contractAddress);
-      }
-    } catch (err) {
-      console.error('Failed to fetch global contract address', err);
-    } finally {
-      setIsFetchingContract(false);
-    }
-  };
-
+  // Auto-connect wallet on load if available
   useEffect(() => {
-    fetchContractAddress();
+    if (window.midnight) {
+      window.midnight.mnLace.enable().then((api: DAppConnectorWalletAPI) => {
+        setWallet(api);
+        api.state().then(state => {
+          setIsConnected(true);
+          setAddress(state.unshieldedAddress);
+        });
+      }).catch(err => console.log('Wallet not auto-connected', err));
+    }
   }, []);
 
-  // 3D Tilt Effect State
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    x.set(e.clientX - rect.left / rect.width - 0.5);
-    y.set(e.clientY - rect.top / rect.height - 0.5);
-  };
-  const handleMouseLeave = () => { x.set(0); y.set(0); };
-
   const connectWallet = async () => {
+    if (!window.midnight) {
+      alert("Lace wallet extension not found! Please install the Lace wallet.");
+      return;
+    }
     try {
-      setError(''); setTxResult('');
-      setNetworkId('preprod');
-      const midnight = (window as any).midnight;
-      if (!midnight) throw new Error('Midnight provider not found. Please install Lace wallet.');
-      const keys = Object.keys(midnight);
-      let providerKey = keys.find(key => midnight[key] && typeof midnight[key].enable === 'function') || keys[0];
-      const provider = midnight[providerKey];
-      
-      let walletApi = await (provider.enable ? provider.enable('preprod') : provider.connect('preprod'));
-      setWallet(walletApi);
-      const unshieldedAddrObj = await walletApi.getUnshieldedAddress();
-      setAddress(unshieldedAddrObj.unshieldedAddress);
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || 'Failed to connect Lace wallet');
+      const api = await window.midnight.mnLace.enable();
+      setWallet(api);
+      const state = await api.state();
+      setIsConnected(true);
+      setAddress(state.unshieldedAddress);
+    } catch (err) {
+      console.error("User rejected connection", err);
     }
   };
 
-  const disconnectWallet = () => { setWallet(null); setAddress(''); setTxResult(''); setIsVerified(false); };
-
-  const getContractInstance = async () => {
-    if (!wallet) throw new Error('Wallet not connected');
-    if (!deployedAddress) throw new Error('Contract address not configured! Admin must deploy the contract first.');
-
-    const providers = await createMidnightProviders(wallet, {
-      indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
-      indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
-    });
-
-    const secretBytes = new TextEncoder().encode(address.substring(0, 32).padEnd(32, '0'));
-    const compiledContract = CompiledContract.make('EclipseIdContract', Contract).pipe(
-      CompiledContract.withWitnesses({ secret_identity: () => secretBytes })
-    );
-
-    return findDeployedContract(providers, { contractAddress: deployedAddress, compiledContract });
-  };
-
-  // ============================================================================
-  // ADMIN FLOWS
-  // ============================================================================
-  const handleAdminDeploy = async () => {
-    if (!wallet) return;
-    try {
-      setLoading(true); setError(''); setTxResult(''); 
-      setLoadingStep('Generating ZK Proof & Synchronizing Ledger... (This takes ~45 seconds on Preprod)');
-      
-      const providers = await createMidnightProviders(wallet, {
-        indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
-        indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
-      });
-      const compiledContract = CompiledContract.make('EclipseIdContract', Contract).pipe(CompiledContract.withVacantWitnesses);
-      
-      const deployed = await deployContract(providers, { compiledContract });
-      const addr = deployed.deployTxData.public.contractAddress;
-      
-      // Send the new address to Cloudflare for dynamic discovery
-      setLoadingStep('Registering Contract Address to Cloudflare...');
-      let discoveryMessage = 'Global Registry Updated!';
-      try {
-        const cfRes = await fetch(`${BACKEND_URL}/api/admin/set-contract`, {
-          method: 'POST',
-          headers: { 
-            'Content-Type': 'application/json',
-            'X-Admin-Key': 'eclipse-hackathon-2026-secure-key' 
-          },
-          body: JSON.stringify({ contractAddress: addr })
-        });
-        const cfData = await cfRes.json();
-        if (!cfData.success) throw new Error(cfData.error);
-      } catch (cfErr: any) {
-        console.error('Cloudflare registry failed:', cfErr);
-        discoveryMessage = `Warning: Cloudflare registration failed (${cfErr.message}). Please retry deployment or set manually.`;
-      }
-      
-      setDeployedAddress(addr);
-      setTxResult(`Successfully deployed contract!\nAddress: ${addr}\n${discoveryMessage}`);
-    } catch (err: any) {
-      setError(err.message || String(err));
-    } finally {
-      setLoading(false); setLoadingStep('');
-    }
-  };
-
-  const handleAdminRegisterIssuer = async () => {
-    try {
-      setLoading(true); setError(''); setTxResult('');
-      
-      setLoadingStep('Fetching Issuer ID from Cloudflare...');
-      const res = await fetch(`${BACKEND_URL}/api/issuer/request-credential`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: 'admin@eclipse.id', address })
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.error);
-
-      setLoadingStep('Registering Issuer on Midnight... (Waiting for network confirmation)');
-      const contract = await getContractInstance();
-      const issuerBytes = fromHex(data.issuerId);
-      const { txHash } = await contract.callTx.add_issuer(issuerBytes);
-      
-      setTxResult(`Admin: Backend Issuer Registered Successfully!\nTxHash: ${txHash}`);
-    } catch (err: any) {
-      setError(err.message || 'Failed to register issuer');
-    } finally {
-      setLoading(false); setLoadingStep('');
-    }
-  };
-
-  // ============================================================================
-  // USER FLOWS (The Demo Pitch)
-  // ============================================================================
-  const handleAccessDarkpool = async () => {
-    if (!email) { setError('Please provide an email to get your EclipseID KYC credential first.'); return; }
-    if (!deployedAddress) { setError('System Error: Smart Contract is not globally configured.'); return; }
-    try {
-      setLoading(true); setError(''); setTxResult('');
-      
-      // Step 1: Shield Layer - Get Credential off-chain
-      setLoadingStep('[Step 1] EclipseID: Securing KYC credential from Cloudflare off-chain...');
-      const res = await fetch(`${BACKEND_URL}/api/issuer/request-credential`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, address })
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.error);
-      
-      // Step 2: DApp Layer - Prove it on-chain anonymously
-      setLoadingStep('[Step 2] DApp Layer: Generating Zero-Knowledge Proof to claim access anonymously...');
-      const contract = await getContractInstance();
-      const issuerBytes = fromHex(data.issuerId);
-      const nullifierBytes = fromHex(data.nullifier);
-      
-      const { txHash } = await contract.callTx.verify_and_claim(issuerBytes, nullifierBytes);
-      
-      setIsVerified(true);
-      setTxResult(`Privacy Preserved: Your identity was never sent to the network.\nZK Proof TxHash: ${txHash}`);
-    } catch (err: any) {
-      setError(err.message || 'Verification failed');
-    } finally {
-      setLoading(false); setLoadingStep('');
-    }
+  const disconnectWallet = () => {
+    setWallet(null);
+    setIsConnected(false);
+    setAddress('');
   };
 
   return (
-    <div className="min-h-screen bg-[#070410] text-rose-50 overflow-hidden relative font-sans">
-      <motion.nav className="flex justify-between items-center px-8 py-6 max-w-7xl mx-auto relative z-10 border-b border-white/5">
-        <div className="text-2xl font-black tracking-tighter flex items-center gap-4">
-          <span className="text-zinc-100 drop-shadow-md">EclipseID</span>
-          {isFetchingContract ? (
-            <span className="px-2 py-0.5 rounded-md bg-zinc-500/20 text-zinc-400 text-xs font-bold tracking-widest border border-zinc-500/30">SYNCING...</span>
-          ) : deployedAddress ? (
-            <span className="px-2 py-0.5 rounded-md bg-green-500/20 text-green-400 text-xs font-bold tracking-widest border border-green-500/30">LIVE</span>
-          ) : (
-             <span className="px-2 py-0.5 rounded-md bg-red-500/20 text-red-400 text-xs font-bold tracking-widest border border-red-500/30">OFFLINE</span>
-          )}
-        </div>
-        <div className="flex gap-8 text-sm font-medium text-rose-200/60 items-center">
-          <Link001 href="#">Documentation</Link001>
-          {/* Admin button removed. Admin dashboard now appears automatically for the whitelisted wallet. */}
-        </div>
-      </motion.nav>
+    <div className="min-h-screen bg-[#070410] text-rose-50 selection:bg-rose-500/30 selection:text-white font-sans relative overflow-x-hidden">
+      {/* Background Animated Gradient Mesh */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-20">
+        <motion.div animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute -top-1/2 -left-1/2 w-[100vw] h-[100vw] rounded-full bg-gradient-to-r from-orange-600/30 to-rose-700/30 blur-[120px]" />
+        <motion.div animate={{ scale: [1, 1.5, 1], rotate: [0, -90, 0], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute -bottom-1/2 -right-1/2 w-[120vw] h-[120vw] rounded-full bg-gradient-to-r from-purple-800/20 to-rose-900/20 blur-[150px]" />
+      </div>
 
-      <main className="max-w-4xl mx-auto px-8 pt-16 pb-24 relative z-10">
-        <motion.div className="text-center mb-12 space-y-4">
-          <h1 className="text-6xl md:text-7xl font-black tracking-tighter leading-tight flex flex-col items-center">
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-rose-500 to-purple-600 drop-shadow-[0_0_20px_rgba(249,115,22,0.3)] pb-2">EclipseID</span>
-            <span className="text-3xl md:text-4xl text-zinc-100 font-bold tracking-tight">Zero-Knowledge Identity for Confidential DeFi</span>
-          </h1>
-          <p className="text-zinc-400 text-lg max-w-2xl mx-auto font-medium mt-4">
-            The ultimate shield between KYC providers and dApps. Prove you are an accredited investor without ever revealing your real-world identity to the public ledger.
-          </p>
-        </motion.div>
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Sleek Navigation Bar */}
+        <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full backdrop-blur-sm border-b border-white/5 sticky top-0 bg-[#070410]/80">
+          <Link to="/" className="text-2xl font-black tracking-tighter flex items-center gap-3 group">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-rose-600 flex items-center justify-center shadow-[0_0_15px_rgba(249,115,22,0.4)] group-hover:scale-110 transition-transform">
+              <div className="w-3 h-3 bg-[#070410] rounded-full" />
+            </div>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-rose-50 to-rose-200/80 drop-shadow-md">EclipseID</span>
+          </Link>
+          
+          <div className="hidden md:flex items-center gap-8 bg-white/5 px-6 py-2 rounded-full border border-white/10">
+            <NavLink href="/darkpool">Darkpool dApp</NavLink>
+            <NavLink href="/developers">Developers</NavLink>
+            {isAdminMode && <NavLink href="/admin">Command Center</NavLink>}
+          </div>
 
-        <motion.div 
-          onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
-          style={{ rotateY, rotateX, transformStyle: "preserve-3d" }}
-          className="bg-[#120a1f]/80 backdrop-blur-xl border border-rose-500/10 p-8 rounded-3xl shadow-2xl relative"
-        >
-          <div style={{ transform: "translateZ(30px)" }} className="relative z-10 w-full h-full">
-            {!wallet ? (
-              <div className="flex flex-col items-center py-12 text-center">
-                <button onClick={connectWallet} className="bg-gradient-to-r from-orange-500 to-rose-600 text-white font-bold py-3 px-10 rounded-full cursor-pointer shadow-lg shadow-orange-500/20 hover:scale-105 transition-transform">
-                  Connect Lace Wallet
-                </button>
-              </div>
+          <div className="flex items-center gap-4">
+            {!isConnected ? (
+              <button onClick={connectWallet} className="bg-white/10 hover:bg-white/20 text-rose-50 px-6 py-2 rounded-full font-semibold border border-white/10 transition-all shadow-lg backdrop-blur-md cursor-pointer">
+                Connect Lace
+              </button>
             ) : (
-              <div className="space-y-8">
-                <div className="flex justify-between items-center pb-6 border-b border-white/10">
-                  <div>
-                    <h2 className="text-xl font-semibold flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />Lace Connected</h2>
-                    <p className="text-sm text-rose-200/60 font-mono mt-1">{address}</p>
-                  </div>
-                  <button onClick={disconnectWallet} className="text-sm px-4 py-2 rounded-full border border-rose-500/20 bg-rose-500/5 cursor-pointer hover:bg-rose-500/10 transition-colors">Disconnect</button>
+              <div className="flex items-center gap-4 bg-black/40 px-4 py-2 rounded-full border border-white/5">
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.6)]" />
+                  <span className="text-xs font-mono text-rose-200/70">{address.slice(0, 12)}...</span>
                 </div>
-
-                {isAdminMode ? (
-                  <div className="space-y-6 pt-2 bg-rose-950/20 border border-rose-500/20 p-6 rounded-2xl">
-                    <h3 className="text-xl font-bold text-rose-300 border-b border-rose-500/20 pb-4 mb-4">Admin Dashboard (Hidden in Production)</h3>
-                    <p className="text-sm text-rose-200/70 mb-4">Deploy the EclipseID foundational contract exactly once, and authorize the Cloudflare backend to act as the KYC credential issuer.</p>
-                    
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between bg-[#070410]/50 p-4 rounded-xl border border-white/5">
-                        <div className="flex flex-col">
-                          <span className="font-semibold text-sm">Global Contract Address</span>
-                          <span className="font-mono text-xs text-rose-200/50">{deployedAddress || 'Not Deployed'}</span>
-                        </div>
-                        <button onClick={handleAdminDeploy} disabled={loading} className="bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 px-4 py-2 rounded-lg font-semibold border border-orange-500/20 cursor-pointer text-sm transition-colors disabled:opacity-50">
-                          Deploy Global Contract
-                        </button>
-                      </div>
-
-                      <div className="flex items-center justify-between bg-[#070410]/50 p-4 rounded-xl border border-white/5">
-                        <div className="flex flex-col">
-                          <span className="font-semibold text-sm">Register Cloudflare Backend</span>
-                          <span className="text-xs text-rose-200/50">Authorizes the backend to issue credentials</span>
-                        </div>
-                        <button onClick={handleAdminRegisterIssuer} disabled={loading || !deployedAddress} className="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-4 py-2 rounded-lg font-semibold border border-rose-500/20 cursor-pointer text-sm transition-colors disabled:opacity-50">
-                          Register Backend Issuer
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="space-y-6 pt-2">
-                    {isVerified ? (
-                      <div className="bg-green-500/10 border border-green-500/30 p-8 rounded-2xl text-center space-y-4">
-                        <div className="w-16 h-16 bg-green-500/20 text-green-400 rounded-full flex items-center justify-center mx-auto text-3xl font-bold">✓</div>
-                        <h3 className="text-2xl font-bold text-green-400">Access Granted</h3>
-                        <p className="text-green-200/70 text-sm">Your ZK proof was successfully submitted. You are now verified as an accredited investor, and your identity remains completely anonymous on the Midnight network.</p>
-                      </div>
-                    ) : (
-                      <div className="space-y-4 max-w-md mx-auto">
-                        <h3 className="text-xl font-medium text-center text-zinc-200">KYC Required</h3>
-                        <p className="text-center text-rose-200/60 text-sm mb-4">You must prove you are an accredited investor to access this Darkpool. Enter your email to fetch your EclipseID credential securely.</p>
-                        
-                        <input
-                          type="email"
-                          placeholder="Enter your email address"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className="w-full bg-[#070410]/50 border border-rose-500/10 focus:border-orange-500/50 outline-none rounded-xl p-3 text-rose-50 text-center transition-colors"
-                        />
-                        <button
-                          onClick={handleAccessDarkpool}
-                          disabled={loading || !email || !deployedAddress}
-                          className="w-full bg-gradient-to-r from-zinc-800 to-zinc-900 border border-white/10 hover:border-orange-500/50 disabled:opacity-50 text-white font-medium py-3 rounded-xl shadow-lg cursor-pointer flex justify-center items-center gap-3 transition-all"
-                        >
-                          {loading && <div className="w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full animate-spin" />}
-                          {!deployedAddress ? 'System Error: EclipseID Contract Offline' : loading ? 'Generating ZK Proof...' : 'Access Darkpool Anonymously'}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                )}
+                <button onClick={disconnectWallet} className="text-xs text-rose-400 hover:text-rose-300 transition-colors">Disconnect</button>
               </div>
             )}
           </div>
-        </motion.div>
+        </nav>
 
-        {/* Global Loading Spinner for Midnight Indexer */}
-        {loading && loadingStep && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 bg-blue-500/10 border border-blue-500/20 p-4 rounded-2xl flex items-center gap-4">
-            <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin shrink-0" />
-            <p className="text-blue-300 text-sm font-medium">{loadingStep}</p>
-          </motion.div>
-        )}
-
-        {txResult && !loading && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-2xl text-center text-sm break-all font-mono whitespace-pre-wrap">
-            {txResult}
-          </motion.div>
-        )}
-        {error && !loading && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl text-center text-sm font-medium">
-            {error}
-          </motion.div>
-        )}
-      </main>
+        {/* Page Content */}
+        <main className="flex-1 w-full relative">
+          <Routes>
+            <Route path="/" element={<Landing />} />
+            <Route path="/darkpool" element={<Darkpool />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/developers" element={<Developers />} />
+          </Routes>
+        </main>
+        
+        {/* Footer */}
+        <footer className="w-full text-center py-8 text-rose-200/30 text-xs border-t border-white/5 mt-auto">
+          Built on Midnight Network • Zero-Knowledge Identity Protocol
+        </footer>
+      </div>
     </div>
   );
 }
-
-export default App;

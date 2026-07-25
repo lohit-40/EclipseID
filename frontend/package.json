@@ -30,6 +30,7 @@
     "pino": "^10.3.1",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.1",
     "rxjs": "^7.8.2",
     "shadcn": "^4.13.1",
     "tailwind-merge": "^3.6.0",

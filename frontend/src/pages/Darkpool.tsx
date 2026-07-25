@@ -1,0 +1,189 @@
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useWallet } from '../WalletContext';
+import { createMidnightProviders } from '../providers';
+import { Contract, EclipseIdContract } from '../../contract/src/EclipseID';
+import { CompiledContract } from '@midnight-ntwrk/midnight-js-contracts';
+import { type EclipseIdProviders } from '../providers';
+
+const BACKEND_URL = 'https://eclipse-id-backend.lohitmishra25.workers.dev';
+
+export default function Darkpool() {
+  const { wallet, address, isConnected } = useWallet();
+  const [email, setEmail] = useState<string>('');
+  const [isVerified, setIsVerified] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingStep, setLoadingStep] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [txResult, setTxResult] = useState<string>('');
+
+  const getContractAddress = async (): Promise<string> => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/contract`);
+      const data = await res.json();
+      if (data.contractAddress) return data.contractAddress;
+      throw new Error('Contract Address not found');
+    } catch (err) {
+      throw new Error('Smart Contract is not configured. Please wait for the admin to deploy it.');
+    }
+  };
+
+  const getContractInstance = async (providers: EclipseIdProviders): Promise<EclipseIdContract> => {
+    const contractAddress = await getContractAddress();
+    return new Contract(providers).at(contractAddress);
+  };
+
+  const handleVerify = async () => {
+    if (!wallet || !email) return;
+    try {
+      setLoading(true); setError(''); setTxResult('');
+      
+      setLoadingStep('Generating Confidential ID...');
+      const req = await fetch(`${BACKEND_URL}/api/issuer/issue`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+      const data = await req.json();
+      if (!data.success) throw new Error(data.error);
+      
+      const { secret_identity } = data;
+      const providers = await createMidnightProviders(wallet, {
+        indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
+        indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
+      });
+      
+      setLoadingStep('Securing ID in Local Shielded Vault...');
+      await providers.privateStateProvider.set('secret_identity', secret_identity);
+      
+      setLoadingStep('Synchronizing with Global Smart Contract...');
+      const contract = await getContractInstance(providers);
+      
+      setLoadingStep('Executing ZK Transaction (Waiting for Indexer)...');
+      const tx = await contract.callTx.verify_and_claim();
+      await providers.walletProvider.submitTransaction(await providers.proofProvider.proveTx(tx));
+      
+      setIsVerified(true);
+      setTxResult('Successfully Verified On-Chain! Your ID is shielded.');
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Verification failed. Make sure your Lace wallet is unlocked.');
+    } finally {
+      setLoading(false);
+      setLoadingStep('');
+    }
+  };
+
+  const handleEnterDarkpool = async () => {
+    if (!wallet) return;
+    try {
+      setLoading(true); setError(''); setTxResult('');
+      setLoadingStep('Generating ZK Proof of Accreditation...');
+      
+      const providers = await createMidnightProviders(wallet, {
+        indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
+        indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
+      });
+      
+      const contract = await getContractInstance(providers);
+      const tx = await contract.callTx.enter_darkpool();
+      
+      setLoadingStep('Submitting Proof to Blockchain...');
+      await providers.walletProvider.submitTransaction(await providers.proofProvider.proveTx(tx));
+      
+      setTxResult('Access Granted! You have anonymously entered the Darkpool.');
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Access Denied. Proof generation failed.');
+    } finally {
+      setLoading(false);
+      setLoadingStep('');
+    }
+  };
+
+  if (!isConnected) {
+    return (
+      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center">
+        <h2 className="text-3xl font-bold text-rose-100 mb-4">Connect Wallet to Access Darkpool</h2>
+        <p className="text-rose-200/60 mb-8">You must connect your Lace wallet to prove your accredited status.</p>
+        <div className="w-16 h-16 rounded-full bg-[#070410] border border-rose-500/20 flex items-center justify-center animate-pulse">
+           <svg className="w-8 h-8 text-rose-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-xl mx-auto mt-12">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-[#070410]/50 p-8 rounded-3xl border border-white/5 shadow-2xl relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-rose-600" />
+        
+        <div className="mb-8">
+          <h2 className="text-2xl font-bold text-rose-50 tracking-tight">Confidential DeFi Darkpool</h2>
+          <p className="text-sm text-rose-200/60 mt-2 font-medium">Verify your KYC credentials off-chain and prove your accredited status to the smart contract using zero-knowledge.</p>
+        </div>
+
+        {!isVerified ? (
+          <div className="space-y-6">
+            <div>
+              <label className="block text-xs font-bold text-rose-200/40 uppercase tracking-widest mb-2">Off-chain Verification</label>
+              <input 
+                type="email" 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-black/40 border border-white/10 focus:border-orange-500/50 outline-none rounded-xl p-4 text-rose-50 transition-colors"
+                placeholder="Enter your registered email"
+              />
+            </div>
+            
+            <button 
+              onClick={handleVerify}
+              disabled={loading || !email}
+              className="w-full bg-gradient-to-r from-orange-500/20 to-rose-600/20 hover:from-orange-500/30 hover:to-rose-600/30 text-orange-400 font-bold py-4 rounded-xl border border-orange-500/20 transition-all disabled:opacity-50"
+            >
+              Issue ZK Credential
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex items-start gap-3">
+              <svg className="w-5 h-5 text-green-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <div>
+                <h4 className="text-green-400 font-bold text-sm">Credential Secured</h4>
+                <p className="text-green-400/60 text-xs mt-1">Your cryptographic identity is safely stored in your local wallet's private state.</p>
+              </div>
+            </div>
+
+            <button 
+              onClick={handleEnterDarkpool}
+              disabled={loading}
+              className="w-full bg-gradient-to-r from-orange-500 to-rose-600 hover:scale-[1.02] text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/20 transition-all disabled:opacity-50 disabled:hover:scale-100 relative overflow-hidden group"
+            >
+              <span className="relative z-10">Access Darkpool Anonymously</span>
+              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform" />
+            </button>
+          </div>
+        )}
+
+        {loading && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 flex flex-col items-center justify-center p-6 bg-black/40 rounded-2xl border border-white/5">
+            <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mb-4" />
+            <p className="text-sm font-medium text-rose-200/60 animate-pulse text-center">{loadingStep}</p>
+          </motion.div>
+        )}
+
+        {txResult && !loading && (
+          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mt-8 bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-2xl text-center text-sm font-bold shadow-[0_0_30px_rgba(74,222,128,0.1)]">
+            {txResult}
+          </motion.div>
+        )}
+      </motion.div>
+      
+      {error && !loading && (
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl text-center text-sm font-medium">
+          {error}
+        </motion.div>
+      )}
+    </div>
+  );
+}
