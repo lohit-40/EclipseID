@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useWallet } from '../WalletContext';
 import { createMidnightProviders } from '../providers';
-import { Contract, EclipseIdContract } from '../../../contract/src/EclipseID';
-import { CompiledContract } from '@midnight-ntwrk/midnight-js-contracts';
+import { Contract } from '../contract/index';
+export type EclipseIdContract = Contract<any, any>;
+import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
 import { type EclipseIdProviders } from '../providers';
 
 const BACKEND_URL = 'https://eclipse-id-backend.lohitmishra25.workers.dev';
