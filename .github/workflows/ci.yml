@@ -1,3 +1,5 @@
+
+
 name: CI/CD Pipeline
 
 on:
@@ -12,53 +14,74 @@ permissions:
   id-token: write
 
 jobs:
-  build-and-test:
+  test-contract:
+    name: Build & Test Contract
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: 'contract/package-lock.json'
+      - name: Install dependencies
+        run: cd contract && npm install
+      - name: Install Midnight Compact Compiler
+        run: |
+          curl -L -o compact.tar.xz https://github.com/midnightntwrk/compact/releases/download/compact-v0.5.1/compact-x86_64-unknown-linux-musl.tar.xz
+          tar xf compact.tar.xz
+          sudo mv compact-x86_64-unknown-linux-musl/compact /usr/local/bin/
+          compact update
+          compact --version
+      - name: Build Contract
+        run: cd contract && npm run build:compact
+      - name: Run Contract Tests
+        run: cd contract && npm test
 
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-        cache-dependency-path: 'contract/package-lock.json'
-        
-    - name: Install dependencies
-      run: cd contract && npm install
-      
-    - name: Install Midnight Compact Compiler
-      run: |
-        curl -L -o compact.tar.xz https://github.com/midnightntwrk/compact/releases/download/compact-v0.5.1/compact-x86_64-unknown-linux-musl.tar.xz
-        tar xf compact.tar.xz
-        sudo mv compact-x86_64-unknown-linux-musl/compact /usr/local/bin/
-        compact update
-        compact --version
+  test-backend:
+    name: Build & Test Backend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: 'backend/package-lock.json'
+      - name: Install dependencies
+        run: cd backend && npm install
+      - name: Type-Check Backend
+        run: cd backend && npx tsc --noEmit
 
-    - name: Build Contracts
-      run: cd contract && npm run build:compact
-      
-    - name: Run Tests
-      run: cd contract && npm test
+  test-frontend:
+    name: Build & Test Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: 'frontend/package-lock.json'
+      - name: Install dependencies
+        run: cd frontend && npm install
+      - name: Build Frontend
+        run: cd frontend && npm run build
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: './frontend/dist'
 
-    - name: Install Frontend dependencies
-      run: cd frontend && npm install
-      
-    - name: Build Frontend
-      run: cd frontend && npm run build
-
-    - name: Upload Build Artifact
-      if: github.ref == 'refs/heads/main'
-      uses: actions/upload-artifact@v4
-      with:
-        name: frontend-build
-        path: './frontend/dist'
-
-  deploy-frontend:
-    needs: build-and-test
+  deploy:
+    name: Deployment Gate
+    needs: [test-contract, test-backend, test-frontend]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
-      - name: Ready for Deployment
-        run: echo "Build artifact generated and ready for manual/automatic deployment."
+      - name: Authorization Success
+        run: echo "All validation checks passed. Code is cleared for deployment."
+

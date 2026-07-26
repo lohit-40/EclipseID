@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useWallet } from '../WalletContext';
 import { createMidnightProviders } from '../providers';
-import { Contract, EclipseIdContract } from '../../contract/src/EclipseID';
+import { Contract, EclipseIdContract } from '../../../contract/src/EclipseID';
 import { CompiledContract } from '@midnight-ntwrk/midnight-js-contracts';
 import { type EclipseIdProviders } from '../providers';
 
