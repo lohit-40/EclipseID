@@ -1,6 +1,7 @@
 # EclipseID
 
 [![CI](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml/badge.svg)](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml)
+[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EclipseID010)](https://x.com/EclipseID010)
 
 EclipseID is a decentralized, privacy-preserving credential verification system built on the Midnight Network. It enables organizations to verify credentials (like KYC or age verification) without forcing users to expose their raw, sensitive data. Using Midnight's Compact language, the contract verifies these claims using a private witness and selective disclosure. This enables high-demand use cases like Sybil-resistant airdrops, private allowlists, and permissioned DeFi access while keeping user identity completely secure and private.
 
