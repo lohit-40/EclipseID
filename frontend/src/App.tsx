@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { type DAppConnectorWalletAPI } from '@midnight-ntwrk/dapp-connector-api';
 import { useWallet } from './WalletContext';
+import { Moon, Fingerprint } from 'lucide-react';
 
 // Pages
 import Landing from './pages/Landing';
@@ -83,12 +84,9 @@ export default function App() {
         {/* Sleek Navigation Bar */}
         <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full backdrop-blur-sm border-b border-white/5 sticky top-0 bg-[#070410]/80">
           <Link to="/" className="text-2xl font-black tracking-tighter flex items-center gap-3 group">
-            <div className="w-10 h-10 overflow-hidden mix-blend-screen flex items-center justify-start group-hover:scale-110 transition-transform">
-              <img 
-                src="/logo.png" 
-                alt="EclipseID Logo" 
-                className="h-full max-w-none object-left"
-              />
+            <div className="relative w-10 h-10 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Moon className="absolute inset-0 text-cyan-500 w-full h-full fill-cyan-500/20 drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]" strokeWidth={2} />
+              <Fingerprint className="absolute inset-0 text-white w-full h-full scale-[0.65] drop-shadow-md" strokeWidth={1.5} />
             </div>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-blue-400 drop-shadow-md">EclipseID</span>
           </Link>

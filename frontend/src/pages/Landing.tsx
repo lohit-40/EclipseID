@@ -1,20 +1,18 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { Moon, Fingerprint } from 'lucide-react';
 
 export default function Landing() {
   return (
     <div className="flex flex-col items-center justify-center pt-20 px-4 text-center max-w-4xl mx-auto">
       <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="mb-12 flex flex-col items-center">
         <motion.div 
-          className="w-32 h-32 md:w-40 md:h-40 overflow-hidden mix-blend-screen flex items-center justify-start mb-6 drop-shadow-[0_0_30px_rgba(56,189,248,0.4)]"
+          className="relative w-32 h-32 md:w-40 md:h-40 flex items-center justify-center mb-6"
           animate={{ y: [0, -15, 0] }}
           transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
         >
-          <img 
-            src="/logo.png" 
-            alt="EclipseID Logo" 
-            className="h-full max-w-none object-left"
-          />
+          <Moon className="absolute inset-0 text-cyan-500 w-full h-full fill-cyan-500/20 drop-shadow-[0_0_15px_rgba(6,182,212,0.5)]" strokeWidth={1.5} />
+          <Fingerprint className="absolute inset-0 text-white w-full h-full scale-[0.65] drop-shadow-lg" strokeWidth={1.5} />
         </motion.div>
         <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-cyan-400 via-blue-500 to-purple-600 pb-4">
           EclipseID
