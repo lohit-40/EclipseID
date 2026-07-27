@@ -34,19 +34,23 @@ export default function App() {
 
   // Auto-connect wallet on load if available
   useEffect(() => {
-    if (window.midnight) {
-      window.midnight.mnLace.enable().then((api: DAppConnectorWalletAPI) => {
-        setWallet(api);
-        api.state().then(state => {
-          setIsConnected(true);
-          setAddress(state.unshieldedAddress);
-        });
-      }).catch(err => console.log('Wallet not auto-connected', err));
+    try {
+      if (window.midnight && window.midnight.mnLace) {
+        window.midnight.mnLace.enable().then((api: DAppConnectorWalletAPI) => {
+          setWallet(api);
+          api.state().then(state => {
+            setIsConnected(true);
+            setAddress(state.unshieldedAddress);
+          }).catch(console.error);
+        }).catch((err: any) => console.log('Wallet not auto-connected', err));
+      }
+    } catch (e) {
+      console.error('Wallet detection error:', e);
     }
   }, []);
 
   const connectWallet = async () => {
-    if (!window.midnight) {
+    if (!window.midnight || !window.midnight.mnLace) {
       alert("Lace wallet extension not found! Please install the Lace wallet.");
       return;
     }
