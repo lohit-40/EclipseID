@@ -82,14 +82,15 @@ export default function App() {
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Sleek Navigation Bar */}
         <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full backdrop-blur-sm border-b border-white/5 sticky top-0 bg-[#070410]/80">
-          <Link to="/" className="flex items-center gap-3 group">
-            <motion.img 
-              src="/logo.png" 
-              alt="EclipseID Logo" 
-              className="h-10 object-contain drop-shadow-[0_0_15px_rgba(56,189,248,0.4)]"
-              whileHover={{ scale: 1.05, rotate: [0, -2, 2, 0] }}
-              transition={{ duration: 0.4 }}
-            />
+          <Link to="/" className="text-2xl font-black tracking-tighter flex items-center gap-3 group">
+            <div className="w-10 h-10 overflow-hidden mix-blend-screen flex items-center justify-start group-hover:scale-110 transition-transform">
+              <img 
+                src="/logo.png" 
+                alt="EclipseID Logo" 
+                className="h-full max-w-none object-left"
+              />
+            </div>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-blue-400 drop-shadow-md">EclipseID</span>
           </Link>
           
           <div className="hidden md:flex items-center gap-8 bg-white/5 px-6 py-2 rounded-full border border-white/10">
