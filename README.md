@@ -54,13 +54,39 @@ The user's actual personal data (their identity, age, or the raw credential) rem
 
 **Contract Address:** `00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c`
 
-## Setup Instructions
+## User-Facing Documentation (Usage Guide)
 
-To run this project locally, you must have the Midnight toolchain installed.
+EclipseID provides a seamless, zero-knowledge MVP for accessing confidential DeFi platforms (like our mock Darkpool).
 
-1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
-2. Install [Node.js 22](https://nodejs.org/en).
-3. Clone this repository and run:
+### How to use the MVP:
+1. **Prerequisites:** Ensure you have the **Lace Wallet** browser extension installed and connected to the Midnight Preprod Network.
+2. **Access the dApp:** Visit the live MVP at [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app).
+3. **Connect Wallet:** Click "Connect Lace" in the top right corner. The dApp will establish a connection via the DApp Connector API.
+4. **Issue Credential:** 
+   - Navigate to the **Darkpool dApp** tab.
+   - Enter your email address to simulate the off-chain KYC verification step.
+   - Click "Issue ZK Credential". This simulates an authorized issuer placing your credential inside your local wallet's private state.
+5. **Generate Proof & Access Darkpool:**
+   - Once your credential is in your shielded vault, click "Access Darkpool Anonymously".
+   - Your browser will locally generate a zero-knowledge proof (`verify_and_claim` circuit) using your private witness.
+   - You will be prompted by Lace to sign and submit the transaction to the Midnight Network.
+6. **Enter the Darkpool:** Once the network verifies the proof, you will gain access to the Confidential OTC Orderbook UI without your wallet address ever being linked to your KYC data.
+
+## Developer & Technical Documentation
+
+### Prerequisites
+To run or deploy this project locally, you must have the Midnight toolchain installed:
+1. [Docker Desktop](https://www.docker.com/products/docker-desktop/) (For running the local proof server).
+2. [Node.js 22](https://nodejs.org/en).
+
+### Local Setup & Compilation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/lohit-40/EclipseID.git
+   cd EclipseID
+   ```
+2. **Compile the Compact Smart Contract:**
    ```bash
    cd contract
    npm install
@@ -72,10 +98,25 @@ To run this project locally, you must have the Midnight toolchain installed.
    Done.
    Circuits: add_issuer, verify_and_claim
    ```
-4. To run the local proof server:
+3. **Run the local proof server:**
    ```bash
    docker-compose up -d
    ```
+4. **Run the Frontend (React/Vite):**
+   ```bash
+   cd ../frontend
+   npm install
+   npm run dev
+   ```
+
+### CI/CD Pipeline
+This repository implements a full CI/CD pipeline using GitHub Actions (`.github/workflows/ci.yml`). 
+On every push to `main`, the pipeline automatically:
+- Checks out the code.
+- Installs all dependencies for both the frontend and the contract.
+- Runs the Compact compiler to ensure the smart contract compiles successfully.
+- Builds the Vite React frontend for production.
+- *Any compilation or build errors will fail the workflow, ensuring only stable code is merged.*
 
 ## Privacy Claim
 
