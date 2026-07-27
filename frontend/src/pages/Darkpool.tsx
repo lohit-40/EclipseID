@@ -13,6 +13,7 @@ export default function Darkpool() {
   const { wallet, address, isConnected } = useWallet();
   const [email, setEmail] = useState<string>('');
   const [isVerified, setIsVerified] = useState<boolean>(false);
+  const [hasAccess, setHasAccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [loadingStep, setLoadingStep] = useState<string>('');
   const [error, setError] = useState<string>('');
@@ -93,6 +94,7 @@ export default function Darkpool() {
       await providers.walletProvider.submitTransaction(await providers.proofProvider.proveTx(tx));
       
       setTxResult('Access Granted! You have anonymously entered the Darkpool.');
+      setHasAccess(true);
     } catch (err: any) {
       console.error(err);
       setError(err.message || 'Access Denied. Proof generation failed.');
@@ -132,7 +134,7 @@ export default function Darkpool() {
                 type="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-black/40 border border-white/10 focus:border-orange-500/50 outline-none rounded-xl p-4 text-rose-50 transition-colors"
+                className="w-full bg-black/40 border border-white/10 focus:border-cyan-500/50 outline-none rounded-xl p-4 text-rose-50 transition-colors"
                 placeholder="Enter your registered email"
               />
             </div>
@@ -140,12 +142,12 @@ export default function Darkpool() {
             <button 
               onClick={handleVerify}
               disabled={loading || !email}
-              className="w-full bg-gradient-to-r from-orange-500/20 to-rose-600/20 hover:from-orange-500/30 hover:to-rose-600/30 text-orange-400 font-bold py-4 rounded-xl border border-orange-500/20 transition-all disabled:opacity-50"
+              className="w-full bg-gradient-to-r from-cyan-500/20 to-blue-600/20 hover:from-cyan-500/30 hover:to-blue-600/30 text-cyan-400 font-bold py-4 rounded-xl border border-cyan-500/20 transition-all disabled:opacity-50"
             >
               Issue ZK Credential
             </button>
           </div>
-        ) : (
+        ) : !hasAccess ? (
           <div className="space-y-6">
             <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex items-start gap-3">
               <svg className="w-5 h-5 text-green-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -158,12 +160,38 @@ export default function Darkpool() {
             <button 
               onClick={handleEnterDarkpool}
               disabled={loading}
-              className="w-full bg-gradient-to-r from-orange-500 to-rose-600 hover:scale-[1.02] text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-500/20 transition-all disabled:opacity-50 disabled:hover:scale-100 relative overflow-hidden group"
+              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:scale-[1.02] text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:hover:scale-100 relative overflow-hidden group"
             >
               <span className="relative z-10">Access Darkpool Anonymously</span>
               <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform" />
             </button>
           </div>
+        ) : (
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-8 bg-black/40 border border-white/5 p-6 rounded-2xl w-full">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-rose-50">Confidential OTC Orderbook</h3>
+              <span className="bg-green-500/20 text-green-400 text-xs px-3 py-1 rounded-full border border-green-500/30 font-bold">Verified Anonymous</span>
+            </div>
+            
+            <div className="space-y-3">
+              {[
+                { pair: 'BTC / USDC', size: '250.00', price: '$64,230', type: 'Buy' },
+                { pair: 'ETH / USDC', size: '1,500.00', price: '$3,450', type: 'Sell' },
+                { pair: 'SOL / USDC', size: '10,000.00', price: '$145.20', type: 'Buy' },
+              ].map((order, i) => (
+                <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
+                  <div>
+                    <p className="font-bold text-rose-50">{order.pair}</p>
+                    <p className="text-xs text-rose-200/50 group-hover:text-rose-200/80 transition-colors">Size: {order.size}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className={`font-bold ${order.type === 'Buy' ? 'text-green-400' : 'text-red-400'}`}>{order.price}</p>
+                    <button className="mt-1 text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded text-white transition-colors">Fill {order.type}</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
         )}
 
         {loading && (

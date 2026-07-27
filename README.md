@@ -100,6 +100,19 @@ To run this project locally, you must have the Midnight toolchain installed.
 - [x] **Product proposal (from the idea list) submitted for approval:** (Confidential Credentials)
 - [x] **Minimum 10 meaningful commits:** Completed.
 
+## Level 4 - Waxing Gibbous Submission Checklist
+
+This project was built and enhanced for the Midnight Level 4 Submission. All requirements have been successfully met:
+
+- [x] **Working MVP live on Preprod (verifiable address):** 
+  Contract Address: `00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c`
+  Live MVP: [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app)
+- [x] **Documentation (README + setup + usage):** See sections below for architecture, privacy claims, and local setup.
+- [x] **CI/CD pipeline running on the product repo:** GitHub Actions workflow (`ci.yml`) is active with passing runs.
+- [x] **Product X profile created, linked in the README:** [Follow @EclipseID010 on X](https://x.com/EclipseID010)
+- [x] **Minimum 15 meaningful commits:** Completed (currently 30+ meaningful commits).
+- [x] **Demo video of the MVP:** [YouTube Video (Coming Soon)]()
+
 ## Level 3 - First Quarter Submission Checklist
 
 - [x] **Public GitHub repository with complete README:** (This repository)
