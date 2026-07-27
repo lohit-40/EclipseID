@@ -4,10 +4,15 @@ import { Link } from 'react-router-dom';
 export default function Landing() {
   return (
     <div className="flex flex-col items-center justify-center pt-20 px-4 text-center max-w-4xl mx-auto">
-      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="mb-12">
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-orange-400 via-rose-500 to-purple-600 pb-4">
-          EclipseID
-        </h1>
+      <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="mb-12 flex flex-col items-center">
+        <motion.img 
+          src="/logo.png" 
+          alt="EclipseID Logo" 
+          className="h-32 md:h-48 object-contain mb-8 drop-shadow-[0_0_30px_rgba(56,189,248,0.3)]"
+          animate={{ y: [0, -10, 0] }}
+          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+        />
+        <h1 className="sr-only">EclipseID</h1>
         <p className="text-xl md:text-3xl text-rose-100/90 font-medium mt-4">
           Zero-Knowledge Identity for Confidential DeFi
         </p>
