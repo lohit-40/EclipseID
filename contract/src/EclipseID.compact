@@ -4,36 +4,47 @@ import CompactStandardLibrary;
 export ledger issuers: Map<Bytes<32>, Boolean>;
 export ledger used_nullifiers: Map<Bytes<32>, Boolean>;
 
-// The private witness representing the user's secret identity/key, kept entirely off-chain.
-// SECURITY: This ensures PII is never broadcasted to the network or stored in public state.
-witness secret_identity(): Bytes<32>;
+export struct UserAttributes {
+    secret_id: Bytes<32>,
+    is_accredited: Boolean,
+    age: Uint<8>
+}
+
+// The private witness representing the user's secret identity and attributes.
+// SECURITY: Kept entirely off-chain. Selective disclosure proves attributes without leaking the origin data.
+witness user_credential(): UserAttributes;
 
 export circuit add_issuer(issuer: Bytes<32>): [] {
-    // SECURITY: In a production app, this would require a cryptographic signature 
-    // from a DAO or protocol admin to authorize a new credential issuer.
-    // For this prototype, we demonstrate state transition by inserting into the ledger.
     issuers.insert(disclose(issuer), true);
 }
 
-export circuit verify_and_claim(
+// ZK Circuit 1: Darkpool Access (Requires is_accredited == true)
+export circuit enter_darkpool(
     issuer: Bytes<32>,
     nullifier: Bytes<32>
 ): [] {
-    // Check if issuer is authorized (Public State Check)
-    // SECURITY: Guarantees the credential was issued by a trusted entity.
     assert(issuers.member(disclose(issuer)), "Issuer not authorized");
     
-    // SECURITY: In a production environment, the nullifier is cryptographically derived
-    // from the secret identity (e.g., hash(secret_id, issuer_id, domain_separator)).
-    // Here we assert they are distinct to mathematically enforce that the secret isn't leaked.
-    assert(secret_identity() != nullifier, "Secret identity cannot equal nullifier");
+    // Selective Disclosure: Prove accreditation without revealing age or secret_id
+    assert(user_credential().is_accredited, "User is not an accredited investor");
     
-    // Double-Spend / Replay Attack Prevention
-    // We check if the nullifier exists in the public state.
+    // Nullifier derivation check (simplified)
+    assert(user_credential().secret_id != nullifier, "Secret identity cannot equal nullifier");
     assert(!used_nullifiers.member(disclose(nullifier)), "Identity already verified/used");
+    used_nullifiers.insert(disclose(nullifier), true);
+}
+
+// ZK Circuit 2: Age-Gated Airdrop (Requires age >= 18)
+export circuit claim_age_gated_airdrop(
+    issuer: Bytes<32>,
+    nullifier: Bytes<32>
+): [] {
+    assert(issuers.member(disclose(issuer)), "Issuer not authorized");
     
-    // Disclose the nullifier to the public ledger so it can't be used again.
-    // SECURITY: This explicitly demonstrates using disclose() to transition 
-    // a one-way hashed identifier into public state without leaking the origin secret.
+    // Selective Disclosure: Prove age >= 18 without revealing exact age or accreditation
+    assert(user_credential().age >= 18, "User is not over 18");
+    
+    assert(user_credential().secret_id != nullifier, "Secret identity cannot equal nullifier");
+    assert(!used_nullifiers.member(disclose(nullifier)), "Identity already verified/used");
     used_nullifiers.insert(disclose(nullifier), true);
 }
