@@ -36,14 +36,22 @@ export default function App() {
   // Auto-connect wallet on load if available
   useEffect(() => {
     try {
-      if (window.midnight && window.midnight.mnLace) {
-        window.midnight.mnLace.enable().then((api: DAppConnectorWalletAPI) => {
-          setWallet(api);
-          api.state().then(state => {
-            setIsConnected(true);
-            setAddress(state.unshieldedAddress);
-          }).catch(console.error);
-        }).catch((err: any) => console.log('Wallet not auto-connected', err));
+      if (window.midnight) {
+        const connector = window.midnight.mnLace || window.midnight;
+        if (connector.enable || connector.connect) {
+          const connectPromise = connector.enable ? connector.enable() : connector.connect();
+          connectPromise.then(async (api: any) => {
+            let connectedApi = api;
+            if (api.requestAuthorization) {
+               connectedApi = await api.requestAuthorization();
+            }
+            setWallet(connectedApi);
+            connectedApi.state().then((state: any) => {
+              setIsConnected(true);
+              setAddress(state.unshieldedAddress);
+            }).catch(console.error);
+          }).catch((err: any) => console.log('Wallet not auto-connected', err));
+        }
       }
     } catch (e) {
       console.error('Wallet detection error:', e);
@@ -51,18 +59,29 @@ export default function App() {
   }, []);
 
   const connectWallet = async () => {
-    if (!window.midnight || !window.midnight.mnLace) {
-      alert("Lace wallet extension not found! Please install the Lace wallet.");
+    if (!window.midnight) {
+      alert("Midnight wallet extension not found! Please install a compatible wallet like Lace.");
       return;
     }
     try {
-      const api = await window.midnight.mnLace.enable();
-      setWallet(api);
-      const state = await api.state();
+      // Use mnLace if available, otherwise fallback to the generic window.midnight connector
+      const connector = window.midnight.mnLace || window.midnight;
+      
+      // Some wallet versions use connect(), some use enable()
+      const api = await (connector.enable ? connector.enable() : connector.connect());
+      
+      // If it returned an InitialAPI (has requestAuthorization), authorize it
+      let connectedApi = api;
+      if (api.requestAuthorization) {
+         connectedApi = await api.requestAuthorization();
+      }
+      
+      setWallet(connectedApi);
+      const state = await connectedApi.state();
       setIsConnected(true);
       setAddress(state.unshieldedAddress);
     } catch (err) {
-      console.error("User rejected connection", err);
+      console.error("User rejected connection or connection failed", err);
     }
   };
 
