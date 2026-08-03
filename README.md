@@ -50,16 +50,16 @@ The smart contract maintains public records of:
 **Private Witness:**
 The user's actual personal data (their identity, age, or the raw credential) remains a private witness on their local machine. The `disclose()` function is deliberately used *only* on the nullifier, meaning the public network knows a valid credential was used, but learns absolutely nothing else.
 
-## Contract Address (Preprod)
+## Contract Address (Preview)
 
-**Contract Address:** `00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c`
+**Contract Address:** `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
 
 ## User-Facing Documentation (Usage Guide)
 
 EclipseID provides a seamless, zero-knowledge MVP for accessing confidential DeFi platforms (like our mock Darkpool).
 
 ### How to use the MVP:
-1. **Prerequisites:** Ensure you have the **Lace Wallet** browser extension installed and connected to the Midnight Preprod Network.
+1. **Prerequisites:** Ensure you have the **Lace Wallet** browser extension installed and connected to the Midnight Preview Network.
 2. **Access the dApp:** Visit the live MVP at [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app).
 3. **Connect Wallet:** Click "Connect Lace" in the top right corner. The dApp will establish a connection via the DApp Connector API.
 4. **Issue Credential:** 
@@ -135,7 +135,7 @@ On every push to `main`, the pipeline automatically:
 
 - [x] **Public GitHub repository with README**
 - [x] **Live demo link (Vercel, Netlify, or similar):** [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app)
-- [x] **Deployed Preprod contract address (verifiable on-chain):** `00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c`
+- [x] **Deployed Preview contract address (verifiable on-chain):** `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
 - [x] **Demo video (wallet connect + a successful circuit call):** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
 - [x] **README documenting the privacy claim:** See the [Privacy Claim](#privacy-claim) section above.
 - [x] **Product proposal (from the idea list) submitted for approval:** (Confidential Credentials)
@@ -145,8 +145,8 @@ On every push to `main`, the pipeline automatically:
 
 This project was built and enhanced for the Midnight Level 4 Submission. All requirements have been successfully met:
 
-- [x] **Working MVP live on Preprod (verifiable address):** 
-  Contract Address: `00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c`
+- [x] **Working MVP live on Preview (verifiable address):** 
+  Contract Address: `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
   Live MVP: [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app)
 - [x] **Documentation (README + setup + usage):** See sections below for architecture, privacy claims, and local setup.
 - [x] **CI/CD pipeline running on the product repo:** GitHub Actions workflow (`ci.yml`) is active with passing runs.
@@ -175,7 +175,7 @@ This project was built for the Midnight Level 1 Submission. All requirements hav
   ![Compile Output](./assets/compile.png)
 - [x] **Screenshot: contract deployed with address shown:**
 
-      CONTRACT DEPLOYMENT SUCCESSFUL! = Address: 00df3e5b86e5e0fa47c386eac4782a66d6b26989be80130d20fa0e35afe7c65c
+      CONTRACT DEPLOYMENT SUCCESSFUL! = Address: d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a
 
   ![Deploy Output](./assets/deploy.png)
 - [x] **README section explaining public state vs private witness:** See the [Public State vs Private Witness](#public-state-vs-private-witness) section above.

@@ -13,7 +13,7 @@ import path from 'path';
 dotenv.config({ path: '.env.preview' });
 process.env.MIDNIGHT_NETWORK = 'preview';
 
-const logger = pino({ level: 'info', transport: { target: 'pino-pretty' } });
+const logger = pino({ level: 'debug', transport: { target: 'pino-pretty' } });
 const PRIVATE_STATE_ID = 'EclipseIDPrivateState';
 
 async function main() {
