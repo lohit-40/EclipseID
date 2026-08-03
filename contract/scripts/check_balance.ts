@@ -4,8 +4,8 @@ import { getConfig } from './config.js';
 import { MidnightWalletProvider, syncWallet, type WalletSecret } from './wallet.js';
 import * as dotenv from 'dotenv';
 
-dotenv.config({ path: '.env.preprod' });
-process.env.MIDNIGHT_NETWORK = 'preprod';
+dotenv.config({ path: '.env.preview' });
+process.env.MIDNIGHT_NETWORK = 'preview';
 
 const logger = pino({ level: 'info', transport: { target: 'pino-pretty' } });
 
@@ -58,3 +58,4 @@ async function main() {
 }
 
 main().catch(console.error);
+

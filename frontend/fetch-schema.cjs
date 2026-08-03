@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-fetch('https://indexer.preprod.midnight.network/graphql', {
+fetch('https://indexer.preview.midnight.network/graphql', {
   method: 'POST',
   headers: {'Content-Type': 'application/json'},
   body: JSON.stringify({
@@ -16,3 +16,4 @@ fetch('https://indexer.preprod.midnight.network/graphql', {
     `
   })
 }).then(r => r.json()).then(j => console.log(JSON.stringify(j, null, 2)));
+

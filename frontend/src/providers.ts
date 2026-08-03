@@ -10,6 +10,7 @@ import { levelPrivateStateProvider } from '@midnight-ntwrk/midnight-js-level-pri
 import { indexerPublicDataProvider } from '@midnight-ntwrk/midnight-js-indexer-public-data-provider';
 import { FetchZkConfigProvider } from '@midnight-ntwrk/midnight-js-fetch-zk-config-provider';
 import { type MidnightProviders } from '@midnight-ntwrk/midnight-js-types';
+export type EclipseIdProviders = MidnightProviders<any, any>;
 import { toHex, fromHex } from '@midnight-ntwrk/midnight-js-utils';
 class DAppConnectorWalletAdapter implements MidnightProvider, WalletProvider {
   private readonly api: WalletConnectedAPI;

@@ -30,7 +30,7 @@ export default function App() {
   const { wallet, setWallet, address, setAddress, isConnected, setIsConnected } = useWallet();
   const location = useLocation();
   
-  const MASTER_ADMIN_WALLET = 'mn_addr_preprod1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa';
+  const MASTER_ADMIN_WALLET = 'mn_addr_preview1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa';
   const isAdminMode = address === MASTER_ADMIN_WALLET;
 
   // Auto-connect wallet on load if available
@@ -155,3 +155,4 @@ export default function App() {
     </div>
   );
 }
+

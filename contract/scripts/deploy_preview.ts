@@ -10,15 +10,15 @@ import { waitForFunds } from '@midnight-ntwrk/testkit-js';
 import * as dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: '.env.preprod' });
-process.env.MIDNIGHT_NETWORK = 'preprod';
+dotenv.config({ path: '.env.preview' });
+process.env.MIDNIGHT_NETWORK = 'preview';
 
 const logger = pino({ level: 'info', transport: { target: 'pino-pretty' } });
 const PRIVATE_STATE_ID = 'EclipseIDPrivateState';
 
 async function main() {
     console.log("==========================================");
-    console.log("   Deploying EclipseID to Preprod...      ");
+    console.log("   Deploying EclipseID to preview...      ");
     console.log("==========================================");
 
     const config = getConfig();
@@ -26,7 +26,7 @@ async function main() {
 
     const seedPhrase = process.env.SEED;
     if (!seedPhrase) {
-        throw new Error("Please configure SEED in .env.preprod with either a 64-char hex or a 24-word mnemonic");
+        throw new Error("Please configure SEED in .env.preview with either a 64-char hex or a 24-word mnemonic");
     }
 
     let secret: WalletSecret;
@@ -94,3 +94,4 @@ main().catch((err) => {
     console.error("Deployment Failed:", err);
     process.exit(1);
 });
+

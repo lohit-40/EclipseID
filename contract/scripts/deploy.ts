@@ -26,7 +26,7 @@ async function main() {
 
     const seedPhrase = process.env.SEED;
     if (!seedPhrase) {
-        throw new Error("Please configure SEED in .env.preprod with either a 64-char hex or a 24-word mnemonic");
+        throw new Error("Please configure SEED in .env.preview with either a 64-char hex or a 24-word mnemonic");
     }
 
     let secret: WalletSecret;
@@ -95,3 +95,4 @@ main().catch((err) => {
     console.error("Deployment Failed:", err);
     process.exit(1);
 });
+

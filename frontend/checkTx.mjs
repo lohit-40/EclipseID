@@ -5,6 +5,7 @@ const query = {
 };
 
 Promise.all([
-  fetch('https://indexer.preprod.midnight.network/api/v4/graphql', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(query) }).then(r => r.json()).then(r => console.log('v4:', JSON.stringify(r))),
-  fetch('https://indexer.preprod.midnight.network/api/v1/graphql', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(query) }).then(r => r.json()).then(r => console.log('v1:', JSON.stringify(r))).catch(e => console.log('v1 error'))
+  fetch('https://indexer.preview.midnight.network/api/v4/graphql', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(query) }).then(r => r.json()).then(r => console.log('v4:', JSON.stringify(r))),
+  fetch('https://indexer.preview.midnight.network/api/v1/graphql', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(query) }).then(r => r.json()).then(r => console.log('v1:', JSON.stringify(r))).catch(e => console.log('v1 error'))
 ]).catch(console.error);
+

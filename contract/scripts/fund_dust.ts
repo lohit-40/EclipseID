@@ -1,12 +1,12 @@
 import { FaucetClient } from '@midnight-ntwrk/wallet-sdk-facade';
 import { FluentWalletBuilder } from '@midnight-ntwrk/testkit-js';
 import * as dotenv from 'dotenv';
-dotenv.config({ path: '.env.preprod' });
+dotenv.config({ path: '.env.preview' });
 
 async function run() {
   const mnemonic = process.env.MNEMONIC;
   if (!mnemonic) {
-    console.error('Please set MNEMONIC in your .env.preprod file.');
+    console.error('Please set MNEMONIC in your .env.preview file.');
     process.exit(1);
   }
 
@@ -21,12 +21,12 @@ async function run() {
   };
 
   const envConfig = {
-    walletNetworkId: 'preprod',
-    networkId: 'preprod',
-    indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
-    indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
-    node: 'https://rpc.preprod.midnight.network',
-    nodeWS: 'wss://rpc.preprod.midnight.network',
+    walletNetworkId: 'preview',
+    networkId: 'preview',
+    indexer: 'https://indexer.preview.midnight.network/api/v4/graphql',
+    indexerWS: 'wss://indexer.preview.midnight.network/api/v4/graphql/ws',
+    node: 'https://rpc.preview.midnight.network',
+    nodeWS: 'wss://rpc.preview.midnight.network',
     proofServer: 'http://127.0.0.1:6300'
   } as any;
 
@@ -37,7 +37,7 @@ async function run() {
   const wallet = built.wallet;
   
   // Wait for the wallet to synchronize
-  console.log('Wallet synchronized. Generating DUST from Preprod Faucet...');
+  console.log('Wallet synchronized. Generating DUST from preview Faucet...');
 
   const unshieldedAddress = await wallet.unshieldedAddress();
   console.log('Unshielded Address:', unshieldedAddress);
@@ -47,7 +47,7 @@ async function run() {
   console.log('Current tNIGHT balance:', balance.toString());
   
   try {
-    const faucet = new FaucetClient('https://faucet.preprod.midnight.network');
+    const faucet = new FaucetClient('https://faucet.preview.midnight.network');
     await faucet.requestFunds(unshieldedAddress);
     console.log('Successfully requested DUST generation from Faucet!');
   } catch (err) {
@@ -58,3 +58,4 @@ async function run() {
 }
 
 run().catch(console.error);
+

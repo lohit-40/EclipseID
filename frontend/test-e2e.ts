@@ -1,5 +1,5 @@
 import { createRequire } from 'module';
-import { DAppConnectorWalletAdapter, createLogger, PreprodTestEnvironment, FluentWalletBuilder } from '@midnight-ntwrk/testkit-js';
+import { DAppConnectorWalletAdapter, createLogger, previewTestEnvironment, FluentWalletBuilder } from '@midnight-ntwrk/testkit-js';
 import { createMidnightProviders } from './src/providers.js';
 import { Contract } from './src/contract/index.js';
 import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
@@ -7,7 +7,7 @@ import { deployContract } from '@midnight-ntwrk/midnight-js-contracts';
 import { fromHex, toHex } from '@midnight-ntwrk/midnight-js-utils';
 import { setNetworkId } from '@midnight-ntwrk/midnight-js-network-id';
 import * as dotenv from 'dotenv';
-dotenv.config({ path: '../.env.preprod' });
+dotenv.config({ path: '../.env.preview' });
 
 async function run() {
   const originalFetch = globalThis.fetch;
@@ -36,7 +36,7 @@ async function run() {
 
   const mnemonic = process.env.MNEMONIC;
   if (!mnemonic) {
-    console.error('Please set MNEMONIC="your 24 word seed phrase" in your .env.preprod file.');
+    console.error('Please set MNEMONIC="your 24 word seed phrase" in your .env.preview file.');
     process.exit(1);
   }
 
@@ -50,17 +50,17 @@ async function run() {
     crypto: globalThis.crypto
   };
 
-  setNetworkId('preprod');
+  setNetworkId('preview');
 
   console.log('Initializing headless wallet adapter...');
   
   const envConfig = {
-    walletNetworkId: 'preprod',
-    networkId: 'preprod',
-    indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
-    indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
-    node: 'https://rpc.preprod.midnight.network',
-    nodeWS: 'wss://rpc.preprod.midnight.network',
+    walletNetworkId: 'preview',
+    networkId: 'preview',
+    indexer: 'https://indexer.preview.midnight.network/api/v4/graphql',
+    indexerWS: 'wss://indexer.preview.midnight.network/api/v4/graphql/ws',
+    node: 'https://rpc.preview.midnight.network',
+    nodeWS: 'wss://rpc.preview.midnight.network',
     proofServer: 'http://127.0.0.1:6300'
   } as any;
   
@@ -90,7 +90,7 @@ async function run() {
         const uP = s.unshielded?.progress;
         const sSync = sP && typeof sP.isStrictlyComplete === 'function' ? sP.isStrictlyComplete() : false;
         const uSync = uP && typeof uP.isStrictlyComplete === 'function' ? uP.isStrictlyComplete() : false;
-        // Ignore dust for now since it hangs on preprod
+        // Ignore dust for now since it hangs on preview
         return sSync && uSync;
       })
     )
@@ -144,3 +144,4 @@ run().catch(err => {
   console.error(err);
   process.exit(1);
 });
+

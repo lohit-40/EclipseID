@@ -51,8 +51,8 @@ export default function Darkpool() {
       
       const { secret_identity } = data;
       const providers = await createMidnightProviders(wallet, {
-        indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
-        indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
+        indexer: 'https://indexer.preview.midnight.network/api/v4/graphql',
+        indexerWS: 'wss://indexer.preview.midnight.network/api/v4/graphql/ws',
       });
       
       setLoadingStep('Securing ID & Attributes in Local Shielded Vault...');
@@ -91,8 +91,8 @@ export default function Darkpool() {
       setLoadingStep('Generating ZK Proof of Accreditation...');
       
       const providers = await createMidnightProviders(wallet, {
-        indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
-        indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
+        indexer: 'https://indexer.preview.midnight.network/api/v4/graphql',
+        indexerWS: 'wss://indexer.preview.midnight.network/api/v4/graphql/ws',
       });
       
       const contract = await getContractInstance(providers);
@@ -226,3 +226,4 @@ export default function Darkpool() {
     </div>
   );
 }
+

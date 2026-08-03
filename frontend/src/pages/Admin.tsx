@@ -8,7 +8,7 @@ import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-j
 import { type EclipseIdProviders } from '../providers';
 
 const BACKEND_URL = 'https://eclipse-id-backend.lohitmishra25.workers.dev';
-const MASTER_ADMIN_WALLET = 'mn_addr_preprod1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa'; // The whitelisted wallet
+const MASTER_ADMIN_WALLET = 'mn_addr_preview1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa'; // The whitelisted wallet
 
 export default function Admin() {
   const { wallet, address, isConnected } = useWallet();
@@ -34,11 +34,11 @@ export default function Admin() {
     if (!wallet) return;
     try {
       setLoading(true); setError('');
-      setLoadingStep('Generating ZK Proof & Synchronizing Ledger... (This takes ~45 seconds on Preprod)');
+      setLoadingStep('Generating ZK Proof & Synchronizing Ledger... (This takes ~45 seconds on preview)');
       
       const providers = await createMidnightProviders(wallet, {
-        indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
-        indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
+        indexer: 'https://indexer.preview.midnight.network/api/v4/graphql',
+        indexerWS: 'wss://indexer.preview.midnight.network/api/v4/graphql/ws',
       });
       const compiledContract = CompiledContract.make('EclipseIdContract', Contract).pipe(CompiledContract.withVacantWitnesses);
       
@@ -94,8 +94,8 @@ export default function Admin() {
       if (!data.publicKey) throw new Error('Could not fetch issuer public key from backend');
       
       const providers = await createMidnightProviders(wallet, {
-        indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
-        indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
+        indexer: 'https://indexer.preview.midnight.network/api/v4/graphql',
+        indexerWS: 'wss://indexer.preview.midnight.network/api/v4/graphql/ws',
       });
       const contract = await getContractInstance(providers);
       
@@ -180,3 +180,4 @@ export default function Admin() {
     </div>
   );
 }
+
