@@ -11,9 +11,11 @@ describe('EclipseID Smart Contract', () => {
   it('should generate the ZK IR (Zero-Knowledge Intermediate Representation)', () => {
     // Verify the compiler generated the ZK circuits
     const zkirPath1 = path.resolve(__dirname, '../managed/zkir/add_issuer.zkir');
-    const zkirPath2 = path.resolve(__dirname, '../managed/zkir/verify_and_claim.zkir');
+    const zkirPath2 = path.resolve(__dirname, '../managed/zkir/enter_darkpool.zkir');
+    const zkirPath3 = path.resolve(__dirname, '../managed/zkir/claim_age_gated_airdrop.zkir');
     expect(fs.existsSync(zkirPath1)).toBe(true);
     expect(fs.existsSync(zkirPath2)).toBe(true);
+    expect(fs.existsSync(zkirPath3)).toBe(true);
   });
 
   it('should verify the frontend application exists and is configured', () => {
