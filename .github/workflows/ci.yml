@@ -27,13 +27,10 @@ jobs:
           cache-dependency-path: 'contract/package-lock.json'
       - name: Install dependencies
         run: cd contract && npm install
-      - name: Install Midnight Compact Compiler
-        run: |
-          curl -L -o compact.tar.xz https://github.com/midnightntwrk/compact/releases/download/compact-v0.5.1/compact-x86_64-unknown-linux-musl.tar.xz
-          tar xf compact.tar.xz
-          sudo mv compact-x86_64-unknown-linux-musl/compact /usr/local/bin/
-          compact update
-          compact --version
+      - name: Setup Compact Compiler
+        uses: midnightntwrk/setup-compact-action@v1
+        with:
+          compact-version: 'latest'
       - name: Build Contract
         run: cd contract && npm run build:compact
       - name: Run Contract Tests
