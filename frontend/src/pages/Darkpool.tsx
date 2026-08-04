@@ -97,8 +97,16 @@ export default function Darkpool() {
       
       const contract = await getContractInstance(providers);
       
-      // Call the Selective Disclosure circuit (only asserts is_accredited)
-      const tx = await contract.callTx.enter_darkpool();
+      setLoadingStep('Fetching Authorized Issuer & Generating Nullifier...');
+      const req = await fetch(`${BACKEND_URL}/api/issuer/public-key`);
+      const data = await req.json();
+      if (!data.publicKey) throw new Error('Could not fetch issuer public key from backend');
+      
+      const nullifier = Array.from(crypto.getRandomValues(new Uint8Array(32)))
+        .map(b => b.toString(16).padStart(2, '0')).join('');
+
+      // Call the Selective Disclosure circuit with issuer and nullifier
+      const tx = await contract.callTx.enter_darkpool(data.publicKey, nullifier);
       
       setLoadingStep('Submitting Proof to Blockchain...');
       await providers.walletProvider.submitTransaction(await providers.proofProvider.proveTx(tx));

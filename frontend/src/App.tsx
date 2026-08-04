@@ -93,11 +93,8 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#070410] text-rose-50 selection:bg-rose-500/30 selection:text-white font-sans relative overflow-x-hidden">
-      {/* Background Animated Gradient Mesh */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-20">
-        <motion.div animate={{ scale: [1, 1.2, 1], rotate: [0, 90, 0], opacity: [0.3, 0.5, 0.3] }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }} className="absolute -top-1/2 -left-1/2 w-[100vw] h-[100vw] rounded-full bg-gradient-to-r from-orange-600/30 to-rose-700/30 blur-[120px]" />
-        <motion.div animate={{ scale: [1, 1.5, 1], rotate: [0, -90, 0], opacity: [0.2, 0.4, 0.2] }} transition={{ duration: 25, repeat: Infinity, ease: "linear" }} className="absolute -bottom-1/2 -right-1/2 w-[120vw] h-[120vw] rounded-full bg-gradient-to-r from-purple-800/20 to-rose-900/20 blur-[150px]" />
-      </div>
+      {/* High-Performance Static Gradient Background (Zero GPU Overhead) */}
+      <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_20%_30%,_rgba(225,29,72,0.1)_0%,_transparent_50%),radial-gradient(circle_at_80%_80%,_rgba(107,33,168,0.15)_0%,_transparent_60%)]" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Sleek Navigation Bar */}
