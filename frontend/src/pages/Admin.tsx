@@ -7,8 +7,8 @@ export type EclipseIdContract = Contract<any, any>;
 import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
 import { type EclipseIdProviders } from '../providers';
 
-const BACKEND_URL = 'https://eclipse-id-backend.lohitmishra25.workers.dev';
-const MASTER_ADMIN_WALLET = 'mn_addr_preview1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa'; // The whitelisted wallet
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const MASTER_ADMIN_WALLET = import.meta.env.VITE_MASTER_ADMIN_WALLET; // The whitelisted wallet
 
 export default function Admin() {
   const { wallet, address, isConnected } = useWallet();

@@ -30,7 +30,7 @@ export default function App() {
   const { wallet, setWallet, address, setAddress, isConnected, setIsConnected } = useWallet();
   const location = useLocation();
   
-  const MASTER_ADMIN_WALLET = 'mn_addr_preview1j26nj67vy6h0995upsdn85su3pvzqjfpyacclywcvv8e3zr4zrrqxv68xa';
+  const MASTER_ADMIN_WALLET = import.meta.env.VITE_MASTER_ADMIN_WALLET;
   const isAdminMode = address === MASTER_ADMIN_WALLET;
 
   // Auto-connect wallet on load if available

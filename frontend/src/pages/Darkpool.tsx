@@ -7,7 +7,7 @@ export type EclipseIdContract = Contract<any, any>;
 import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
 import { type EclipseIdProviders } from '../providers';
 
-const BACKEND_URL = 'https://eclipse-id-backend.lohitmishra25.workers.dev';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function Darkpool() {
   const { wallet, address, isConnected } = useWallet();
