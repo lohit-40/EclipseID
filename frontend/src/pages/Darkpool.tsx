@@ -57,9 +57,14 @@ export default function Darkpool() {
       
       setLoadingStep('Securing ID & Attributes in Local Shielded Vault...');
       
+      // Fetch the authorized issuer's public key from the backend to construct the witness
+      const req = await fetch(`${BACKEND_URL}/api/issuer/public-key`);
+      const issuerData = await req.json();
+      
       // Store the full UserAttributes struct for selective disclosure
       const userAttributes = {
         secret_id: secret_identity,
+        issuer_pk: issuerData.publicKey,
         is_accredited: true,
         age: 25n // Represented as bigint for Compact's Uint type
       };

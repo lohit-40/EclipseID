@@ -6,6 +6,7 @@ export ledger used_nullifiers: Map<Bytes<32>, Boolean>;
 
 export struct UserAttributes {
     secret_id: Bytes<32>,
+    issuer_pk: Bytes<32>,
     is_accredited: Boolean,
     age: Uint<8>
 }
@@ -25,6 +26,9 @@ export circuit enter_darkpool(
 ): [] {
     assert(issuers.member(disclose(issuer)), "Issuer not authorized");
     
+    // Privacy Design: Ensure the credential was actually issued by the authorized issuer
+    assert(user_credential().issuer_pk == issuer, "Credential was not issued by the provided issuer");
+    
     // Selective Disclosure: Prove accreditation without revealing age or secret_id
     assert(user_credential().is_accredited, "User is not an accredited investor");
     
@@ -40,6 +44,9 @@ export circuit claim_age_gated_airdrop(
     nullifier: Bytes<32>
 ): [] {
     assert(issuers.member(disclose(issuer)), "Issuer not authorized");
+    
+    // Privacy Design: Ensure the credential was actually issued by the authorized issuer
+    assert(user_credential().issuer_pk == issuer, "Credential was not issued by the provided issuer");
     
     // Selective Disclosure: Prove age >= 18 without revealing exact age or accreditation
     assert(user_credential().age >= 18, "User is not over 18");

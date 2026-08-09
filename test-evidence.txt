@@ -1,0 +1,13 @@
+PASS tests/EclipseID.test.ts (2.134 s)
+  EclipseID Smart Contract
+    √ should compile successfully and generate a valid Contract artifact (15 ms)
+    √ should generate the ZK IR (Zero-Knowledge Intermediate Representation) (3 ms)
+    √ should verify the frontend application exists and is configured (1 ms)
+  Application Logic Checks
+    √ should generate valid 32-byte hex nullifiers for ZK circuits (2 ms)
+    √ should ensure the application is pointing to the preview network (1 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       5 passed, 5 total
+Snapshots:   0 total
+Time:        3.541 s
