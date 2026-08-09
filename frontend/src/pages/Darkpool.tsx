@@ -58,8 +58,8 @@ export default function Darkpool() {
       setLoadingStep('Securing ID & Attributes in Local Shielded Vault...');
       
       // Fetch the authorized issuer's public key from the backend to construct the witness
-      const req = await fetch(`${BACKEND_URL}/api/issuer/public-key`);
-      const issuerData = await req.json();
+      const issuerReq = await fetch(`${BACKEND_URL}/api/issuer/public-key`);
+      const issuerData = await issuerReq.json();
       
       // Store the full UserAttributes struct for selective disclosure
       const userAttributes = {
