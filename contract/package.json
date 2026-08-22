@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build:compact": "compact compile src/EclipseID.compact managed",
-    "deploy:preview": "tsx scripts/deploy.ts",
+    "deploy:preview": "tsx scripts/deploy_preview.ts",
+    "deploy:preprod": "tsx scripts/deploy_preprod.ts",
     "test": "jest"
   },
   "dependencies": {
