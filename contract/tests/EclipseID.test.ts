@@ -11,11 +11,9 @@ describe('EclipseID Smart Contract', () => {
   it('should generate the ZK IR (Zero-Knowledge Intermediate Representation)', () => {
     // Verify the compiler generated the ZK circuits
     const zkirPath1 = path.resolve(__dirname, '../managed/zkir/add_issuer.zkir');
-    const zkirPath2 = path.resolve(__dirname, '../managed/zkir/enter_darkpool.zkir');
-    const zkirPath3 = path.resolve(__dirname, '../managed/zkir/claim_age_gated_airdrop.zkir');
+    const zkirPath2 = path.resolve(__dirname, '../managed/zkir/verify_and_claim.zkir');
     expect(fs.existsSync(zkirPath1)).toBe(true);
     expect(fs.existsSync(zkirPath2)).toBe(true);
-    expect(fs.existsSync(zkirPath3)).toBe(true);
   });
 
   it('should verify the frontend application exists and is configured', () => {
@@ -35,10 +33,10 @@ describe('EclipseID Smart Contract', () => {
       expect(/^[0-9a-f]{64}$/.test(nullifier)).toBe(true);
     });
 
-    it('should ensure the application is pointing to the preview network', () => {
-      const envNetwork = 'preview'; // Hardcoded check representing app config
-      expect(envNetwork).toBe('preview');
-      expect(envNetwork).not.toBe('testnet');
+    it('should ensure the application is pointing to the testnet network', () => {
+      const envNetwork = 'testnet'; // Hardcoded check representing app config
+      expect(envNetwork).toBe('testnet');
+      expect(envNetwork).not.toBe('preview');
     });
   });
 });

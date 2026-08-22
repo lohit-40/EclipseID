@@ -111,7 +111,7 @@ export default function Darkpool() {
         .map(b => b.toString(16).padStart(2, '0')).join('');
 
       // Call the Selective Disclosure circuit with issuer and nullifier
-      const tx = await contract.callTx.enter_darkpool(data.publicKey, nullifier);
+      const tx = await contract.callTx.verify_and_claim(data.publicKey, nullifier);
       
       setLoadingStep('Submitting Proof to Blockchain...');
       await providers.walletProvider.submitTransaction(await providers.proofProvider.proveTx(tx));

@@ -19,8 +19,8 @@ export circuit add_issuer(issuer: Bytes<32>): [] {
     issuers.insert(disclose(issuer), true);
 }
 
-// ZK Circuit 1: Darkpool Access (Requires is_accredited == true)
-export circuit enter_darkpool(
+// ZK Circuit 1: Verify and Claim
+export circuit verify_and_claim(
     issuer: Bytes<32>,
     nullifier: Bytes<32>
 ): [] {
@@ -28,29 +28,8 @@ export circuit enter_darkpool(
     
     // Privacy Design: Ensure the credential was actually issued by the authorized issuer
     assert(user_credential().issuer_pk == issuer, "Credential was not issued by the provided issuer");
-    
-    // Selective Disclosure: Prove accreditation without revealing age or secret_id
-    assert(user_credential().is_accredited, "User is not an accredited investor");
     
     // Nullifier derivation check (simplified)
-    assert(user_credential().secret_id != nullifier, "Secret identity cannot equal nullifier");
-    assert(!used_nullifiers.member(disclose(nullifier)), "Identity already verified/used");
-    used_nullifiers.insert(disclose(nullifier), true);
-}
-
-// ZK Circuit 2: Age-Gated Airdrop (Requires age >= 18)
-export circuit claim_age_gated_airdrop(
-    issuer: Bytes<32>,
-    nullifier: Bytes<32>
-): [] {
-    assert(issuers.member(disclose(issuer)), "Issuer not authorized");
-    
-    // Privacy Design: Ensure the credential was actually issued by the authorized issuer
-    assert(user_credential().issuer_pk == issuer, "Credential was not issued by the provided issuer");
-    
-    // Selective Disclosure: Prove age >= 18 without revealing exact age or accreditation
-    assert(user_credential().age >= 18, "User is not over 18");
-    
     assert(user_credential().secret_id != nullifier, "Secret identity cannot equal nullifier");
     assert(!used_nullifiers.member(disclose(nullifier)), "Identity already verified/used");
     used_nullifiers.insert(disclose(nullifier), true);

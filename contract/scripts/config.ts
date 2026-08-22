@@ -30,23 +30,23 @@ export const PREVIEW_CONFIG: NetworkConfig = {
   faucet: 'https://midnight-tmnight-preview.nethermind.dev/',
 };
 
-export const preview_CONFIG: NetworkConfig = {
-  networkId: 'preview',
-  indexer: 'https://indexer.preview.midnight.network/api/v4/graphql',
-  indexerWS: 'wss://indexer.preview.midnight.network/api/v4/graphql/ws',
-  node: 'https://rpc.preview.midnight.network',
-  nodeWS: 'wss://rpc.preview.midnight.network',
+export const PREPROD_CONFIG: NetworkConfig = {
+  networkId: 'testnet',
+  indexer: 'https://indexer.preprod.midnight.network/api/v4/graphql',
+  indexerWS: 'wss://indexer.preprod.midnight.network/api/v4/graphql/ws',
+  node: 'https://rpc.preprod.midnight.network',
+  nodeWS: 'wss://rpc.preprod.midnight.network',
   proofServer: process.env['MIDNIGHT_PROOF_SERVER'] ?? 'http://127.0.0.1:6300',
-  faucet: 'https://midnight-tmnight-preview.nethermind.dev/',
+  faucet: 'https://midnight-tmnight-testnet.nethermind.dev/',
 };
 
 export function getConfig(): NetworkConfig {
   const network = process.env['MIDNIGHT_NETWORK'] ?? 'local';
   if (network === 'local') return LOCAL_CONFIG;
   if (network === 'preview') return PREVIEW_CONFIG;
-  if (network === 'preview') return preview_CONFIG;
+  if (network === 'testnet' || network === 'preprod') return PREPROD_CONFIG;
   throw new Error(
-    `Unknown network: ${network}. Supported: 'local', 'preview', 'preview'.`,
+    `Unknown network: ${network}. Supported: 'local', 'preview', 'testnet'.`,
   );
 }
 
