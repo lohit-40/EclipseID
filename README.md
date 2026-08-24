@@ -134,7 +134,7 @@ On every push to `main`, the pipeline automatically:
 ## Level 2 - Waxing Crescent Submission Checklist
 
 - [x] **Public GitHub repository with README**
-- [x] **Live demo link (Vercel, Netlify, or similar):** [https://eclipse-id-frontend.pages.dev](https://eclipse-id-frontend.pages.dev) (Note to grader: If demo link is inactive, refer to the fully functional local setup instructions in this repository, as Cloudflare Pages preview links may expire.)
+- [x] **Live demo link (Vercel, Netlify, or similar):** [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app) (Note to grader: If demo link is inactive, refer to the fully functional local setup instructions in this repository, as Cloudflare Pages preview links may expire.)
 - [x] **Deployed Preview contract address (verifiable on-chain):** `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
 - [x] **Demo video (wallet connect + a successful circuit call):** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
 - [x] **README documenting the privacy claim:** See the [Privacy Claim](#privacy-claim) section above.
@@ -147,7 +147,7 @@ This project was built and enhanced for the Midnight Level 4 Submission. All req
 
 - [x] **Working MVP live on Preview (verifiable address):** 
   Contract Address: `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
-  Live MVP: [https://eclipse-id-frontend.pages.dev](https://eclipse-id-frontend.pages.dev)
+  Live MVP: [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app)
 - [x] **Documentation (README + setup + usage):** See sections below for architecture, privacy claims, and local setup.
 - [x] **CI/CD pipeline running on the product repo:** GitHub Actions workflow (`ci.yml`) is active with passing runs.
 - [x] **Product X profile created, linked in the README:** [Follow @EclipseID010 on X](https://x.com/EclipseID010)
@@ -157,7 +157,7 @@ This project was built and enhanced for the Midnight Level 4 Submission. All req
 ## Level 3 - First Quarter Submission Checklist
 
 - [x] **Public GitHub repository with complete README:** (This repository)
-- [x] **Live demo link:** [https://eclipse-id-frontend.pages.dev](https://eclipse-id-frontend.pages.dev) (See local run instructions if offline)
+- [x] **Live demo link:** [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app) (See local run instructions if offline)
 - [x] **Screenshot: test output (3+ tests passing):** Available in submission materials.
 - [x] **CI/CD badge or workflow file with passing runs:** Added to the top of this README.
 - [x] **Demo video (1 minute) showing full functionality:** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
