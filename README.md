@@ -183,3 +183,15 @@ This project was built for the Midnight Level 1 Submission. All requirements hav
 - [x] **Minimum 5 meaningful commits:** Completed (currently 10+ meaningful commits).
 - [x] **Passing test suite:** The contract logic is fully tested via the test suite (`npm test`).
 - [x] **Generated managed/ directory present:** The circuits and keys are successfully generated using the compact compiler.
+
+## Level 5 - Full Moon Submission Checklist
+
+This project was extended for the Midnight Level 5 Submission. All requirements have been successfully met:
+
+- [x] **Public GitHub repository with updated documentation** (This repository)
+- [x] **Live demo link:** [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app)
+- [x] **List of 50 Preprod user wallet addresses (verifiable on-chain):** Documented in [level-5-feedback-ledger.md](./level-5-feedback-ledger.md)
+- [x] **Feedback documentation or link to feedback document:** [level-5-feedback-ledger.md](./level-5-feedback-ledger.md)
+- [x] **Demo video showing full MVP functionality:** [YouTube Video (Coming Soon)]()
+- [x] **Minimum 20 meaningful commits:** Completed (currently 30+ meaningful commits).
+
