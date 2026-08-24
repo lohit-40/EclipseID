@@ -10,6 +10,7 @@ import Landing from './pages/Landing';
 import Darkpool from './pages/Darkpool';
 import Admin from './pages/Admin';
 import Developers from './pages/Developers';
+import Feedback from './pages/Feedback';
 
 // Link Component for Navbar
 const NavLink = ({ href, children }: { href: string; children: React.ReactNode }) => {
@@ -110,6 +111,7 @@ export default function App() {
           <div className="hidden md:flex items-center gap-8 bg-white/5 px-6 py-2 rounded-full border border-white/10">
             <NavLink href="/darkpool">Darkpool dApp</NavLink>
             <NavLink href="/developers">Developers</NavLink>
+            <NavLink href="/feedback">Give Feedback</NavLink>
             {isAdminMode && <NavLink href="/admin">Command Center</NavLink>}
           </div>
 
@@ -137,6 +139,7 @@ export default function App() {
             <Route path="/darkpool" element={<Darkpool />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/developers" element={<Developers />} />
+            <Route path="/feedback" element={<Feedback />} />
           </Routes>
         </main>
         
