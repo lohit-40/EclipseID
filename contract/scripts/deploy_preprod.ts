@@ -74,13 +74,13 @@ async function main() {
 
     logger.info("Deploying Contract...");
     // Retrieve owner's public key from the wallet
-    const ownerKeys = await providers.walletProvider.coinPublicKey();
+    const ownerKeys = wallet.getCoinPublicKey();
     
     const deployed = await deployContract(providers, {
         privateStateId: PRIVATE_STATE_ID,
         initialPrivateState: {},
         compiledContract: compiledContract,
-        args: [ownerKeys]
+        args: [Buffer.from(ownerKeys, 'hex')]
     });
 
     const contractAddress = deployed.deployTxData.public.contractAddress;

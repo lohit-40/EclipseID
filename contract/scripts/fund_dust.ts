@@ -1,5 +1,5 @@
-import { FaucetClient } from '@midnight-ntwrk/wallet-sdk-facade';
 import { FluentWalletBuilder } from '@midnight-ntwrk/testkit-js';
+import * as Rx from 'rxjs';
 import * as dotenv from 'dotenv';
 dotenv.config({ path: '.env.preview' });
 
@@ -39,17 +39,20 @@ async function run() {
   // Wait for the wallet to synchronize
   console.log('Wallet synchronized. Generating DUST from preview Faucet...');
 
-  const unshieldedAddress = await wallet.unshieldedAddress();
+  const unshieldedAddress = await built.keystore.deriveAddress(0);
   console.log('Unshielded Address:', unshieldedAddress);
   
-  const state = await wallet.state();
-  const balance = state.balances.unshielded;
-  console.log('Current tNIGHT balance:', balance.toString());
+  const state = await Rx.firstValueFrom(wallet.state());
+  const balance = state.unshielded.localState.balances;
+  console.log('Current balances:', balance);
   
   try {
-    const faucet = new FaucetClient('https://faucet.preview.midnight.network');
-    await faucet.requestFunds(unshieldedAddress);
-    console.log('Successfully requested DUST generation from Faucet!');
+    const res = await fetch(`https://faucet.preview.midnight.network/api/faucet/send`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address: unshieldedAddress })
+    });
+    console.log('Successfully requested DUST generation from Faucet! Status:', res.status);
   } catch (err) {
     console.error('Failed to request DUST:', err);
   }

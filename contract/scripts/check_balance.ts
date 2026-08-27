@@ -34,25 +34,17 @@ async function main() {
     
     const wallet = await MidnightWalletProvider.build(logger, envConfig, secret);
     await wallet.start();
-    const unshieldedAddr = await wallet.wallet.getUnshieldedAddress();
+    const state = await syncWallet(logger, wallet.wallet, 3600000);
+    const unshieldedAddr = await wallet.unshieldedKeystore.deriveAddress(0);
     console.log("==========================================");
     console.log("WALLET ADDRESS (for receiving funds):");
     console.log(unshieldedAddr);
     console.log("==========================================");
 
-    await syncWallet(logger, wallet.wallet, 3600000);
-    
-    const state = await wallet.wallet.state().pipe(
-        (obs) => new Promise<any>((resolve) => {
-            const sub = obs.subscribe((s) => {
-                sub.unsubscribe();
-                resolve(s);
-            });
-        })
-    );
-    
     console.log("WALLET STATE BALANCES:");
-    console.log(JSON.stringify(state.balances, null, 2));
+    console.log("Unshielded:", JSON.stringify(state.unshielded.localState.balances, null, 2));
+    console.log("Shielded:", JSON.stringify(state.shielded.state.balances, null, 2));
+    console.log("Dust:", JSON.stringify(state.dust.state.balance, null, 2));
     
     await wallet.stop();
 }
