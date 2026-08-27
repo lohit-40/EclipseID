@@ -1,36 +1,46 @@
 pragma language_version >= 0.14.0;
 import CompactStandardLibrary;
 
+export ledger owner: Bytes<32>;
 export ledger issuers: Map<Bytes<32>, Boolean>;
-export ledger used_nullifiers: Map<Bytes<32>, Boolean>;
+export ledger used_nullifiers: Map<Field, Boolean>;
 
 export struct UserAttributes {
-    secret_id: Bytes<32>,
+    secret_id: Field,
     issuer_pk: Bytes<32>,
     is_accredited: Boolean,
     age: Uint<8>
 }
 
 // The private witness representing the user's secret identity and attributes.
-// SECURITY: Kept entirely off-chain. Selective disclosure proves attributes without leaking the origin data.
 witness user_credential(): UserAttributes;
 
+// Witness representing the caller of the contract
+witness msgSender(): Bytes<32>;
+
+constructor(owner_pk: Bytes<32>) {
+    owner = disclose(owner_pk);
+}
+
 export circuit add_issuer(issuer: Bytes<32>): [] {
+    // VULNERABILITY 1 FIX: Strict Access Control
+    assert(msgSender() == owner, "Only owner can add issuers");
     issuers.insert(disclose(issuer), true);
 }
 
 // ZK Circuit 1: Verify and Claim
 export circuit verify_and_claim(
-    issuer: Bytes<32>,
-    nullifier: Bytes<32>
+    issuer: Bytes<32>
 ): [] {
     assert(issuers.member(disclose(issuer)), "Issuer not authorized");
     
     // Privacy Design: Ensure the credential was actually issued by the authorized issuer
     assert(user_credential().issuer_pk == issuer, "Credential was not issued by the provided issuer");
     
-    // Nullifier derivation check (simplified)
-    assert(user_credential().secret_id != nullifier, "Secret identity cannot equal nullifier");
+    // VULNERABILITY 2 FIX: Deterministic Cryptographic Nullifier
+    // Ensure the nullifier is mathematically derived from the private identity, preventing bypass
+    const nullifier = transientHash<Field>(user_credential().secret_id);
+    
     assert(!used_nullifiers.member(disclose(nullifier)), "Identity already verified/used");
     used_nullifiers.insert(disclose(nullifier), true);
 }
