@@ -7,6 +7,7 @@
     "build:compact": "compact compile src/EclipseID.compact managed",
     "deploy:preview": "tsx scripts/deploy_preview.ts",
     "deploy:preprod": "tsx scripts/deploy_preprod.ts",
+    "deploy:local": "tsx scripts/deploy_local.ts",
     "test": "jest"
   },
   "dependencies": {
