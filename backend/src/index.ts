@@ -46,29 +46,41 @@ async function sha256Hex(message: string): Promise<string> {
 // 32-byte static identifier for this Issuer backend
 const ISSUER_SECRET = "ECLIPSE_ID_BACKEND_ISSUER_SECRET_KEY_2026";
 
-app.post('/api/issuer/request-credential', async (c) => {
+app.get('/api/issuer/public-key', async (c) => {
+  try {
+    const issuerId = await sha256Hex(ISSUER_SECRET);
+    return c.json({ success: true, publicKey: issuerId });
+  } catch (err: any) {
+    return c.json({ success: false, error: err.message }, 500);
+  }
+});
+
+app.post('/api/issuer/issue', async (c) => {
   try {
     const body = await c.req.json();
-    const { email, address } = body;
+    const { email } = body;
     
-    if (!email || !address) {
-      return c.json({ success: false, error: 'Email and address are required' }, 400);
+    if (!email) {
+      return c.json({ success: false, error: 'Email is required' }, 400);
     }
 
-    // 1. Generate the Backend's 32-byte Issuer ID
-    const issuerId = await sha256Hex(ISSUER_SECRET);
-
-    // 2. Generate the User's unique Nullifier.
-    // In a real ZK application, the nullifier is derived from the user's secret identity.
-    // For this prototype, we simulate the credential issuance by giving the user a 
-    // unique nullifier tied to their email and address.
-    const nullifier = await sha256Hex(`${email}:${address}:${ISSUER_SECRET}`);
+    // Generate a random 32-byte secret identity (as a decimal string for BigInt)
+    // In a real app this would be derived deterministically or stored securely
+    const randomBytes = new Uint8Array(32);
+    crypto.getRandomValues(randomBytes);
+    let secretInt = 0n;
+    for (const b of randomBytes) {
+      secretInt = (secretInt << 8n) + BigInt(b);
+    }
+    // Field size in Midnight is roughly 254 bits, we modulo to be safe
+    // 2^253
+    const FIELD_PRIME = 28948022309329048855892746252171976963317496166410141009864396001978282409984n;
+    const secret_identity = (secretInt % FIELD_PRIME).toString();
 
     return c.json({ 
       success: true, 
-      issuerId,
-      nullifier,
-      message: 'Credential requested successfully. Ready for smart contract interaction.'
+      secret_identity,
+      message: 'Credential issued successfully.'
     });
   } catch (err: any) {
     return c.json({ success: false, error: err.message }, 500);

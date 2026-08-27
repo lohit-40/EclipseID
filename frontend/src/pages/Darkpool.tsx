@@ -9,6 +9,10 @@ import { type EclipseIdProviders } from '../providers';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
+const hexToBytes = (hex: string) => {
+  return new Uint8Array(hex.match(/.{1,2}/g)?.map(byte => parseInt(byte, 16)) || []);
+};
+
 export default function Darkpool() {
   const { wallet, address, isConnected } = useWallet();
   const [email, setEmail] = useState<string>('');
@@ -63,8 +67,8 @@ export default function Darkpool() {
       
       // Store the full UserAttributes struct for selective disclosure
       const userAttributes = {
-        secret_id: secret_identity,
-        issuer_pk: issuerData.publicKey,
+        secret_id: BigInt(secret_identity),
+        issuer_pk: hexToBytes(issuerData.publicKey),
         is_accredited: true,
         age: 25n // Represented as bigint for Compact's Uint type
       };
@@ -111,7 +115,7 @@ export default function Darkpool() {
         .map(b => b.toString(16).padStart(2, '0')).join('');
 
       // Call the Selective Disclosure circuit with issuer
-      const tx = await contract.callTx.verify_and_claim(data.publicKey);
+      const tx = await contract.callTx.verify_and_claim(hexToBytes(data.publicKey));
       
       setLoadingStep('Submitting Proof to Blockchain...');
       await providers.walletProvider.submitTransaction(await providers.proofProvider.proveTx(tx));
