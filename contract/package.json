@@ -4,7 +4,7 @@
   "description": "Confidential Credentials on Midnight",
   "type": "module",
   "scripts": {
-    "build:compact": "compact compile src/EclipseID.compact managed",
+    "build:compact": "wsl ../compact-x86_64-unknown-linux-musl/compact compile src/EclipseID.compact managed",
     "deploy:preview": "tsx scripts/deploy_preview.ts",
     "deploy:preprod": "tsx scripts/deploy_preprod.ts",
     "deploy:local": "tsx scripts/deploy_local.ts",
