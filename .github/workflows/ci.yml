@@ -32,7 +32,9 @@ jobs:
         with:
           compact-version: 'latest'
       - name: Build Contract
-        run: cd contract && compactc compile src/EclipseID.compact managed
+        run: |
+          chmod +x compact-x86_64-unknown-linux-musl/compact
+          cd contract && ../compact-x86_64-unknown-linux-musl/compact compile src/EclipseID.compact managed
       - name: Run Contract Tests
         run: cd contract && npm test
 
