@@ -239,7 +239,7 @@ export default function Darkpool() {
                   {hasAccess && <CheckCircle2 className="text-emerald-500 w-5 h-5" />}
                 </div>
                 
-                <p className="text-sm text-emerald-500/60 mb-4">Prove `age >= 18` and `is_accredited == true` via ZK circuit.</p>
+                <p className="text-sm text-emerald-500/60 mb-4">Prove `age &gt;= 18` and `is_accredited == true` via ZK circuit.</p>
                 <button
                   onClick={handleEnterDarkpool}
                   disabled={loading || !isVerified || hasAccess}

@@ -32,7 +32,7 @@ jobs:
         with:
           compact-version: 'latest'
       - name: Build Contract
-        run: cd contract && npm run build:compact
+        run: cd contract && compactc compile src/EclipseID.compact managed
       - name: Run Contract Tests
         run: cd contract && npm test
 
