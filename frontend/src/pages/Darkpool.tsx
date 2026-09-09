@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useWallet } from '../WalletContext';
 import { createMidnightProviders } from '../providers';
 import { Contract } from '../contract/index';
 export type EclipseIdContract = Contract<any, any>;
-import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
 import { type EclipseIdProviders } from '../providers';
+import { ShieldCheck, Lock, Terminal, Activity, CheckCircle2 } from 'lucide-react';
+import ScrambleText from '../components/ScrambleText';
+import { playSound } from '../utils/sounds';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -22,6 +26,22 @@ export default function Darkpool() {
   const [loadingStep, setLoadingStep] = useState<string>('');
   const [error, setError] = useState<string>('');
   const [txResult, setTxResult] = useState<string>('');
+  const [logs, setLogs] = useState<string[]>([]);
+  
+  const container = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.from('.terminal-window', {
+      y: 20,
+      opacity: 0,
+      duration: 0.8,
+      ease: "power3.out",
+    });
+  }, { scope: container });
+
+  const addLog = (msg: string) => {
+    setLogs(prev => [...prev, `[${new Date().toISOString().split('T')[1].split('.')[0]}] ${msg}`]);
+  };
 
   const getContractAddress = async (): Promise<string> => {
     try {
@@ -30,7 +50,7 @@ export default function Darkpool() {
       if (data.contractAddress) return data.contractAddress;
       throw new Error('Contract Address not found');
     } catch (err) {
-      throw new Error('Smart Contract is not configured. Please wait for the admin to deploy it.');
+      throw new Error('Smart Contract is not configured. Wait for admin deployment.');
     }
   };
 
@@ -42,9 +62,11 @@ export default function Darkpool() {
   const handleVerify = async () => {
     if (!wallet || !email) return;
     try {
-      setLoading(true); setError(''); setTxResult('');
+      playSound('scan');
+      setLoading(true); setError(''); setTxResult(''); setLogs([]);
       
-      setLoadingStep('Generating Confidential ID...');
+      const step1 = 'Generating Confidential ID via Issuer...';
+      setLoadingStep(step1); addLog(step1);
       const req = await fetch(`${BACKEND_URL}/api/issuer/issue`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -52,6 +74,7 @@ export default function Darkpool() {
       });
       const data = await req.json();
       if (!data.success) throw new Error(data.error);
+      playSound('success');
       
       const { secret_identity } = data;
       const providers = await createMidnightProviders(wallet, {
@@ -59,34 +82,31 @@ export default function Darkpool() {
         indexerWS: 'wss://indexer.preview.midnight.network/api/v4/graphql/ws',
       });
       
-      setLoadingStep('Securing ID & Attributes in Local Shielded Vault...');
+      const step2 = 'Securing ID & Attributes in Local Shielded Vault...';
+      setLoadingStep(step2); addLog(step2);
+      playSound('scan');
       
-      // Fetch the authorized issuer's public key from the backend to construct the witness
       const issuerReq = await fetch(`${BACKEND_URL}/api/issuer/public-key`);
       const issuerData = await issuerReq.json();
       
-      // Store the full UserAttributes struct for selective disclosure
       const userAttributes = {
         secret_id: BigInt(secret_identity),
         issuer_pk: hexToBytes(issuerData.publicKey),
         is_accredited: true,
-        age: 25n // Represented as bigint for Compact's Uint type
+        age: 25n 
       };
       await providers.privateStateProvider.set('user_credential', userAttributes);
       
-      setLoadingStep('Synchronizing with Global Smart Contract...');
-      const contract = await getContractInstance(providers);
-      
-      setLoadingStep('Executing ZK Transaction (Waiting for Indexer)...');
-      // For testing MVP flow, we skip actually pushing the issuer to the ledger here and assume they are in
-      // Since it's a mock UI, we just simulate the UI flow. We'll update Darkpool.
-      // Wait, verify_and_claim is gone. We just verified the credential is saved.
+      addLog('Attributes Shielded Locally (Age: 25, Accredited: true).');
+      playSound('success');
       
       setIsVerified(true);
       setTxResult('Successfully Verified Off-Chain! Your full KYC attributes are shielded locally.');
     } catch (err: any) {
+      playSound('error');
       console.error(err);
       setError(err.message || 'Verification failed. Make sure your Lace wallet is unlocked.');
+      addLog(`ERROR: ${err.message}`);
     } finally {
       setLoading(false);
       setLoadingStep('');
@@ -96,8 +116,11 @@ export default function Darkpool() {
   const handleEnterDarkpool = async () => {
     if (!wallet) return;
     try {
-      setLoading(true); setError(''); setTxResult('');
-      setLoadingStep('Generating ZK Proof of Accreditation...');
+      playSound('scan');
+      setLoading(true); setError(''); setTxResult(''); setLogs([]);
+      
+      const step1 = 'Generating ZK Proof of Accreditation & Age...';
+      setLoadingStep(step1); addLog(step1);
       
       const providers = await createMidnightProviders(wallet, {
         indexer: 'https://indexer.preview.midnight.network/api/v4/graphql',
@@ -106,25 +129,31 @@ export default function Darkpool() {
       
       const contract = await getContractInstance(providers);
       
-      setLoadingStep('Fetching Authorized Issuer & Generating Nullifier...');
+      addLog('Fetching Authorized Issuer...');
       const req = await fetch(`${BACKEND_URL}/api/issuer/public-key`);
       const data = await req.json();
-      if (!data.publicKey) throw new Error('Could not fetch issuer public key from backend');
-      
-      const nullifier = Array.from(crypto.getRandomValues(new Uint8Array(32)))
-        .map(b => b.toString(16).padStart(2, '0')).join('');
+      if (!data.publicKey) throw new Error('Could not fetch issuer public key');
+      playSound('success');
 
-      // Call the Selective Disclosure circuit with issuer, minimum age, and accreditation requirement
+      addLog('Proving: is_accredited == true && age >= 18');
+      playSound('scan');
+      
+      // Call the Selective Disclosure circuit
       const tx = await contract.callTx.verify_and_claim(hexToBytes(data.publicKey), 18n, true);
       
-      setLoadingStep('Submitting Proof to Blockchain...');
+      const step2 = 'Submitting ZK Proof to Blockchain...';
+      setLoadingStep(step2); addLog(step2);
       await providers.walletProvider.submitTransaction(await providers.proofProvider.proveTx(tx));
       
-      setTxResult('Access Granted! You have anonymously entered the Darkpool.');
+      playSound('success');
+      setTxResult('ACCESS GRANTED. You have anonymously entered the Darkpool.');
+      addLog('Transaction confirmed. ZK Proof validated on-chain.');
       setHasAccess(true);
     } catch (err: any) {
+      playSound('error');
       console.error(err);
       setError(err.message || 'Access Denied. Proof generation failed.');
+      addLog(`ACCESS DENIED: ${err.message}`);
     } finally {
       setLoading(false);
       setLoadingStep('');
@@ -133,114 +162,141 @@ export default function Darkpool() {
 
   if (!isConnected) {
     return (
-      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center">
-        <h2 className="text-3xl font-bold text-rose-100 mb-4">Connect Wallet to Access Darkpool</h2>
-        <p className="text-rose-200/60 mb-8">You must connect your Lace wallet to prove your accredited status.</p>
-        <div className="w-16 h-16 rounded-full bg-[#070410] border border-rose-500/20 flex items-center justify-center animate-pulse">
-           <svg className="w-8 h-8 text-rose-500/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
-        </div>
+      <div className="flex flex-col items-center justify-center pt-32 px-4 text-center font-mono">
+        <Lock className="w-16 h-16 text-emerald-500 mb-6 animate-pulse drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+        <h2 className="text-3xl font-black text-emerald-400 mb-4 tracking-widest">ENCRYPTED_SECTOR</h2>
+        <p className="text-emerald-500/60 mb-8 border border-emerald-900/50 bg-[#0a140f] px-6 py-3">CONNECTION REQUIRED FOR ZK_AUTH</p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-xl mx-auto mt-12">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-[#070410]/50 p-8 rounded-3xl border border-white/5 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-500 to-rose-600" />
-        
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-rose-50 tracking-tight">Confidential DeFi Darkpool</h2>
-          <p className="text-sm text-rose-200/60 mt-2 font-medium">Verify your KYC credentials off-chain and prove your accredited status to the smart contract using zero-knowledge.</p>
+    <div ref={container} className="max-w-4xl mx-auto mt-12 px-4 font-mono">
+      <div className="terminal-window bg-[#0a140f] rounded-none border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.1)] relative overflow-hidden">
+        {/* Hacker Terminal Header */}
+        <div className="bg-emerald-900/20 border-b border-emerald-500/30 p-3 flex items-center justify-between">
+          <div className="flex items-center gap-3 text-emerald-500 text-sm tracking-widest font-bold">
+            <Terminal size={16} />
+            <span>ZK_AUTH_TERMINAL_V1.0</span>
+          </div>
+          <div className="flex gap-2">
+            <div className="w-3 h-3 rounded-full bg-emerald-500/20 border border-emerald-500/50" />
+            <div className="w-3 h-3 rounded-full bg-emerald-500/20 border border-emerald-500/50" />
+            <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+          </div>
         </div>
 
-        {!isVerified ? (
-          <div className="space-y-6">
-            <div>
-              <label className="block text-xs font-bold text-rose-200/40 uppercase tracking-widest mb-2">Off-chain Verification</label>
-              <input 
-                type="email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-black/40 border border-white/10 focus:border-cyan-500/50 outline-none rounded-xl p-4 text-rose-50 transition-colors"
-                placeholder="Enter your registered email"
-              />
-            </div>
-            
-            <button 
-              onClick={handleVerify}
-              disabled={loading || !email}
-              className="w-full bg-gradient-to-r from-cyan-500/20 to-blue-600/20 hover:from-cyan-500/30 hover:to-blue-600/30 text-cyan-400 font-bold py-4 rounded-xl border border-cyan-500/20 transition-all disabled:opacity-50"
-            >
-              Issue ZK Credential
-            </button>
+        <div className="p-8">
+          <div className="mb-8 border-l-2 border-emerald-500 pl-4 py-2">
+             <h2 className="text-2xl font-black text-emerald-400 mb-2 uppercase tracking-widest"><ScrambleText text="Authentication Protocol" delayMs={100} /></h2>
+             <p className="text-emerald-500/70 text-sm">Execute local KYC shielding and generate zero-knowledge proof of compliance to access the Darkpool.</p>
           </div>
-        ) : !hasAccess ? (
-          <div className="space-y-6">
-            <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-400 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-              <div>
-                <h4 className="text-green-400 font-bold text-sm">Credential Secured</h4>
-                <p className="text-green-400/60 text-xs mt-1">Your cryptographic identity is safely stored in your local wallet's private state.</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            {/* Action Panel */}
+            <div className="space-y-8">
+              {/* Step 1 */}
+              <div className={`p-6 border transition-all ${isVerified ? 'bg-emerald-900/10 border-emerald-500/20' : 'bg-[#070410] border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]'}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-emerald-300 flex items-center gap-2">
+                    <span className="text-xs bg-emerald-500/20 px-2 py-1 text-emerald-400">STEP_01</span>
+                    Local KYC Shield
+                  </h3>
+                  {isVerified && <CheckCircle2 className="text-emerald-500 w-5 h-5" />}
+                </div>
+                
+                {!isVerified ? (
+                  <>
+                    <p className="text-sm text-emerald-500/60 mb-4">Simulate KYC API to fetch and shield attributes locally.</p>
+                    <input
+                      type="email"
+                      placeholder="ENTER_EMAIL_ADDRESS"
+                      className="w-full bg-black border border-emerald-500/30 rounded-none px-4 py-3 text-emerald-300 focus:outline-none focus:border-emerald-400 focus:shadow-[0_0_10px_rgba(16,185,129,0.3)] placeholder:text-emerald-900/50 mb-4 font-mono transition-all"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <button
+                      onClick={handleVerify}
+                      disabled={loading || !email}
+                      className="w-full bg-emerald-500/10 border border-emerald-500 text-emerald-400 font-bold py-3 hover:bg-emerald-500 hover:text-black transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group"
+                    >
+                      <ShieldCheck className="group-hover:animate-pulse" size={18} />
+                      EXECUTE_SHIELDING
+                    </button>
+                  </>
+                ) : (
+                  <p className="text-sm text-emerald-400">KYC attributes successfully shielded in local Midnight vault.</p>
+                )}
+              </div>
+
+              {/* Step 2 */}
+              <div className={`p-6 border transition-all ${!isVerified ? 'opacity-50 border-emerald-900/30' : 'bg-[#070410] border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]'} ${hasAccess ? 'border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)]' : ''}`}>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-bold text-emerald-300 flex items-center gap-2">
+                    <span className="text-xs bg-emerald-500/20 px-2 py-1 text-emerald-400">STEP_02</span>
+                    ZK Compliance Proof
+                  </h3>
+                  {hasAccess && <CheckCircle2 className="text-emerald-500 w-5 h-5" />}
+                </div>
+                
+                <p className="text-sm text-emerald-500/60 mb-4">Prove `age >= 18` and `is_accredited == true` via ZK circuit.</p>
+                <button
+                  onClick={handleEnterDarkpool}
+                  disabled={loading || !isVerified || hasAccess}
+                  className="w-full bg-emerald-500/10 border border-emerald-500 text-emerald-400 font-bold py-3 hover:bg-emerald-500 hover:text-black transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group"
+                >
+                  <Activity className="group-hover:animate-pulse" size={18} />
+                  GENERATE_PROOF
+                </button>
               </div>
             </div>
 
-            <button 
-              onClick={handleEnterDarkpool}
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:scale-[1.02] text-white font-bold py-4 rounded-xl shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:hover:scale-100 relative overflow-hidden group"
-            >
-              <span className="relative z-10">Access Darkpool Anonymously</span>
-              <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform" />
-            </button>
+            {/* Terminal Output Panel */}
+            <div className="bg-black border border-emerald-900/50 p-4 font-mono text-xs flex flex-col relative h-[400px]">
+              <div className="absolute top-0 right-0 bg-emerald-900/30 px-2 py-1 text-emerald-500 border-b border-l border-emerald-900/50">OUTPUT_LOG</div>
+              <div className="flex-1 overflow-y-auto space-y-2 mt-6 pr-2 custom-scrollbar">
+                <div className="text-emerald-500/40">SYSTEM READY. AWAITING COMMANDS...</div>
+                {logs.map((log, i) => (
+                  <div key={i} className={log.includes('ERROR') || log.includes('DENIED') ? 'text-rose-500' : 'text-emerald-400'}>
+                    <ScrambleText text={log} delayMs={0} />
+                  </div>
+                ))}
+                
+                {loading && (
+                  <div className="flex items-center gap-2 text-emerald-300 mt-4">
+                    <span className="animate-pulse">_</span>
+                    <ScrambleText text={loadingStep} delayMs={50} />
+                  </div>
+                )}
+                
+                {error && (
+                  <div className="text-rose-500 border-l-2 border-rose-500 pl-2 mt-4 bg-rose-500/10 py-2">
+                    <ScrambleText text={error} />
+                  </div>
+                )}
+                
+                {txResult && (
+                  <div className="text-emerald-300 border-l-2 border-emerald-500 pl-2 mt-4 bg-emerald-500/10 py-2 font-bold shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                    <ScrambleText text={txResult} />
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
-        ) : (
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-8 bg-black/40 border border-white/5 p-6 rounded-2xl w-full">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-rose-50">Confidential OTC Orderbook</h3>
-              <span className="bg-green-500/20 text-green-400 text-xs px-3 py-1 rounded-full border border-green-500/30 font-bold">Verified Anonymous</span>
-            </div>
-            
-            <div className="space-y-3">
-              {[
-                { pair: 'BTC / USDC', size: '250.00', price: '$64,230', type: 'Buy' },
-                { pair: 'ETH / USDC', size: '1,500.00', price: '$3,450', type: 'Sell' },
-                { pair: 'SOL / USDC', size: '10,000.00', price: '$145.20', type: 'Buy' },
-              ].map((order, i) => (
-                <div key={i} className="flex items-center justify-between p-4 bg-white/5 rounded-xl border border-white/5 hover:bg-white/10 transition-colors cursor-pointer group">
-                  <div>
-                    <p className="font-bold text-rose-50">{order.pair}</p>
-                    <p className="text-xs text-rose-200/50 group-hover:text-rose-200/80 transition-colors">Size: {order.size}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className={`font-bold ${order.type === 'Buy' ? 'text-green-400' : 'text-red-400'}`}>{order.price}</p>
-                    <button className="mt-1 text-xs bg-white/10 hover:bg-white/20 px-3 py-1 rounded text-white transition-colors">Fill {order.type}</button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {loading && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mt-8 flex flex-col items-center justify-center p-6 bg-black/40 rounded-2xl border border-white/5">
-            <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mb-4" />
-            <p className="text-sm font-medium text-rose-200/60 animate-pulse text-center">{loadingStep}</p>
-          </motion.div>
-        )}
-
-        {txResult && !loading && (
-          <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mt-8 bg-green-500/10 border border-green-500/20 text-green-400 p-4 rounded-2xl text-center text-sm font-bold shadow-[0_0_30px_rgba(74,222,128,0.1)]">
-            {txResult}
-          </motion.div>
-        )}
-      </motion.div>
+        </div>
+      </div>
       
-      {error && !loading && (
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="mt-6 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-2xl text-center text-sm font-medium">
-          {error}
-        </motion.div>
-      )}
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #000;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #10b981;
+        }
+      `}</style>
     </div>
   );
 }
-
