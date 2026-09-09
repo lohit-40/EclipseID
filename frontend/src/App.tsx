@@ -3,7 +3,9 @@ import { motion } from 'framer-motion';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { type DAppConnectorWalletAPI } from '@midnight-ntwrk/dapp-connector-api';
 import { useWallet } from './WalletContext';
-import { Moon, Fingerprint } from 'lucide-react';
+import { Terminal, Shield } from 'lucide-react';
+import ScrambleText from './components/ScrambleText';
+import { playSound } from './utils/sounds';
 
 // Pages
 import Landing from './pages/Landing';
@@ -20,7 +22,7 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link 
       to={href}
-      className={`transition-colors font-medium text-sm ${isActive ? 'text-rose-100 font-bold border-b border-rose-500' : 'text-rose-200/60 hover:text-rose-100'}`}
+      className={`transition-colors font-medium text-sm ${isActive ? 'text-emerald-400 font-bold border-b border-emerald-500 shadow-[0_4px_15px_-3px_rgba(16,185,129,0.5)]' : 'text-emerald-200/60 hover:text-emerald-100'}`}
     >
       {children}
     </Link>
@@ -60,7 +62,9 @@ export default function App() {
   }, []);
 
   const connectWallet = async () => {
+    playSound('scan');
     if (!window.midnight) {
+      playSound('error');
       alert("Midnight wallet extension not found! Please install a compatible wallet like Lace.");
       return;
     }
@@ -81,34 +85,37 @@ export default function App() {
       const state = await connectedApi.state();
       setIsConnected(true);
       setAddress(state.unshieldedAddress);
+      playSound('success');
     } catch (err) {
+      playSound('error');
       console.error("User rejected connection or connection failed", err);
     }
   };
 
   const disconnectWallet = () => {
+    playSound('alert');
     setWallet(null);
     setIsConnected(false);
     setAddress('');
   };
 
   return (
-    <div className="min-h-screen bg-[#070410] text-rose-50 selection:bg-rose-500/30 selection:text-white font-sans relative overflow-x-hidden">
-      {/* High-Performance Static Gradient Background (Zero GPU Overhead) */}
-      <div className="fixed inset-0 z-0 pointer-events-none bg-[radial-gradient(circle_at_20%_30%,_rgba(225,29,72,0.1)_0%,_transparent_50%),radial-gradient(circle_at_80%_80%,_rgba(107,33,168,0.15)_0%,_transparent_60%)]" />
+    <div className="min-h-screen bg-[#070410] text-emerald-50 selection:bg-emerald-500/30 selection:text-white font-mono relative overflow-x-hidden">
+      {/* Cyber grid background matching Stellar project */}
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-20 bg-[linear-gradient(to_right,#0f2e1b_1px,transparent_1px),linear-gradient(to_bottom,#0f2e1b_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        {/* Sleek Navigation Bar */}
-        <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full backdrop-blur-sm border-b border-white/5 sticky top-0 bg-[#070410]/80">
+        {/* Sleek Hacker Navigation Bar */}
+        <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full backdrop-blur-md border-b border-emerald-900/50 sticky top-0 bg-[#070410]/80 z-50">
           <Link to="/" className="text-2xl font-black tracking-tighter flex items-center gap-3 group">
             <div className="relative w-10 h-10 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Moon className="absolute inset-0 text-cyan-500 w-full h-full fill-cyan-500/20 drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]" strokeWidth={2} />
-              <Fingerprint className="absolute inset-0 text-white w-full h-full scale-[0.65] drop-shadow-md" strokeWidth={1.5} />
+              <Shield className="absolute inset-0 text-emerald-500 w-full h-full drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]" strokeWidth={1.5} />
+              <Terminal className="absolute inset-0 text-[#070410] w-full h-full scale-[0.5] z-10 fill-emerald-500" strokeWidth={2} />
             </div>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-blue-400 drop-shadow-md">EclipseID</span>
+            <ScrambleText text="EclipseID" className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-500 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" delayMs={100} />
           </Link>
           
-          <div className="hidden md:flex items-center gap-8 bg-white/5 px-6 py-2 rounded-full border border-white/10">
+          <div className="hidden md:flex items-center gap-8 bg-black/40 px-6 py-2 rounded-none border border-emerald-900/50 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]">
             <NavLink href="/darkpool">Darkpool dApp</NavLink>
             <NavLink href="/developers">Developers</NavLink>
             <NavLink href="/feedback">Give Feedback</NavLink>
@@ -117,16 +124,17 @@ export default function App() {
 
           <div className="flex items-center gap-4">
             {!isConnected ? (
-              <button onClick={connectWallet} className="bg-white/10 hover:bg-white/20 text-rose-50 px-6 py-2 rounded-full font-semibold border border-white/10 transition-all shadow-lg backdrop-blur-md cursor-pointer">
-                Connect Lace
+              <button onClick={connectWallet} className="relative group overflow-hidden bg-transparent border border-emerald-500/50 text-emerald-400 px-6 py-2 font-mono font-bold transition-all hover:bg-emerald-500/10 hover:border-emerald-400 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] cursor-pointer rounded-none">
+                <span className="relative z-10">CONNECT_WALLET</span>
+                <div className="absolute inset-0 bg-emerald-500/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
               </button>
             ) : (
-              <div className="flex items-center gap-4 bg-black/40 px-4 py-2 rounded-full border border-white/5">
+              <div className="flex items-center gap-4 bg-[#0a140f] px-4 py-2 border border-emerald-500/30 rounded-none shadow-[inset_0_0_10px_rgba(16,185,129,0.1)]">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.6)]" />
-                  <span className="text-xs font-mono text-rose-200/70">{address.slice(0, 12)}...</span>
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+                  <span className="text-xs font-mono text-emerald-400/80 tracking-widest">{address.slice(0, 12)}...</span>
                 </div>
-                <button onClick={disconnectWallet} className="text-xs text-rose-400 hover:text-rose-300 transition-colors">Disconnect</button>
+                <button onClick={disconnectWallet} className="text-xs text-rose-500 hover:text-rose-400 transition-colors tracking-widest">[ DISCONNECT ]</button>
               </div>
             )}
           </div>
@@ -144,15 +152,13 @@ export default function App() {
         </main>
         
         {/* Footer */}
-        <footer className="w-full flex flex-col items-center justify-center py-8 text-rose-200/30 text-xs border-t border-white/5 mt-auto gap-3">
-          <p>Built on Midnight Network • Zero-Knowledge Identity Protocol</p>
-          <a href="https://x.com/EclipseID010" target="_blank" rel="noreferrer" className="hover:text-rose-200 transition-colors flex items-center gap-1.5 font-medium">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            Follow @EclipseID010
+        <footer className="w-full flex flex-col items-center justify-center py-8 text-emerald-500/40 text-xs border-t border-emerald-900/30 mt-auto gap-3 font-mono tracking-widest">
+          <p>SYSTEM.CORE.MIDNIGHT_NETWORK // ZK.IDENTITY.PROTOCOL</p>
+          <a href="https://x.com/EclipseID010" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 font-bold">
+            [ FOLLOW_X ]
           </a>
         </footer>
       </div>
     </div>
   );
 }
-
