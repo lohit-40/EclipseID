@@ -31,6 +31,9 @@ jobs:
         uses: midnightntwrk/setup-compact-action@v1
         with:
           compact-version: 'latest'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Build Contract
         run: cd contract && compact compile src/EclipseID.compact managed
       - name: Run Contract Tests
