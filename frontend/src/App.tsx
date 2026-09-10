@@ -1,7 +1,5 @@
 import { useEffect } from 'react';
-import { motion } from 'framer-motion';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
-import { type DAppConnectorWalletAPI } from '@midnight-ntwrk/dapp-connector-api';
 import { useWallet } from './WalletContext';
 import { Terminal, Shield } from 'lucide-react';
 import ScrambleText from './components/ScrambleText';
@@ -22,7 +20,7 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link 
       to={href}
-      className={`transition-colors font-medium text-sm ${isActive ? 'text-vibe-primary font-bold border-b border-vibe-accent shadow-[0_4px_15px_-3px_rgba(16,185,129,0.5)]' : 'text-vibe-secondary/80/60 hover:text-white/90'}`}
+      className={`transition-all font-bold text-sm px-4 py-2 uppercase tracking-widest border-2 ${isActive ? 'bg-brutal-orange text-brutal-bg border-brutal-orange shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]' : 'bg-brutal-bg text-brutal-text border-brutal-text hover:bg-brutal-text hover:text-brutal-bg shadow-[2px_2px_0px_0px_rgba(28,28,28,1)] hover:shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]'}`}
     >
       {children}
     </Link>
@@ -69,13 +67,9 @@ export default function App() {
       return;
     }
     try {
-      // Use mnLace if available, otherwise fallback to the generic window.midnight connector
       const connector = window.midnight.mnLace || window.midnight;
-      
-      // Some wallet versions use connect(), some use enable()
       const api = await (connector.enable ? connector.enable() : connector.connect());
       
-      // If it returned an InitialAPI (has requestAuthorization), authorize it
       let connectedApi = api;
       if (api.requestAuthorization) {
          connectedApi = await api.requestAuthorization();
@@ -100,22 +94,19 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030008] text-white selection:bg-vibe-accent/30 selection:text-white font-mono relative overflow-x-hidden">
-      {/* Cyber grid background matching Stellar project */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-20 bg-[linear-gradient(to_right,#1a0033_1px,transparent_1px),linear-gradient(to_bottom,#1a0033_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+    <div className="min-h-screen bg-brutal-bg text-brutal-text selection:bg-brutal-orange selection:text-brutal-bg font-sans relative overflow-x-hidden">
+      <div className="grain-overlay" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        {/* Sleek Hacker Navigation Bar */}
-        <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full backdrop-blur-md border-b border-vibe-dark/50 sticky top-0 bg-[#030008]/80 z-50">
-          <Link to="/" className="text-2xl font-black tracking-tighter flex items-center gap-3 group">
-            <div className="relative w-10 h-10 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Shield className="absolute inset-0 text-vibe-accent w-full h-full drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]" strokeWidth={1.5} />
-              <Terminal className="absolute inset-0 text-[#070410] w-full h-full scale-[0.5] z-10 fill-vibe-accent" strokeWidth={2} />
+        <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full sticky top-0 bg-brutal-bg z-50 border-b-4 border-brutal-text mb-8">
+          <Link to="/" className="text-3xl font-black tracking-tighter flex items-center gap-3 group uppercase">
+            <div className="relative w-10 h-10 flex items-center justify-center bg-brutal-orange text-brutal-bg border-2 border-brutal-text shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-[2px_2px_0px_0px_rgba(28,28,28,1)] transition-all">
+              <Shield className="absolute inset-0 w-full h-full p-2" strokeWidth={2.5} />
             </div>
-            <ScrambleText text="EclipseID" className="text-transparent bg-clip-text bg-gradient-to-r from-vibe-secondary to-vibe-primary drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" delayMs={100} />
+            <ScrambleText text="EclipseID" className="text-brutal-text" delayMs={100} />
           </Link>
           
-          <div className="hidden md:flex items-center gap-8 bg-black/40 px-6 py-2 rounded-none border border-vibe-dark/50 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]">
+          <div className="hidden md:flex items-center gap-4">
             <NavLink href="/darkpool">Darkpool dApp</NavLink>
             <NavLink href="/developers">Developers</NavLink>
             <NavLink href="/feedback">Give Feedback</NavLink>
@@ -124,23 +115,21 @@ export default function App() {
 
           <div className="flex items-center gap-4">
             {!isConnected ? (
-              <button onClick={connectWallet} className="relative group overflow-hidden bg-transparent border border-vibe-accent/50 text-vibe-primary px-6 py-2 font-mono font-bold transition-all hover:bg-vibe-accent/10 hover:border-vibe-primary hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] cursor-pointer rounded-none">
-                <span className="relative z-10">CONNECT_WALLET</span>
-                <div className="absolute inset-0 bg-vibe-accent/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+              <button onClick={connectWallet} className="brutal-btn py-2 px-4 shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(28,28,28,1)]">
+                CONNECT WALLET
               </button>
             ) : (
-              <div className="flex items-center gap-4 bg-[#0a0014] px-4 py-2 border border-vibe-accent/30 rounded-none shadow-[inset_0_0_10px_rgba(16,185,129,0.1)]">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-vibe-accent animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
-                  <span className="text-xs font-mono text-vibe-primary/80 tracking-widest">{address.slice(0, 12)}...</span>
+              <div className="flex items-center gap-4 bg-brutal-bg px-4 py-2 border-2 border-brutal-text shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
+                <div className="flex items-center gap-2 font-bold">
+                  <div className="w-3 h-3 rounded-none bg-brutal-orange border-2 border-brutal-text" />
+                  <span className="text-xs uppercase tracking-widest">{address.slice(0, 12)}...</span>
                 </div>
-                <button onClick={disconnectWallet} className="text-xs text-rose-500 hover:text-rose-400 transition-colors tracking-widest">[ DISCONNECT ]</button>
+                <button onClick={disconnectWallet} className="text-xs font-bold bg-brutal-text text-brutal-bg px-2 py-1 uppercase tracking-widest hover:bg-brutal-orange transition-colors border-2 border-transparent hover:border-brutal-text">DISCONNECT</button>
               </div>
             )}
           </div>
         </nav>
 
-        {/* Page Content */}
         <main className="flex-1 w-full relative">
           <Routes>
             <Route path="/" element={<Landing />} />
@@ -151,11 +140,10 @@ export default function App() {
           </Routes>
         </main>
         
-        {/* Footer */}
-        <footer className="w-full flex flex-col items-center justify-center py-8 text-vibe-accent/40 text-xs border-t border-vibe-dark/30 mt-auto gap-3 font-mono tracking-widest">
+        <footer className="w-full flex flex-col items-center justify-center py-8 text-brutal-text text-xs border-t-4 border-brutal-text mt-auto gap-3 font-bold uppercase tracking-widest bg-brutal-orange bg-opacity-10">
           <p>SYSTEM.CORE.MIDNIGHT_NETWORK // ZK.IDENTITY.PROTOCOL</p>
-          <a href="https://x.com/EclipseID010" target="_blank" rel="noreferrer" className="hover:text-vibe-primary transition-colors flex items-center gap-1.5 font-bold">
-            [ FOLLOW_X ]
+          <a href="https://x.com/EclipseID010" target="_blank" rel="noreferrer" className="hover:text-brutal-orange transition-colors flex items-center gap-1.5 underline underline-offset-4 decoration-2">
+            [ FOLLOW X ]
           </a>
         </footer>
       </div>

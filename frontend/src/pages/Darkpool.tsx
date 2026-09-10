@@ -162,121 +162,121 @@ export default function Darkpool() {
 
   if (!isConnected) {
     return (
-      <div className="flex flex-col items-center justify-center pt-32 px-4 text-center font-mono">
-        <Lock className="w-16 h-16 text-vibe-accent mb-6 animate-pulse drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
-        <h2 className="text-3xl font-black text-vibe-primary mb-4 tracking-widest">ENCRYPTED_SECTOR</h2>
-        <p className="text-vibe-accent/60 mb-8 border border-vibe-dark/50 bg-[#0a0014] px-6 py-3">CONNECTION REQUIRED FOR ZK_AUTH</p>
+      <div className="flex flex-col items-center justify-center pt-32 px-4 text-center font-sans">
+        <Lock className="w-24 h-24 text-brutal-text mb-6 drop-shadow-[4px_4px_0px_rgba(255,69,34,1)]" />
+        <h2 className="text-4xl font-black text-brutal-text mb-4 tracking-widest uppercase">ENCRYPTED SECTOR</h2>
+        <p className="text-brutal-bg mb-8 border-4 border-brutal-text bg-brutal-orange px-6 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">CONNECTION REQUIRED FOR ZK_AUTH</p>
       </div>
     );
   }
 
   return (
-    <div ref={container} className="max-w-4xl mx-auto mt-12 px-4 font-mono">
-      <div className="terminal-window bg-[#0a0014] rounded-none border border-vibe-accent/30 shadow-[0_0_30px_rgba(16,185,129,0.1)] relative overflow-hidden">
+    <div ref={container} className="max-w-5xl mx-auto mt-12 px-4 font-sans">
+      <div className="terminal-window bg-white rounded-none border-4 border-brutal-text shadow-[8px_8px_0px_0px_rgba(28,28,28,1)] relative overflow-hidden">
         {/* Hacker Terminal Header */}
-        <div className="bg-vibe-dark/20 border-b border-vibe-accent/30 p-3 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-vibe-accent text-sm tracking-widest font-bold">
+        <div className="bg-brutal-bg border-b-4 border-brutal-text p-3 flex items-center justify-between">
+          <div className="flex items-center gap-3 text-brutal-text text-sm tracking-widest font-bold">
             <Terminal size={16} />
             <span>ZK_AUTH_TERMINAL_V1.0</span>
           </div>
           <div className="flex gap-2">
-            <div className="w-3 h-3 rounded-full bg-vibe-accent/20 border border-vibe-accent/50" />
-            <div className="w-3 h-3 rounded-full bg-vibe-accent/20 border border-vibe-accent/50" />
-            <div className="w-3 h-3 rounded-full bg-vibe-accent animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+            <div className="w-4 h-4 rounded-none bg-brutal-bg border-2 border-brutal-text" />
+            <div className="w-4 h-4 rounded-none bg-brutal-bg border-2 border-brutal-text" />
+            <div className="w-4 h-4 rounded-none bg-brutal-orange border-2 border-brutal-text" />
           </div>
         </div>
 
         <div className="p-8">
-          <div className="mb-8 border-l-2 border-vibe-accent pl-4 py-2">
-             <h2 className="text-2xl font-black text-vibe-primary mb-2 uppercase tracking-widest"><ScrambleText text="Authentication Protocol" delayMs={100} /></h2>
-             <p className="text-vibe-accent/70 text-sm">Execute local KYC shielding and generate zero-knowledge proof of compliance to access the Darkpool.</p>
+          <div className="mb-8 border-l-4 border-brutal-orange pl-4 py-2 bg-brutal-bg shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
+             <h2 className="text-3xl font-black text-brutal-text mb-2 uppercase tracking-widest"><ScrambleText text="Authentication Protocol" delayMs={100} /></h2>
+             <p className="text-brutal-text font-bold text-sm uppercase">Execute local KYC shielding and generate zero-knowledge proof of compliance to access the Darkpool.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Action Panel */}
             <div className="space-y-8">
               {/* Step 1 */}
-              <div className={`p-6 border transition-all ${isVerified ? 'bg-vibe-dark/10 border-vibe-accent/20' : 'bg-[#030008] border-vibe-accent/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]'}`}>
+              <div className={`p-6 border-4 transition-all bg-white shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] ${isVerified ? 'border-brutal-orange bg-brutal-bg' : 'border-brutal-text'}`}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-vibe-secondary flex items-center gap-2">
-                    <span className="text-xs bg-vibe-accent/20 px-2 py-1 text-vibe-primary">STEP_01</span>
+                  <h3 className="font-black text-brutal-text flex items-center gap-2 text-xl">
+                    <span className="text-sm bg-brutal-text px-2 py-1 text-brutal-bg uppercase">STEP 01</span>
                     Local KYC Shield
                   </h3>
-                  {isVerified && <CheckCircle2 className="text-vibe-accent w-5 h-5" />}
+                  {isVerified && <CheckCircle2 className="text-brutal-orange w-8 h-8" />}
                 </div>
                 
                 {!isVerified ? (
                   <>
-                    <p className="text-sm text-vibe-accent/60 mb-4">Simulate KYC API to fetch and shield attributes locally.</p>
+                    <p className="text-sm text-brutal-text font-bold mb-4 uppercase">Simulate KYC API to fetch and shield attributes locally.</p>
                     <input
                       type="email"
                       placeholder="ENTER_EMAIL_ADDRESS"
-                      className="w-full bg-black border border-vibe-accent/30 rounded-none px-4 py-3 text-vibe-secondary focus:outline-none focus:border-vibe-primary focus:shadow-[0_0_10px_rgba(16,185,129,0.3)] placeholder:text-vibe-dark/50 mb-4 font-mono transition-all"
+                      className="brutal-input mb-4 font-sans text-xl"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
                     <button
                       onClick={handleVerify}
                       disabled={loading || !email}
-                      className="w-full bg-vibe-accent/10 border border-vibe-accent text-vibe-primary font-bold py-3 hover:bg-vibe-accent hover:text-black transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group"
+                      className="w-full bg-brutal-orange border-4 border-brutal-text text-brutal-bg font-black py-4 hover:bg-brutal-text hover:text-white transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group text-lg shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] uppercase"
                     >
-                      <ShieldCheck className="group-hover:animate-pulse" size={18} />
-                      EXECUTE_SHIELDING
+                      <ShieldCheck className="group-hover:translate-x-1 transition-transform" size={24} />
+                      EXECUTE SHIELDING
                     </button>
                   </>
                 ) : (
-                  <p className="text-sm text-vibe-primary">KYC attributes successfully shielded in local Midnight vault.</p>
+                  <p className="text-base text-brutal-text font-bold p-4 bg-white border-2 border-brutal-text shadow-[2px_2px_0px_0px_rgba(28,28,28,1)]">KYC attributes successfully shielded in local Midnight vault.</p>
                 )}
               </div>
 
               {/* Step 2 */}
-              <div className={`p-6 border transition-all ${!isVerified ? 'opacity-50 border-vibe-dark/30' : 'bg-[#030008] border-vibe-accent/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]'} ${hasAccess ? 'border-vibe-accent shadow-[0_0_20px_rgba(16,185,129,0.3)]' : ''}`}>
+              <div className={`p-6 border-4 transition-all bg-white shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] ${!isVerified ? 'opacity-50 border-brutal-text/30 shadow-none' : 'border-brutal-text'} ${hasAccess ? 'border-brutal-orange bg-brutal-bg' : ''}`}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-vibe-secondary flex items-center gap-2">
-                    <span className="text-xs bg-vibe-accent/20 px-2 py-1 text-vibe-primary">STEP_02</span>
+                  <h3 className="font-black text-brutal-text flex items-center gap-2 text-xl">
+                    <span className="text-sm bg-brutal-text px-2 py-1 text-brutal-bg uppercase">STEP 02</span>
                     ZK Compliance Proof
                   </h3>
-                  {hasAccess && <CheckCircle2 className="text-vibe-accent w-5 h-5" />}
+                  {hasAccess && <CheckCircle2 className="text-brutal-orange w-8 h-8" />}
                 </div>
                 
-                <p className="text-sm text-vibe-accent/60 mb-4">Prove `age &gt;= 18` and `is_accredited == true` via ZK circuit.</p>
+                <p className="text-sm text-brutal-text font-bold mb-4 uppercase">Prove `age &gt;= 18` and `is_accredited == true` via ZK circuit.</p>
                 <button
                   onClick={handleEnterDarkpool}
                   disabled={loading || !isVerified || hasAccess}
-                  className="w-full bg-vibe-accent/10 border border-vibe-accent text-vibe-primary font-bold py-3 hover:bg-vibe-accent hover:text-black transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group"
+                  className="w-full bg-brutal-text border-4 border-brutal-text text-brutal-bg font-black py-4 hover:bg-brutal-orange hover:text-brutal-text transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group text-lg shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] uppercase"
                 >
-                  <Activity className="group-hover:animate-pulse" size={18} />
-                  GENERATE_PROOF
+                  <Activity className="group-hover:translate-x-1 transition-transform" size={24} />
+                  GENERATE PROOF
                 </button>
               </div>
             </div>
 
             {/* Terminal Output Panel */}
-            <div className="bg-black border border-vibe-dark/50 p-4 font-mono text-xs flex flex-col relative h-[400px]">
-              <div className="absolute top-0 right-0 bg-vibe-dark/30 px-2 py-1 text-vibe-accent border-b border-l border-vibe-dark/50">OUTPUT_LOG</div>
-              <div className="flex-1 overflow-y-auto space-y-2 mt-6 pr-2 custom-scrollbar">
-                <div className="text-vibe-accent/40">SYSTEM READY. AWAITING COMMANDS...</div>
+            <div className="bg-brutal-bg border-4 border-brutal-text p-6 font-mono text-sm flex flex-col relative h-[450px] shadow-[8px_8px_0px_0px_rgba(28,28,28,1)]">
+              <div className="absolute top-0 right-0 bg-brutal-text px-4 py-2 text-white font-bold tracking-widest uppercase">OUTPUT LOG</div>
+              <div className="flex-1 overflow-y-auto space-y-4 mt-8 pr-4 custom-scrollbar font-bold">
+                <div className="text-brutal-text">SYSTEM READY. AWAITING COMMANDS...</div>
                 {logs.map((log, i) => (
-                  <div key={i} className={log.includes('ERROR') || log.includes('DENIED') ? 'text-rose-500' : 'text-vibe-primary'}>
+                  <div key={i} className={log.includes('ERROR') || log.includes('DENIED') ? 'text-white bg-brutal-orange px-2 py-1 border-2 border-brutal-text' : 'text-brutal-text border-l-4 border-brutal-text pl-2'}>
                     <ScrambleText text={log} delayMs={0} />
                   </div>
                 ))}
                 
                 {loading && (
-                  <div className="flex items-center gap-2 text-vibe-secondary mt-4">
-                    <span className="animate-pulse">_</span>
+                  <div className="flex items-center gap-2 text-brutal-text mt-4">
+                    <span className="animate-pulse font-black text-xl">_</span>
                     <ScrambleText text={loadingStep} delayMs={50} />
                   </div>
                 )}
                 
                 {error && (
-                  <div className="text-rose-500 border-l-2 border-rose-500 pl-2 mt-4 bg-rose-500/10 py-2">
+                  <div className="text-white border-4 border-brutal-text pl-4 mt-4 bg-brutal-orange py-4 font-black text-base shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
                     <ScrambleText text={error} />
                   </div>
                 )}
                 
                 {txResult && (
-                  <div className="text-vibe-secondary border-l-2 border-vibe-accent pl-2 mt-4 bg-vibe-accent/10 py-2 font-bold shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                  <div className="text-brutal-text border-4 border-brutal-text pl-4 mt-4 bg-white py-4 font-black shadow-[4px_4px_0px_0px_rgba(255,69,34,1)] text-base">
                     <ScrambleText text={txResult} />
                   </div>
                 )}
@@ -288,13 +288,14 @@ export default function Darkpool() {
       
       <style>{`
         .custom-scrollbar::-webkit-scrollbar {
-          width: 4px;
+          width: 8px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
-          background: #000;
+          background: #F2F0EB;
+          border-left: 2px solid #1C1C1C;
         }
         .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #10b981;
+          background: #1C1C1C;
         }
       `}</style>
     </div>

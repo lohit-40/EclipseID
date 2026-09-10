@@ -42,10 +42,7 @@ export default function Admin() {
       });
       const compiledContract = CompiledContract.make('EclipseIdContract', Contract).pipe(CompiledContract.withVacantWitnesses);
       
-      // We are waiting for the deploy to complete
       const deployed = await (async () => {
-        // Because we don't have access to the underlying SDK deployContract directly here without importing it
-        // We'll import it dynamically or we can just assume it's imported at the top. Wait, let me import it.
         const { deployContract } = await import('@midnight-ntwrk/midnight-js-contracts');
         return deployContract(providers, { compiledContract });
       })();
@@ -71,8 +68,7 @@ export default function Admin() {
       }
       
       setDeployedAddress(addr);
-      setError(''); // Clear error to show success
-      // We'll just show a success alert or let the UI update
+      setError('');
       alert(`Deployment Successful! ${discoveryMessage}`);
     } catch (err: any) {
       console.error(err);
@@ -113,66 +109,65 @@ export default function Admin() {
     }
   };
 
-  // Web3 Auth Check
   if (!isConnected) {
     return (
-      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center">
-        <h2 className="text-3xl font-bold text-rose-100 mb-4">Admin Command Center</h2>
-        <p className="text-rose-200/60 mb-8">Connect your wallet to verify permissions.</p>
+      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center font-sans">
+        <h2 className="text-4xl font-black text-brutal-text mb-4 uppercase tracking-widest">Admin Command Center</h2>
+        <p className="text-brutal-bg bg-brutal-orange border-4 border-brutal-text px-6 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">Connect your wallet to verify permissions.</p>
       </div>
     );
   }
 
   if (address !== MASTER_ADMIN_WALLET) {
     return (
-      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center">
-        <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-8 rounded-3xl max-w-md">
-          <h2 className="text-2xl font-bold mb-2">Unauthorized Access</h2>
-          <p className="text-sm opacity-80 font-mono break-all">{address}</p>
-          <p className="mt-4 text-sm">This wallet is not whitelisted for protocol administration.</p>
+      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center font-sans">
+        <div className="bg-brutal-bg border-4 border-brutal-text p-8 shadow-[8px_8px_0px_0px_rgba(28,28,28,1)] max-w-md">
+          <h2 className="text-3xl font-black mb-4 uppercase tracking-widest text-brutal-orange">Unauthorized Access</h2>
+          <p className="text-sm font-mono break-all font-bold bg-white p-2 border-2 border-brutal-text">{address}</p>
+          <p className="mt-4 text-base font-bold">This wallet is not whitelisted for protocol administration.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-2xl mx-auto mt-12">
-      <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-[#120a1f] border border-rose-500/20 rounded-3xl p-8 relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-orange-400 to-rose-600" />
-        <h3 className="text-xl font-bold text-rose-100 mb-2">Protocol Command Center</h3>
-        <p className="text-sm text-rose-200/60 mb-8">Deploy the foundational contract and authorize the KYC issuer.</p>
+    <div className="max-w-3xl mx-auto mt-12 font-sans px-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white border-4 border-brutal-text p-8 relative overflow-hidden shadow-[12px_12px_0px_0px_rgba(28,28,28,1)]">
+        <div className="absolute top-0 left-0 w-full h-2 bg-brutal-orange" />
+        <h3 className="text-3xl font-black text-brutal-text mb-2 uppercase tracking-widest">Protocol Command Center</h3>
+        <p className="text-base text-brutal-text mb-8 font-bold">Deploy the foundational contract and authorize the KYC issuer.</p>
         
-        <div className="space-y-4">
-          <div className="flex items-center justify-between bg-[#030008]/50 p-4 rounded-xl border border-white/5">
+        <div className="space-y-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between bg-brutal-bg p-6 border-4 border-brutal-text shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] gap-4">
             <div className="flex flex-col">
-              <span className="font-semibold text-sm">Global Contract Address</span>
-              <span className="font-mono text-xs text-rose-200/50">{deployedAddress || 'Not Deployed'}</span>
+              <span className="font-black text-lg uppercase">Global Contract Address</span>
+              <span className="font-mono text-sm font-bold bg-white px-2 py-1 border-2 border-brutal-text mt-2">{deployedAddress || 'NOT DEPLOYED'}</span>
             </div>
-            <button onClick={handleAdminDeploy} disabled={loading} className="bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 px-4 py-2 rounded-lg font-semibold border border-orange-500/20 cursor-pointer text-sm transition-colors disabled:opacity-50">
+            <button onClick={handleAdminDeploy} disabled={loading} className="brutal-btn py-3 px-6 text-sm shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(28,28,28,1)] whitespace-nowrap">
               Deploy Global Contract
             </button>
           </div>
 
-          <div className="flex items-center justify-between bg-[#030008]/50 p-4 rounded-xl border border-white/5">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between bg-brutal-bg p-6 border-4 border-brutal-text shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] gap-4">
             <div className="flex flex-col">
-              <span className="font-semibold text-sm">Register Cloudflare Backend</span>
-              <span className="text-xs text-rose-200/50">Authorizes the backend to issue credentials</span>
+              <span className="font-black text-lg uppercase">Register Backend Issuer</span>
+              <span className="text-sm font-bold mt-2">Authorizes the backend to issue credentials</span>
             </div>
-            <button onClick={handleAdminRegisterIssuer} disabled={loading || !deployedAddress} className="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-4 py-2 rounded-lg font-semibold border border-rose-500/20 cursor-pointer text-sm transition-colors disabled:opacity-50">
-              {isIssuerRegistered ? 'Registered' : 'Register Backend Issuer'}
+            <button onClick={handleAdminRegisterIssuer} disabled={loading || !deployedAddress} className="brutal-btn py-3 px-6 text-sm shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(28,28,28,1)] whitespace-nowrap bg-brutal-text text-white hover:bg-brutal-orange hover:text-brutal-text">
+              {isIssuerRegistered ? 'REGISTERED' : 'REGISTER BACKEND ISSUER'}
             </button>
           </div>
         </div>
 
         {loading && (
-          <div className="mt-8 flex flex-col items-center justify-center p-4 bg-black/40 rounded-xl border border-white/5">
-            <div className="w-6 h-6 border-2 border-orange-500 border-t-transparent rounded-full animate-spin mb-3" />
-            <p className="text-xs font-medium text-rose-200/60 animate-pulse">{loadingStep}</p>
+          <div className="mt-8 flex flex-col items-center justify-center p-6 bg-white border-4 border-brutal-text shadow-[4px_4px_0px_0px_rgba(255,69,34,1)]">
+            <div className="w-8 h-8 border-4 border-brutal-orange border-t-brutal-text animate-spin mb-4" />
+            <p className="text-base font-black text-brutal-text animate-pulse uppercase tracking-widest text-center">{loadingStep}</p>
           </div>
         )}
 
         {error && !loading && (
-          <div className="mt-6 bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-center text-sm font-medium">
+          <div className="mt-8 bg-brutal-orange border-4 border-brutal-text text-white p-6 text-center text-lg font-black uppercase shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
             {error}
           </div>
         )}
@@ -180,4 +175,3 @@ export default function Admin() {
     </div>
   );
 }
-

@@ -2,24 +2,27 @@ import { motion } from 'framer-motion';
 
 export default function Developers() {
   return (
-    <div className="max-w-4xl mx-auto pt-16 px-4">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
-        <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-rose-500 mb-4">
+    <div className="max-w-4xl mx-auto pt-16 px-4 font-sans">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-12 border-4 border-brutal-text p-8 bg-brutal-orange shadow-[8px_8px_0px_0px_rgba(28,28,28,1)]">
+        <h1 className="text-4xl font-black text-brutal-bg mb-4 uppercase tracking-widest">
           Developer Integration
         </h1>
-        <p className="text-xl text-rose-200/60">
+        <p className="text-xl text-brutal-bg font-bold">
           Integrate EclipseID's zero-knowledge KYC into your own dApps in minutes.
         </p>
       </motion.div>
 
-      <div className="space-y-12">
-        <section>
-          <h2 className="text-2xl font-semibold text-rose-100 mb-4">1. Smart Contract Integration (Compact)</h2>
-          <p className="text-rose-200/60 mb-4">
+      <div className="space-y-12 mb-20">
+        <section className="bg-white border-4 border-brutal-text p-8 shadow-[8px_8px_0px_0px_rgba(28,28,28,1)]">
+          <h2 className="text-3xl font-black text-brutal-text mb-4 uppercase tracking-widest flex items-center gap-4">
+            <span className="bg-brutal-text text-white px-3 py-1">1</span>
+            Smart Contract Integration (Compact)
+          </h2>
+          <p className="text-brutal-text font-bold mb-6 text-lg">
             EclipseID exports a public verifier. Your smart contract can simply call our verification circuit to ensure a user is accredited without ever seeing their data.
           </p>
-          <div className="bg-[#030008] border border-white/10 rounded-2xl p-6 overflow-x-auto">
-            <pre className="text-sm font-mono text-vibe-primary">
+          <div className="bg-brutal-bg border-4 border-brutal-text p-6 overflow-x-auto shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
+            <pre className="text-sm font-bold text-brutal-text">
               <code>{`import EclipseID;
 
 export circuit borrow_funds(amount: Uint<64>): [] {
@@ -34,13 +37,16 @@ export circuit borrow_funds(amount: Uint<64>): [] {
           </div>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-semibold text-rose-100 mb-4">2. Frontend Integration (midnight-js)</h2>
-          <p className="text-rose-200/60 mb-4">
+        <section className="bg-white border-4 border-brutal-text p-8 shadow-[8px_8px_0px_0px_rgba(28,28,28,1)]">
+          <h2 className="text-3xl font-black text-brutal-text mb-4 uppercase tracking-widest flex items-center gap-4">
+            <span className="bg-brutal-text text-white px-3 py-1">2</span>
+            Frontend Integration (midnight-js)
+          </h2>
+          <p className="text-brutal-text font-bold mb-6 text-lg">
             Use our React SDK to trigger the ZK proof generation seamlessly inside your frontend.
           </p>
-          <div className="bg-[#030008] border border-white/10 rounded-2xl p-6 overflow-x-auto">
-            <pre className="text-sm font-mono text-sky-400">
+          <div className="bg-brutal-bg border-4 border-brutal-text p-6 overflow-x-auto shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
+            <pre className="text-sm font-bold text-brutal-orange">
               <code>{`import { useEclipseID } from '@eclipse-id/react';
 
 function BorrowButton() {
@@ -60,11 +66,11 @@ function BorrowButton() {
           </div>
         </section>
 
-        <section className="bg-gradient-to-r from-orange-500/10 to-rose-600/10 border border-orange-500/20 rounded-3xl p-8 text-center">
-          <h3 className="text-xl font-bold text-orange-400 mb-2">Build with Privacy</h3>
-          <p className="text-rose-200/80 mb-6">Join the movement to protect user data on public ledgers.</p>
-          <button className="px-6 py-3 bg-orange-500/20 text-orange-400 font-semibold rounded-xl border border-orange-500/30 hover:bg-orange-500/30 transition-colors">
-            Read Full Documentation
+        <section className="bg-brutal-bg border-4 border-brutal-text p-12 text-center shadow-[12px_12px_0px_0px_rgba(255,69,34,1)]">
+          <h3 className="text-4xl font-black text-brutal-text mb-4 uppercase tracking-widest">Build with Privacy</h3>
+          <p className="text-brutal-text font-bold mb-8 text-xl">Join the movement to protect user data on public ledgers.</p>
+          <button className="brutal-btn py-4 px-10 text-xl mx-auto shadow-[8px_8px_0px_0px_rgba(28,28,28,1)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
+            READ FULL DOCUMENTATION
           </button>
         </section>
       </div>
