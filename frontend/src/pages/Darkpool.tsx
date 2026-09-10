@@ -163,87 +163,87 @@ export default function Darkpool() {
   if (!isConnected) {
     return (
       <div className="flex flex-col items-center justify-center pt-32 px-4 text-center font-mono">
-        <Lock className="w-16 h-16 text-emerald-500 mb-6 animate-pulse drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
-        <h2 className="text-3xl font-black text-emerald-400 mb-4 tracking-widest">ENCRYPTED_SECTOR</h2>
-        <p className="text-emerald-500/60 mb-8 border border-emerald-900/50 bg-[#0a140f] px-6 py-3">CONNECTION REQUIRED FOR ZK_AUTH</p>
+        <Lock className="w-16 h-16 text-vibe-accent mb-6 animate-pulse drop-shadow-[0_0_15px_rgba(16,185,129,0.5)]" />
+        <h2 className="text-3xl font-black text-vibe-primary mb-4 tracking-widest">ENCRYPTED_SECTOR</h2>
+        <p className="text-vibe-accent/60 mb-8 border border-vibe-dark/50 bg-[#0a0014] px-6 py-3">CONNECTION REQUIRED FOR ZK_AUTH</p>
       </div>
     );
   }
 
   return (
     <div ref={container} className="max-w-4xl mx-auto mt-12 px-4 font-mono">
-      <div className="terminal-window bg-[#0a140f] rounded-none border border-emerald-500/30 shadow-[0_0_30px_rgba(16,185,129,0.1)] relative overflow-hidden">
+      <div className="terminal-window bg-[#0a0014] rounded-none border border-vibe-accent/30 shadow-[0_0_30px_rgba(16,185,129,0.1)] relative overflow-hidden">
         {/* Hacker Terminal Header */}
-        <div className="bg-emerald-900/20 border-b border-emerald-500/30 p-3 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-emerald-500 text-sm tracking-widest font-bold">
+        <div className="bg-vibe-dark/20 border-b border-vibe-accent/30 p-3 flex items-center justify-between">
+          <div className="flex items-center gap-3 text-vibe-accent text-sm tracking-widest font-bold">
             <Terminal size={16} />
             <span>ZK_AUTH_TERMINAL_V1.0</span>
           </div>
           <div className="flex gap-2">
-            <div className="w-3 h-3 rounded-full bg-emerald-500/20 border border-emerald-500/50" />
-            <div className="w-3 h-3 rounded-full bg-emerald-500/20 border border-emerald-500/50" />
-            <div className="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+            <div className="w-3 h-3 rounded-full bg-vibe-accent/20 border border-vibe-accent/50" />
+            <div className="w-3 h-3 rounded-full bg-vibe-accent/20 border border-vibe-accent/50" />
+            <div className="w-3 h-3 rounded-full bg-vibe-accent animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
           </div>
         </div>
 
         <div className="p-8">
-          <div className="mb-8 border-l-2 border-emerald-500 pl-4 py-2">
-             <h2 className="text-2xl font-black text-emerald-400 mb-2 uppercase tracking-widest"><ScrambleText text="Authentication Protocol" delayMs={100} /></h2>
-             <p className="text-emerald-500/70 text-sm">Execute local KYC shielding and generate zero-knowledge proof of compliance to access the Darkpool.</p>
+          <div className="mb-8 border-l-2 border-vibe-accent pl-4 py-2">
+             <h2 className="text-2xl font-black text-vibe-primary mb-2 uppercase tracking-widest"><ScrambleText text="Authentication Protocol" delayMs={100} /></h2>
+             <p className="text-vibe-accent/70 text-sm">Execute local KYC shielding and generate zero-knowledge proof of compliance to access the Darkpool.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             {/* Action Panel */}
             <div className="space-y-8">
               {/* Step 1 */}
-              <div className={`p-6 border transition-all ${isVerified ? 'bg-emerald-900/10 border-emerald-500/20' : 'bg-[#070410] border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]'}`}>
+              <div className={`p-6 border transition-all ${isVerified ? 'bg-vibe-dark/10 border-vibe-accent/20' : 'bg-[#030008] border-vibe-accent/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]'}`}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-emerald-300 flex items-center gap-2">
-                    <span className="text-xs bg-emerald-500/20 px-2 py-1 text-emerald-400">STEP_01</span>
+                  <h3 className="font-bold text-vibe-secondary flex items-center gap-2">
+                    <span className="text-xs bg-vibe-accent/20 px-2 py-1 text-vibe-primary">STEP_01</span>
                     Local KYC Shield
                   </h3>
-                  {isVerified && <CheckCircle2 className="text-emerald-500 w-5 h-5" />}
+                  {isVerified && <CheckCircle2 className="text-vibe-accent w-5 h-5" />}
                 </div>
                 
                 {!isVerified ? (
                   <>
-                    <p className="text-sm text-emerald-500/60 mb-4">Simulate KYC API to fetch and shield attributes locally.</p>
+                    <p className="text-sm text-vibe-accent/60 mb-4">Simulate KYC API to fetch and shield attributes locally.</p>
                     <input
                       type="email"
                       placeholder="ENTER_EMAIL_ADDRESS"
-                      className="w-full bg-black border border-emerald-500/30 rounded-none px-4 py-3 text-emerald-300 focus:outline-none focus:border-emerald-400 focus:shadow-[0_0_10px_rgba(16,185,129,0.3)] placeholder:text-emerald-900/50 mb-4 font-mono transition-all"
+                      className="w-full bg-black border border-vibe-accent/30 rounded-none px-4 py-3 text-vibe-secondary focus:outline-none focus:border-vibe-primary focus:shadow-[0_0_10px_rgba(16,185,129,0.3)] placeholder:text-vibe-dark/50 mb-4 font-mono transition-all"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                     />
                     <button
                       onClick={handleVerify}
                       disabled={loading || !email}
-                      className="w-full bg-emerald-500/10 border border-emerald-500 text-emerald-400 font-bold py-3 hover:bg-emerald-500 hover:text-black transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group"
+                      className="w-full bg-vibe-accent/10 border border-vibe-accent text-vibe-primary font-bold py-3 hover:bg-vibe-accent hover:text-black transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group"
                     >
                       <ShieldCheck className="group-hover:animate-pulse" size={18} />
                       EXECUTE_SHIELDING
                     </button>
                   </>
                 ) : (
-                  <p className="text-sm text-emerald-400">KYC attributes successfully shielded in local Midnight vault.</p>
+                  <p className="text-sm text-vibe-primary">KYC attributes successfully shielded in local Midnight vault.</p>
                 )}
               </div>
 
               {/* Step 2 */}
-              <div className={`p-6 border transition-all ${!isVerified ? 'opacity-50 border-emerald-900/30' : 'bg-[#070410] border-emerald-500/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]'} ${hasAccess ? 'border-emerald-500 shadow-[0_0_20px_rgba(16,185,129,0.3)]' : ''}`}>
+              <div className={`p-6 border transition-all ${!isVerified ? 'opacity-50 border-vibe-dark/30' : 'bg-[#030008] border-vibe-accent/50 hover:shadow-[0_0_15px_rgba(16,185,129,0.2)]'} ${hasAccess ? 'border-vibe-accent shadow-[0_0_20px_rgba(16,185,129,0.3)]' : ''}`}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-bold text-emerald-300 flex items-center gap-2">
-                    <span className="text-xs bg-emerald-500/20 px-2 py-1 text-emerald-400">STEP_02</span>
+                  <h3 className="font-bold text-vibe-secondary flex items-center gap-2">
+                    <span className="text-xs bg-vibe-accent/20 px-2 py-1 text-vibe-primary">STEP_02</span>
                     ZK Compliance Proof
                   </h3>
-                  {hasAccess && <CheckCircle2 className="text-emerald-500 w-5 h-5" />}
+                  {hasAccess && <CheckCircle2 className="text-vibe-accent w-5 h-5" />}
                 </div>
                 
-                <p className="text-sm text-emerald-500/60 mb-4">Prove `age &gt;= 18` and `is_accredited == true` via ZK circuit.</p>
+                <p className="text-sm text-vibe-accent/60 mb-4">Prove `age &gt;= 18` and `is_accredited == true` via ZK circuit.</p>
                 <button
                   onClick={handleEnterDarkpool}
                   disabled={loading || !isVerified || hasAccess}
-                  className="w-full bg-emerald-500/10 border border-emerald-500 text-emerald-400 font-bold py-3 hover:bg-emerald-500 hover:text-black transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group"
+                  className="w-full bg-vibe-accent/10 border border-vibe-accent text-vibe-primary font-bold py-3 hover:bg-vibe-accent hover:text-black transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group"
                 >
                   <Activity className="group-hover:animate-pulse" size={18} />
                   GENERATE_PROOF
@@ -252,18 +252,18 @@ export default function Darkpool() {
             </div>
 
             {/* Terminal Output Panel */}
-            <div className="bg-black border border-emerald-900/50 p-4 font-mono text-xs flex flex-col relative h-[400px]">
-              <div className="absolute top-0 right-0 bg-emerald-900/30 px-2 py-1 text-emerald-500 border-b border-l border-emerald-900/50">OUTPUT_LOG</div>
+            <div className="bg-black border border-vibe-dark/50 p-4 font-mono text-xs flex flex-col relative h-[400px]">
+              <div className="absolute top-0 right-0 bg-vibe-dark/30 px-2 py-1 text-vibe-accent border-b border-l border-vibe-dark/50">OUTPUT_LOG</div>
               <div className="flex-1 overflow-y-auto space-y-2 mt-6 pr-2 custom-scrollbar">
-                <div className="text-emerald-500/40">SYSTEM READY. AWAITING COMMANDS...</div>
+                <div className="text-vibe-accent/40">SYSTEM READY. AWAITING COMMANDS...</div>
                 {logs.map((log, i) => (
-                  <div key={i} className={log.includes('ERROR') || log.includes('DENIED') ? 'text-rose-500' : 'text-emerald-400'}>
+                  <div key={i} className={log.includes('ERROR') || log.includes('DENIED') ? 'text-rose-500' : 'text-vibe-primary'}>
                     <ScrambleText text={log} delayMs={0} />
                   </div>
                 ))}
                 
                 {loading && (
-                  <div className="flex items-center gap-2 text-emerald-300 mt-4">
+                  <div className="flex items-center gap-2 text-vibe-secondary mt-4">
                     <span className="animate-pulse">_</span>
                     <ScrambleText text={loadingStep} delayMs={50} />
                   </div>
@@ -276,7 +276,7 @@ export default function Darkpool() {
                 )}
                 
                 {txResult && (
-                  <div className="text-emerald-300 border-l-2 border-emerald-500 pl-2 mt-4 bg-emerald-500/10 py-2 font-bold shadow-[0_0_15px_rgba(16,185,129,0.1)]">
+                  <div className="text-vibe-secondary border-l-2 border-vibe-accent pl-2 mt-4 bg-vibe-accent/10 py-2 font-bold shadow-[0_0_15px_rgba(16,185,129,0.1)]">
                     <ScrambleText text={txResult} />
                   </div>
                 )}

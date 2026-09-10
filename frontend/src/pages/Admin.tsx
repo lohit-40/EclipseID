@@ -143,7 +143,7 @@ export default function Admin() {
         <p className="text-sm text-rose-200/60 mb-8">Deploy the foundational contract and authorize the KYC issuer.</p>
         
         <div className="space-y-4">
-          <div className="flex items-center justify-between bg-[#070410]/50 p-4 rounded-xl border border-white/5">
+          <div className="flex items-center justify-between bg-[#030008]/50 p-4 rounded-xl border border-white/5">
             <div className="flex flex-col">
               <span className="font-semibold text-sm">Global Contract Address</span>
               <span className="font-mono text-xs text-rose-200/50">{deployedAddress || 'Not Deployed'}</span>
@@ -153,7 +153,7 @@ export default function Admin() {
             </button>
           </div>
 
-          <div className="flex items-center justify-between bg-[#070410]/50 p-4 rounded-xl border border-white/5">
+          <div className="flex items-center justify-between bg-[#030008]/50 p-4 rounded-xl border border-white/5">
             <div className="flex flex-col">
               <span className="font-semibold text-sm">Register Cloudflare Backend</span>
               <span className="text-xs text-rose-200/50">Authorizes the backend to issue credentials</span>

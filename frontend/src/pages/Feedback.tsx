@@ -58,7 +58,7 @@ export default function Feedback() {
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-rose-200/70 ml-1">Verifiable Preprod Address</label>
                 <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 flex items-center gap-3">
-                  <div className="w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.6)]" />
+                  <div className="w-2 h-2 rounded-full bg-vibe-primary shadow-[0_0_10px_rgba(34,197,94,0.6)]" />
                   <span className="font-mono text-sm text-rose-100/90 truncate">{address}</span>
                 </div>
               </div>

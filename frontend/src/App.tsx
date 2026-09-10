@@ -22,7 +22,7 @@ const NavLink = ({ href, children }: { href: string; children: React.ReactNode }
   return (
     <Link 
       to={href}
-      className={`transition-colors font-medium text-sm ${isActive ? 'text-emerald-400 font-bold border-b border-emerald-500 shadow-[0_4px_15px_-3px_rgba(16,185,129,0.5)]' : 'text-emerald-200/60 hover:text-emerald-100'}`}
+      className={`transition-colors font-medium text-sm ${isActive ? 'text-vibe-primary font-bold border-b border-vibe-accent shadow-[0_4px_15px_-3px_rgba(16,185,129,0.5)]' : 'text-vibe-secondary/80/60 hover:text-white/90'}`}
     >
       {children}
     </Link>
@@ -100,22 +100,22 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070410] text-emerald-50 selection:bg-emerald-500/30 selection:text-white font-mono relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#030008] text-white selection:bg-vibe-accent/30 selection:text-white font-mono relative overflow-x-hidden">
       {/* Cyber grid background matching Stellar project */}
-      <div className="fixed inset-0 z-0 pointer-events-none opacity-20 bg-[linear-gradient(to_right,#0f2e1b_1px,transparent_1px),linear-gradient(to_bottom,#0f2e1b_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-20 bg-[linear-gradient(to_right,#1a0033_1px,transparent_1px),linear-gradient(to_bottom,#1a0033_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* Sleek Hacker Navigation Bar */}
-        <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full backdrop-blur-md border-b border-emerald-900/50 sticky top-0 bg-[#070410]/80 z-50">
+        <nav className="flex items-center justify-between px-8 py-6 max-w-7xl mx-auto w-full backdrop-blur-md border-b border-vibe-dark/50 sticky top-0 bg-[#030008]/80 z-50">
           <Link to="/" className="text-2xl font-black tracking-tighter flex items-center gap-3 group">
             <div className="relative w-10 h-10 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Shield className="absolute inset-0 text-emerald-500 w-full h-full drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]" strokeWidth={1.5} />
-              <Terminal className="absolute inset-0 text-[#070410] w-full h-full scale-[0.5] z-10 fill-emerald-500" strokeWidth={2} />
+              <Shield className="absolute inset-0 text-vibe-accent w-full h-full drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]" strokeWidth={1.5} />
+              <Terminal className="absolute inset-0 text-[#070410] w-full h-full scale-[0.5] z-10 fill-vibe-accent" strokeWidth={2} />
             </div>
-            <ScrambleText text="EclipseID" className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 to-green-500 drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" delayMs={100} />
+            <ScrambleText text="EclipseID" className="text-transparent bg-clip-text bg-gradient-to-r from-vibe-secondary to-vibe-primary drop-shadow-[0_0_10px_rgba(16,185,129,0.6)]" delayMs={100} />
           </Link>
           
-          <div className="hidden md:flex items-center gap-8 bg-black/40 px-6 py-2 rounded-none border border-emerald-900/50 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]">
+          <div className="hidden md:flex items-center gap-8 bg-black/40 px-6 py-2 rounded-none border border-vibe-dark/50 shadow-[inset_0_0_20px_rgba(16,185,129,0.05)]">
             <NavLink href="/darkpool">Darkpool dApp</NavLink>
             <NavLink href="/developers">Developers</NavLink>
             <NavLink href="/feedback">Give Feedback</NavLink>
@@ -124,15 +124,15 @@ export default function App() {
 
           <div className="flex items-center gap-4">
             {!isConnected ? (
-              <button onClick={connectWallet} className="relative group overflow-hidden bg-transparent border border-emerald-500/50 text-emerald-400 px-6 py-2 font-mono font-bold transition-all hover:bg-emerald-500/10 hover:border-emerald-400 hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] cursor-pointer rounded-none">
+              <button onClick={connectWallet} className="relative group overflow-hidden bg-transparent border border-vibe-accent/50 text-vibe-primary px-6 py-2 font-mono font-bold transition-all hover:bg-vibe-accent/10 hover:border-vibe-primary hover:shadow-[0_0_15px_rgba(16,185,129,0.4)] cursor-pointer rounded-none">
                 <span className="relative z-10">CONNECT_WALLET</span>
-                <div className="absolute inset-0 bg-emerald-500/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
+                <div className="absolute inset-0 bg-vibe-accent/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
               </button>
             ) : (
-              <div className="flex items-center gap-4 bg-[#0a140f] px-4 py-2 border border-emerald-500/30 rounded-none shadow-[inset_0_0_10px_rgba(16,185,129,0.1)]">
+              <div className="flex items-center gap-4 bg-[#0a0014] px-4 py-2 border border-vibe-accent/30 rounded-none shadow-[inset_0_0_10px_rgba(16,185,129,0.1)]">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
-                  <span className="text-xs font-mono text-emerald-400/80 tracking-widest">{address.slice(0, 12)}...</span>
+                  <div className="w-2 h-2 rounded-full bg-vibe-accent animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.8)]" />
+                  <span className="text-xs font-mono text-vibe-primary/80 tracking-widest">{address.slice(0, 12)}...</span>
                 </div>
                 <button onClick={disconnectWallet} className="text-xs text-rose-500 hover:text-rose-400 transition-colors tracking-widest">[ DISCONNECT ]</button>
               </div>
@@ -152,9 +152,9 @@ export default function App() {
         </main>
         
         {/* Footer */}
-        <footer className="w-full flex flex-col items-center justify-center py-8 text-emerald-500/40 text-xs border-t border-emerald-900/30 mt-auto gap-3 font-mono tracking-widest">
+        <footer className="w-full flex flex-col items-center justify-center py-8 text-vibe-accent/40 text-xs border-t border-vibe-dark/30 mt-auto gap-3 font-mono tracking-widest">
           <p>SYSTEM.CORE.MIDNIGHT_NETWORK // ZK.IDENTITY.PROTOCOL</p>
-          <a href="https://x.com/EclipseID010" target="_blank" rel="noreferrer" className="hover:text-emerald-400 transition-colors flex items-center gap-1.5 font-bold">
+          <a href="https://x.com/EclipseID010" target="_blank" rel="noreferrer" className="hover:text-vibe-primary transition-colors flex items-center gap-1.5 font-bold">
             [ FOLLOW_X ]
           </a>
         </footer>

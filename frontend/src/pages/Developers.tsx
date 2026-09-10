@@ -18,8 +18,8 @@ export default function Developers() {
           <p className="text-rose-200/60 mb-4">
             EclipseID exports a public verifier. Your smart contract can simply call our verification circuit to ensure a user is accredited without ever seeing their data.
           </p>
-          <div className="bg-[#070410] border border-white/10 rounded-2xl p-6 overflow-x-auto">
-            <pre className="text-sm font-mono text-emerald-400">
+          <div className="bg-[#030008] border border-white/10 rounded-2xl p-6 overflow-x-auto">
+            <pre className="text-sm font-mono text-vibe-primary">
               <code>{`import EclipseID;
 
 export circuit borrow_funds(amount: Uint<64>): [] {
@@ -39,7 +39,7 @@ export circuit borrow_funds(amount: Uint<64>): [] {
           <p className="text-rose-200/60 mb-4">
             Use our React SDK to trigger the ZK proof generation seamlessly inside your frontend.
           </p>
-          <div className="bg-[#070410] border border-white/10 rounded-2xl p-6 overflow-x-auto">
+          <div className="bg-[#030008] border border-white/10 rounded-2xl p-6 overflow-x-auto">
             <pre className="text-sm font-mono text-sky-400">
               <code>{`import { useEclipseID } from '@eclipse-id/react';
 

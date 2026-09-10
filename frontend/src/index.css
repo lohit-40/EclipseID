@@ -6,6 +6,12 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+    --color-vibe-primary: #ff0a54;
+    --color-vibe-secondary: #00f0ff;
+    --color-vibe-accent: #8a2be2;
+    --color-vibe-dark: #1a0033;
+    --color-vibe-bg: #030008;
+    --color-vibe-surface: #0a0014;
     --font-heading: var(--font-sans);
     --font-sans: 'Geist Variable', sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
