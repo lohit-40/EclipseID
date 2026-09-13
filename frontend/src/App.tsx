@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useWallet } from './WalletContext';
-import { Terminal, Shield, Menu, X } from 'lucide-react';
+import { Shield, Menu, X } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ScrambleText from './components/ScrambleText';
 import { playSound } from './utils/sounds';
@@ -47,6 +47,11 @@ export default function App() {
   
   const MASTER_ADMIN_WALLET = import.meta.env.VITE_MASTER_ADMIN_WALLET;
   const isAdminMode = address === MASTER_ADMIN_WALLET;
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
 
   // Auto-connect wallet on load if available
   useEffect(() => {

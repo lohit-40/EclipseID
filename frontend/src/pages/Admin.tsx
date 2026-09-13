@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { useWallet } from '../WalletContext';
 import { createMidnightProviders } from '../providers';
 import { Contract } from '../contract/index';
-export type EclipseIdContract = Contract<any, any>;
+type EclipseIdContract = Contract<any, any>;
 import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
 import { type EclipseIdProviders } from '../providers';
 

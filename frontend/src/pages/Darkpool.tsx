@@ -1,9 +1,8 @@
 import { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
 import { useWallet } from '../WalletContext';
 import { createMidnightProviders } from '../providers';
 import { Contract } from '../contract/index';
-export type EclipseIdContract = Contract<any, any>;
+type EclipseIdContract = Contract<any, any>;
 import { type EclipseIdProviders } from '../providers';
 import { ShieldCheck, Lock, Terminal, Activity, CheckCircle2 } from 'lucide-react';
 import ScrambleText from '../components/ScrambleText';
@@ -119,7 +118,7 @@ export default function Darkpool() {
     if (!wallet) return;
     try {
       playSound('scan');
-      setLoading(true); setError(''); setTxResult(''); setLogs([]);
+      setLoading(true); setError(''); setTxResult('');
       
       const step1 = 'Generating ZK Proof of Accreditation & Age...';
       setLoadingStep(step1); addLog(step1);
@@ -307,19 +306,6 @@ export default function Darkpool() {
           </div>
         </div>
       </div>
-      
-      <style>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #F2F0EB;
-          border-left: 2px solid #1C1C1C;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: #1C1C1C;
-        }
-      `}</style>
     </div>
   );
 }
