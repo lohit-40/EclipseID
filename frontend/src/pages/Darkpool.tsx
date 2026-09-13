@@ -20,6 +20,8 @@ const hexToBytes = (hex: string) => {
 export default function Darkpool() {
   const { wallet, address, isConnected } = useWallet();
   const [email, setEmail] = useState<string>('');
+  const [age, setAge] = useState<string>('25');
+  const [isAccredited, setIsAccredited] = useState<boolean>(true);
   const [isVerified, setIsVerified] = useState<boolean>(false);
   const [hasAccess, setHasAccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
@@ -92,12 +94,12 @@ export default function Darkpool() {
       const userAttributes = {
         secret_id: BigInt(secret_identity),
         issuer_pk: hexToBytes(issuerData.publicKey),
-        is_accredited: true,
-        age: 25n 
+        is_accredited: isAccredited,
+        age: BigInt(age || 0) 
       };
       await providers.privateStateProvider.set('user_credential', userAttributes);
       
-      addLog('Attributes Shielded Locally (Age: 25, Accredited: true).');
+      addLog(`Attributes Shielded Locally (Age: ${age}, Accredited: ${isAccredited}).`);
       playSound('success');
       
       setIsVerified(true);
@@ -208,13 +210,33 @@ export default function Darkpool() {
                 {!isVerified ? (
                   <>
                     <p className="text-sm text-brutal-text font-bold mb-4 uppercase">Simulate KYC API to fetch and shield attributes locally.</p>
-                    <input
-                      type="email"
-                      placeholder="ENTER_EMAIL_ADDRESS"
-                      className="brutal-input mb-4 font-sans text-xl"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <div className="flex flex-col gap-3 mb-6">
+                      <input
+                        type="email"
+                        placeholder="ENTER_EMAIL_ADDRESS"
+                        className="bg-white border-4 border-brutal-text px-4 py-3 font-sans text-lg focus:outline-none focus:border-brutal-orange focus:shadow-[4px_4px_0px_0px_rgba(255,69,34,1)] shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                      <div className="flex flex-col sm:flex-row gap-4">
+                        <input
+                          type="number"
+                          placeholder="AGE"
+                          className="bg-white border-4 border-brutal-text px-4 py-3 font-sans text-lg focus:outline-none focus:border-brutal-orange shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] sm:w-1/3"
+                          value={age}
+                          onChange={(e) => setAge(e.target.value)}
+                        />
+                        <label className="flex items-center gap-3 cursor-pointer bg-white border-4 border-brutal-text px-4 py-3 shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] flex-1 select-none focus-within:border-brutal-orange">
+                          <input
+                            type="checkbox"
+                            className="w-5 h-5 accent-brutal-orange cursor-pointer border-2 border-brutal-text"
+                            checked={isAccredited}
+                            onChange={(e) => setIsAccredited(e.target.checked)}
+                          />
+                          <span className="font-bold uppercase text-sm">Accredited Investor</span>
+                        </label>
+                      </div>
+                    </div>
                     <button
                       onClick={handleVerify}
                       disabled={loading || !email}
