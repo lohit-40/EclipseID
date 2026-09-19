@@ -1,7 +1,7 @@
 # EclipseID
 
 [![CI](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml/badge.svg)](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml)
-[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EclipseID010)](https://x.com/EclipseID010)
+[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EclipseID011)](https://x.com/EclipseID011)
 
 EclipseID is a decentralized, privacy-preserving credential verification system built on the Midnight Network. It enables organizations to verify credentials (like KYC or age verification) without forcing users to expose their raw, sensitive data. Using Midnight's Compact language, the contract verifies these claims using a private witness and selective disclosure. This enables high-demand use cases like Sybil-resistant airdrops, private allowlists, and permissioned DeFi access while keeping user identity completely secure and private.
 
@@ -144,7 +144,7 @@ On every push to `main`, the pipeline automatically:
 # EclipseID
 
 [![CI](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml/badge.svg)](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml)
-[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EclipseID010)](https://x.com/EclipseID010)
+[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EclipseID011)](https://x.com/EclipseID011)
 
 EclipseID is a decentralized, privacy-preserving credential verification system built on the Midnight Network. It enables organizations to verify credentials (like KYC or age verification) without forcing users to expose their raw, sensitive data. Using Midnight's Compact language, the contract verifies these claims using a private witness and selective disclosure. This enables high-demand use cases like Sybil-resistant airdrops, private allowlists, and permissioned DeFi access while keeping user identity completely secure and private.
 
@@ -293,7 +293,7 @@ This project was built and enhanced for the Midnight Level 4 Submission. All req
   Live MVP: [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app)
 - [x] **Documentation (README + setup + usage):** See sections below for architecture, privacy claims, and local setup.
 - [x] **CI/CD pipeline running on the product repo:** GitHub Actions workflow (`ci.yml`) is active with passing runs.
-- [x] **Product X profile created, linked in the README:** [Follow @EclipseID010 on X](https://x.com/EclipseID010)
+- [x] **Product X profile created, linked in the README:** [Follow @EclipseID011 on X](https://x.com/EclipseID011)
 - [x] **Minimum 15 meaningful commits:** Completed (currently 30+ meaningful commits).
 - [x] **Demo video of the MVP:** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
 
