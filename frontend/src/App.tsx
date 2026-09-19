@@ -201,7 +201,7 @@ export default function App() {
         
         <footer className="w-full flex flex-col items-center justify-center py-8 text-brutal-text text-xs border-t-4 border-brutal-text mt-auto gap-3 font-bold uppercase tracking-widest bg-brutal-orange bg-opacity-10">
           <p>SYSTEM.CORE.MIDNIGHT_NETWORK // ZK.IDENTITY.PROTOCOL</p>
-          <a href="https://x.com/EclipseID010" target="_blank" rel="noreferrer" className="hover:text-brutal-orange transition-colors flex items-center gap-1.5 underline underline-offset-4 decoration-2">
+          <a href="https://x.com/EclipseID011" target="_blank" rel="noreferrer" className="hover:text-brutal-orange transition-colors flex items-center gap-1.5 underline underline-offset-4 decoration-2">
             [ FOLLOW X ]
           </a>
         </footer>
