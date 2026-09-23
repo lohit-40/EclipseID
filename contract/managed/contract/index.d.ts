@@ -13,14 +13,26 @@ export type Witnesses<PS> = {
 
 export type ImpureCircuits<PS> = {
   add_issuer(context: __compactRuntime.CircuitContext<PS>, issuer_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+  remove_issuer(context: __compactRuntime.CircuitContext<PS>,
+                issuer_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+  change_owner(context: __compactRuntime.CircuitContext<PS>,
+               new_owner_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
   verify_and_claim(context: __compactRuntime.CircuitContext<PS>,
-                   issuer_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+                   issuer_0: Uint8Array,
+                   minimum_age_0: bigint,
+                   require_accredited_0: boolean): __compactRuntime.CircuitResults<PS, []>;
 }
 
 export type ProvableCircuits<PS> = {
   add_issuer(context: __compactRuntime.CircuitContext<PS>, issuer_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+  remove_issuer(context: __compactRuntime.CircuitContext<PS>,
+                issuer_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+  change_owner(context: __compactRuntime.CircuitContext<PS>,
+               new_owner_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
   verify_and_claim(context: __compactRuntime.CircuitContext<PS>,
-                   issuer_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+                   issuer_0: Uint8Array,
+                   minimum_age_0: bigint,
+                   require_accredited_0: boolean): __compactRuntime.CircuitResults<PS, []>;
 }
 
 export type PureCircuits = {
@@ -28,8 +40,14 @@ export type PureCircuits = {
 
 export type Circuits<PS> = {
   add_issuer(context: __compactRuntime.CircuitContext<PS>, issuer_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+  remove_issuer(context: __compactRuntime.CircuitContext<PS>,
+                issuer_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+  change_owner(context: __compactRuntime.CircuitContext<PS>,
+               new_owner_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
   verify_and_claim(context: __compactRuntime.CircuitContext<PS>,
-                   issuer_0: Uint8Array): __compactRuntime.CircuitResults<PS, []>;
+                   issuer_0: Uint8Array,
+                   minimum_age_0: bigint,
+                   require_accredited_0: boolean): __compactRuntime.CircuitResults<PS, []>;
 }
 
 export type Ledger = {

@@ -23,6 +23,44 @@
       }
     },
     {
+      "name": "remove_issuer",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "issuer",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+        ]
+      }
+    },
+    {
+      "name": "change_owner",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "new_owner",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+        ]
+      }
+    },
+    {
       "name": "verify_and_claim",
       "pure": false,
       "proof": true,
@@ -32,6 +70,19 @@
           "type": {
             "type-name": "Bytes",
             "length": 32
+          }
+        },
+        {
+          "name": "minimum_age",
+          "type": {
+            "type-name": "Uint",
+            "maxval": 255
+          }
+        },
+        {
+          "name": "require_accredited",
+          "type": {
+            "type-name": "Boolean"
           }
         }
       ],

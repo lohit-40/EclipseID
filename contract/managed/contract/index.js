@@ -118,23 +118,23 @@ export class Contract {
         partialProofData.output = { value: [], alignment: [] };
         return { result: result_0, context: context, proofData: partialProofData, gasCost: context.gasCost };
       },
-      verify_and_claim: (...args_1) => {
+      remove_issuer: (...args_1) => {
         if (args_1.length !== 2) {
-          throw new __compactRuntime.CompactError(`verify_and_claim: expected 2 arguments (as invoked from Typescript), received ${args_1.length}`);
+          throw new __compactRuntime.CompactError(`remove_issuer: expected 2 arguments (as invoked from Typescript), received ${args_1.length}`);
         }
         const contextOrig_0 = args_1[0];
         const issuer_0 = args_1[1];
         if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
-          __compactRuntime.typeError('verify_and_claim',
+          __compactRuntime.typeError('remove_issuer',
                                      'argument 1 (as invoked from Typescript)',
-                                     'EclipseID.compact line 32 char 1',
+                                     'EclipseID.compact line 31 char 1',
                                      'CircuitContext',
                                      contextOrig_0)
         }
         if (!(issuer_0.buffer instanceof ArrayBuffer && issuer_0.BYTES_PER_ELEMENT === 1 && issuer_0.length === 32)) {
-          __compactRuntime.typeError('verify_and_claim',
+          __compactRuntime.typeError('remove_issuer',
                                      'argument 1 (argument 2 as invoked from Typescript)',
-                                     'EclipseID.compact line 32 char 1',
+                                     'EclipseID.compact line 31 char 1',
                                      'Bytes<32>',
                                      issuer_0)
         }
@@ -148,19 +148,113 @@ export class Contract {
           publicTranscript: [],
           privateTranscriptOutputs: []
         };
+        const result_0 = this._remove_issuer_0(context,
+                                               partialProofData,
+                                               issuer_0);
+        partialProofData.output = { value: [], alignment: [] };
+        return { result: result_0, context: context, proofData: partialProofData, gasCost: context.gasCost };
+      },
+      change_owner: (...args_1) => {
+        if (args_1.length !== 2) {
+          throw new __compactRuntime.CompactError(`change_owner: expected 2 arguments (as invoked from Typescript), received ${args_1.length}`);
+        }
+        const contextOrig_0 = args_1[0];
+        const new_owner_0 = args_1[1];
+        if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
+          __compactRuntime.typeError('change_owner',
+                                     'argument 1 (as invoked from Typescript)',
+                                     'EclipseID.compact line 36 char 1',
+                                     'CircuitContext',
+                                     contextOrig_0)
+        }
+        if (!(new_owner_0.buffer instanceof ArrayBuffer && new_owner_0.BYTES_PER_ELEMENT === 1 && new_owner_0.length === 32)) {
+          __compactRuntime.typeError('change_owner',
+                                     'argument 1 (argument 2 as invoked from Typescript)',
+                                     'EclipseID.compact line 36 char 1',
+                                     'Bytes<32>',
+                                     new_owner_0)
+        }
+        const context = { ...contextOrig_0, gasCost: __compactRuntime.emptyRunningCost() };
+        const partialProofData = {
+          input: {
+            value: _descriptor_0.toValue(new_owner_0),
+            alignment: _descriptor_0.alignment()
+          },
+          output: undefined,
+          publicTranscript: [],
+          privateTranscriptOutputs: []
+        };
+        const result_0 = this._change_owner_0(context,
+                                              partialProofData,
+                                              new_owner_0);
+        partialProofData.output = { value: [], alignment: [] };
+        return { result: result_0, context: context, proofData: partialProofData, gasCost: context.gasCost };
+      },
+      verify_and_claim: (...args_1) => {
+        if (args_1.length !== 4) {
+          throw new __compactRuntime.CompactError(`verify_and_claim: expected 4 arguments (as invoked from Typescript), received ${args_1.length}`);
+        }
+        const contextOrig_0 = args_1[0];
+        const issuer_0 = args_1[1];
+        const minimum_age_0 = args_1[2];
+        const require_accredited_0 = args_1[3];
+        if (!(typeof(contextOrig_0) === 'object' && contextOrig_0.currentQueryContext != undefined)) {
+          __compactRuntime.typeError('verify_and_claim',
+                                     'argument 1 (as invoked from Typescript)',
+                                     'EclipseID.compact line 42 char 1',
+                                     'CircuitContext',
+                                     contextOrig_0)
+        }
+        if (!(issuer_0.buffer instanceof ArrayBuffer && issuer_0.BYTES_PER_ELEMENT === 1 && issuer_0.length === 32)) {
+          __compactRuntime.typeError('verify_and_claim',
+                                     'argument 1 (argument 2 as invoked from Typescript)',
+                                     'EclipseID.compact line 42 char 1',
+                                     'Bytes<32>',
+                                     issuer_0)
+        }
+        if (!(typeof(minimum_age_0) === 'bigint' && minimum_age_0 >= 0n && minimum_age_0 <= 255n)) {
+          __compactRuntime.typeError('verify_and_claim',
+                                     'argument 2 (argument 3 as invoked from Typescript)',
+                                     'EclipseID.compact line 42 char 1',
+                                     'Uint<0..256>',
+                                     minimum_age_0)
+        }
+        if (!(typeof(require_accredited_0) === 'boolean')) {
+          __compactRuntime.typeError('verify_and_claim',
+                                     'argument 3 (argument 4 as invoked from Typescript)',
+                                     'EclipseID.compact line 42 char 1',
+                                     'Boolean',
+                                     require_accredited_0)
+        }
+        const context = { ...contextOrig_0, gasCost: __compactRuntime.emptyRunningCost() };
+        const partialProofData = {
+          input: {
+            value: _descriptor_0.toValue(issuer_0).concat(_descriptor_3.toValue(minimum_age_0).concat(_descriptor_1.toValue(require_accredited_0))),
+            alignment: _descriptor_0.alignment().concat(_descriptor_3.alignment().concat(_descriptor_1.alignment()))
+          },
+          output: undefined,
+          publicTranscript: [],
+          privateTranscriptOutputs: []
+        };
         const result_0 = this._verify_and_claim_0(context,
                                                   partialProofData,
-                                                  issuer_0);
+                                                  issuer_0,
+                                                  minimum_age_0,
+                                                  require_accredited_0);
         partialProofData.output = { value: [], alignment: [] };
         return { result: result_0, context: context, proofData: partialProofData, gasCost: context.gasCost };
       }
     };
     this.impureCircuits = {
       add_issuer: this.circuits.add_issuer,
+      remove_issuer: this.circuits.remove_issuer,
+      change_owner: this.circuits.change_owner,
       verify_and_claim: this.circuits.verify_and_claim
     };
     this.provableCircuits = {
       add_issuer: this.circuits.add_issuer,
+      remove_issuer: this.circuits.remove_issuer,
+      change_owner: this.circuits.change_owner,
       verify_and_claim: this.circuits.verify_and_claim
     };
   }
@@ -196,6 +290,8 @@ export class Contract {
     stateValue_0 = stateValue_0.arrayPush(__compactRuntime.StateValue.newNull());
     state_0.data = new __compactRuntime.ChargedState(stateValue_0);
     state_0.setOperation('add_issuer', new __compactRuntime.ContractOperation());
+    state_0.setOperation('remove_issuer', new __compactRuntime.ContractOperation());
+    state_0.setOperation('change_owner', new __compactRuntime.ContractOperation());
     state_0.setOperation('verify_and_claim', new __compactRuntime.ContractOperation());
     const context = __compactRuntime.createCircuitContext(__compactRuntime.dummyContractAddress(), constructorContext_0.initialZswapLocalState.coinPublicKey, state_0.data, constructorContext_0.initialPrivateState);
     const partialProofData = {
@@ -326,7 +422,72 @@ export class Contract {
                                        { ins: { cached: true, n: 1 } }]);
     return [];
   }
-  _verify_and_claim_0(context, partialProofData, issuer_0) {
+  _remove_issuer_0(context, partialProofData, issuer_0) {
+    __compactRuntime.assert(this._equal_1(this._msgSender_0(context,
+                                                            partialProofData),
+                                          _descriptor_0.fromValue(__compactRuntime.queryLedgerState(context,
+                                                                                                    partialProofData,
+                                                                                                    [
+                                                                                                     { dup: { n: 0 } },
+                                                                                                     { idx: { cached: false,
+                                                                                                              pushPath: false,
+                                                                                                              path: [
+                                                                                                                     { tag: 'value',
+                                                                                                                       value: { value: _descriptor_3.toValue(0n),
+                                                                                                                                alignment: _descriptor_3.alignment() } }] } },
+                                                                                                     { popeq: { cached: false,
+                                                                                                                result: undefined } }]).value)),
+                            'Only owner can remove issuers');
+    __compactRuntime.queryLedgerState(context,
+                                      partialProofData,
+                                      [
+                                       { idx: { cached: false,
+                                                pushPath: true,
+                                                path: [
+                                                       { tag: 'value',
+                                                         value: { value: _descriptor_3.toValue(1n),
+                                                                  alignment: _descriptor_3.alignment() } }] } },
+                                       { push: { storage: false,
+                                                 value: __compactRuntime.StateValue.newCell({ value: _descriptor_0.toValue(issuer_0),
+                                                                                              alignment: _descriptor_0.alignment() }).encode() } },
+                                       { rem: { cached: false } },
+                                       { ins: { cached: true, n: 1 } }]);
+    return [];
+  }
+  _change_owner_0(context, partialProofData, new_owner_0) {
+    __compactRuntime.assert(this._equal_2(this._msgSender_0(context,
+                                                            partialProofData),
+                                          _descriptor_0.fromValue(__compactRuntime.queryLedgerState(context,
+                                                                                                    partialProofData,
+                                                                                                    [
+                                                                                                     { dup: { n: 0 } },
+                                                                                                     { idx: { cached: false,
+                                                                                                              pushPath: false,
+                                                                                                              path: [
+                                                                                                                     { tag: 'value',
+                                                                                                                       value: { value: _descriptor_3.toValue(0n),
+                                                                                                                                alignment: _descriptor_3.alignment() } }] } },
+                                                                                                     { popeq: { cached: false,
+                                                                                                                result: undefined } }]).value)),
+                            'Only owner can change ownership');
+    __compactRuntime.queryLedgerState(context,
+                                      partialProofData,
+                                      [
+                                       { push: { storage: false,
+                                                 value: __compactRuntime.StateValue.newCell({ value: _descriptor_3.toValue(0n),
+                                                                                              alignment: _descriptor_3.alignment() }).encode() } },
+                                       { push: { storage: true,
+                                                 value: __compactRuntime.StateValue.newCell({ value: _descriptor_0.toValue(new_owner_0),
+                                                                                              alignment: _descriptor_0.alignment() }).encode() } },
+                                       { ins: { cached: false, n: 1 } }]);
+    return [];
+  }
+  _verify_and_claim_0(context,
+                      partialProofData,
+                      issuer_0,
+                      minimum_age_0,
+                      require_accredited_0)
+  {
     __compactRuntime.assert(_descriptor_1.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                       partialProofData,
                                                                                       [
@@ -344,12 +505,23 @@ export class Contract {
                                                                                        { popeq: { cached: true,
                                                                                                   result: undefined } }]).value),
                             'Issuer not authorized');
-    __compactRuntime.assert(this._equal_1(this._user_credential_0(context,
+    __compactRuntime.assert(this._equal_3(this._user_credential_0(context,
                                                                   partialProofData).issuer_pk,
                                           issuer_0),
                             'Credential was not issued by the provided issuer');
     const nullifier_0 = this._transientHash_0(this._user_credential_0(context,
                                                                       partialProofData).secret_id);
+    let t_0;
+    __compactRuntime.assert((t_0 = this._user_credential_0(context,
+                                                           partialProofData).age,
+                             t_0 >= minimum_age_0),
+                            'User does not meet minimum age requirement');
+    if (require_accredited_0) {
+      __compactRuntime.assert(this._user_credential_0(context, partialProofData).is_accredited
+                              ===
+                              true,
+                              'User is not accredited');
+    }
     __compactRuntime.assert(!_descriptor_1.fromValue(__compactRuntime.queryLedgerState(context,
                                                                                        partialProofData,
                                                                                        [
@@ -391,6 +563,14 @@ export class Contract {
     return true;
   }
   _equal_1(x0, y0) {
+    if (!x0.every((x, i) => y0[i] === x)) { return false; }
+    return true;
+  }
+  _equal_2(x0, y0) {
+    if (!x0.every((x, i) => y0[i] === x)) { return false; }
+    return true;
+  }
+  _equal_3(x0, y0) {
     if (!x0.every((x, i) => y0[i] === x)) { return false; }
     return true;
   }

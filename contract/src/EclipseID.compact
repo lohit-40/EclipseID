@@ -28,6 +28,16 @@ export circuit add_issuer(issuer: Bytes<32>): [] {
     issuers.insert(disclose(issuer), true);
 }
 
+export circuit remove_issuer(issuer: Bytes<32>): [] {
+    assert(msgSender() == owner, "Only owner can remove issuers");
+    issuers.remove(disclose(issuer));
+}
+
+export circuit change_owner(new_owner: Bytes<32>): [] {
+    assert(msgSender() == owner, "Only owner can change ownership");
+    owner = disclose(new_owner);
+}
+
 // ZK Circuit 1: Verify and Claim
 export circuit verify_and_claim(
     issuer: Bytes<32>,
