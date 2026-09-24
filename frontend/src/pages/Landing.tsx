@@ -98,17 +98,18 @@ export default function Landing() {
           <span className="gradient-text"><ScrambleText text="ID" delayMs={500} /></span>
         </h1>
 
-        <p className="text-lg md:text-xl text-eclipse-muted mb-12 hero-item max-w-xl leading-relaxed">
-          <ScrambleText text="Zero-Knowledge Identity Protocol on Midnight Network" delayMs={600} />
+        <p className="text-xl md:text-2xl text-eclipse-muted mb-12 hero-item max-w-2xl leading-relaxed font-light">
+          <span className="font-serif italic font-medium text-eclipse-text text-2xl md:text-3xl pr-1">Zero-Knowledge</span> Identity Protocol on <span className="font-bold text-eclipse-text">Midnight Network</span>
         </p>
 
         {/* Description glass card */}
         <div className="glass-card p-6 md:p-8 mb-12 max-w-2xl text-left hero-item">
-          <p className="text-eclipse-text leading-relaxed text-sm md:text-base">
-            <span className="text-eclipse-cyan font-mono text-xs opacity-60 block mb-2">{'>'} STATUS: ACTIVE</span>
+          <p className="text-eclipse-text leading-relaxed text-sm md:text-base font-light">
+            <span className="text-eclipse-cyan font-mono text-xs opacity-80 block mb-3 tracking-widest font-semibold">{'>'} STATUS: ACTIVE</span>
             Current Web3 identity systems link real-world PII to public ledgers, creating systemic privacy failure. 
             EclipseID deploys a cryptographic shield between KYC providers and decentralized infrastructure — prove compliance 
-            using <span className="text-eclipse-cyan font-semibold">Midnight Network ZK-SNARKs</span>. Zero data leakage. Total anonymity.
+            using <span className="font-bold text-eclipse-cyan">Midnight Network ZK-SNARKs</span>. 
+            <span className="font-serif italic font-semibold text-eclipse-bright text-lg ml-1">Zero data leakage. Total anonymity.</span>
           </p>
         </div>
 
@@ -153,8 +154,8 @@ export default function Landing() {
                   {f.icon}
                 </div>
                 
-                <h3 className="text-xl font-bold text-eclipse-bright mb-3 tracking-tight">{f.title}</h3>
-                <p className="text-sm text-eclipse-muted leading-relaxed">{f.desc}</p>
+                <h3 className="text-2xl font-black text-eclipse-bright mb-3 tracking-tight font-serif italic">{f.title}</h3>
+                <p className="text-sm text-eclipse-muted leading-relaxed font-light">{f.desc}</p>
               </div>
             );
           })}

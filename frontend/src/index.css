@@ -26,6 +26,7 @@
     --color-foreground: var(--color-eclipse-bright);
     --color-primary: var(--color-eclipse-cyan);
     --color-primary-foreground: var(--color-eclipse-surface);
+    --font-serif: 'Playfair Display', serif;
 }
 
 :root {
