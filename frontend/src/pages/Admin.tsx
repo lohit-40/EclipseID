@@ -140,7 +140,7 @@ export default function Admin() {
     <div className="max-w-3xl mx-auto mt-8 px-4">
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-8 relative overflow-hidden">
         {/* Top accent */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-eclipse-cyan/50 to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-px bg-eclipse-cyan/50" />
         
         <h3 className="text-2xl font-bold text-eclipse-bright mb-1 tracking-tight">Protocol Command Center</h3>
         <p className="text-sm text-eclipse-muted mb-8">Deploy and configure the EclipseID contract infrastructure.</p>

@@ -79,14 +79,14 @@ export default function Landing() {
           onMouseEnter={() => playSound('scan')}
         >
           {/* Glow ring */}
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-eclipse-cyan/20 via-eclipse-violet/10 to-transparent blur-xl" />
+          <div className="absolute inset-0 rounded-3xl bg-eclipse-cyan/10 blur-xl" />
           {/* Glass container */}
-          <div className="relative w-full h-full rounded-3xl bg-eclipse-surface/50 backdrop-blur-xl border border-white/10 flex items-center justify-center overflow-hidden">
+          <div className="relative w-full h-full rounded-3xl bg-eclipse-surface/50 backdrop-blur-xl border border-black/10 flex items-center justify-center overflow-hidden">
             <Fingerprint className="absolute inset-0 w-full h-full opacity-10 text-eclipse-cyan p-6" strokeWidth={0.8} />
             <LockKeyhole className="relative text-eclipse-cyan w-12 h-12 md:w-16 md:h-16 z-10 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]" strokeWidth={1.5} />
             {/* Shimmer line */}
             <motion.div 
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12"
+              className="absolute inset-0 bg-eclipse-cyan/5 -skew-x-12"
               animate={{ x: ['-200%', '200%'] }}
               transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", repeatDelay: 2 }}
             />
@@ -173,7 +173,7 @@ export default function Landing() {
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               {['Compact', 'ZK-SNARKs', 'Midnight', 'React 19', 'TypeScript', 'Vite'].map((t) => (
-                <span key={t} className="px-4 py-2 rounded-full text-xs font-semibold text-eclipse-text bg-white/5 border border-white/5">
+                <span key={t} className="px-4 py-2 rounded-full text-xs font-semibold text-eclipse-text bg-black/5 border border-black/5">
                   {t}
                 </span>
               ))}

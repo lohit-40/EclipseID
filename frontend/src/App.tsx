@@ -22,7 +22,7 @@ const NavLink = ({ href, children, onClick }: { href: string; children: React.Re
     <Link 
       to={href}
       onClick={onClick}
-      className={`relative text-sm font-semibold tracking-wide px-4 py-2 rounded-lg transition-all duration-300 ${isActive ? 'text-eclipse-cyan bg-eclipse-cyan/10' : 'text-eclipse-text hover:text-eclipse-bright hover:bg-white/5'}`}
+      className={`relative text-sm font-semibold tracking-wide px-4 py-2 rounded-lg transition-all duration-300 ${isActive ? 'text-eclipse-cyan bg-eclipse-cyan/10' : 'text-eclipse-text hover:text-eclipse-bright hover:bg-black/5'}`}
     >
       {children}
       {isActive && (
@@ -138,10 +138,10 @@ export default function App() {
 
       <div className="relative z-10 flex flex-col min-h-screen">
         {/* ─── Glassmorphic Navbar ─── */}
-        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-eclipse-void/70 backdrop-blur-2xl border-b border-white/5 shadow-lg shadow-black/20' : 'bg-transparent'}`}>
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-eclipse-void/70 backdrop-blur-2xl border-b border-black/5 shadow-lg shadow-black/5' : 'bg-transparent'}`}>
           <div className="flex items-center justify-between px-6 md:px-10 py-4 max-w-7xl mx-auto w-full">
             <Link to="/" className="flex items-center gap-3 group">
-              <div className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-eclipse-cyan/20 to-eclipse-violet/20 border border-eclipse-cyan/20 group-hover:border-eclipse-cyan/40 group-hover:shadow-[0_0_20px_rgba(0,229,255,0.2)] transition-all duration-300">
+              <div className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-eclipse-cyan/10 border border-eclipse-cyan/20 group-hover:border-eclipse-cyan/40 group-hover:shadow-[0_0_20px_rgba(37,99,235,0.2)] transition-all duration-300">
                 <Shield className="w-5 h-5 text-eclipse-cyan" strokeWidth={2} />
               </div>
               <span className="text-lg font-bold text-eclipse-bright tracking-tight hidden sm:block">
@@ -174,7 +174,7 @@ export default function App() {
                 </div>
               )}
               
-              <button className="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors text-eclipse-text" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              <button className="md:hidden p-2 rounded-lg hover:bg-black/5 transition-colors text-eclipse-text" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
             </div>
@@ -189,14 +189,14 @@ export default function App() {
               animate={{ opacity: 1, y: 0, backdropFilter: 'blur(20px)' }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.3 }}
-              className="md:hidden fixed top-[72px] left-4 right-4 bg-eclipse-surface/90 backdrop-blur-2xl border border-white/10 rounded-2xl z-40 flex flex-col p-6 gap-3 shadow-2xl shadow-black/40"
+              className="md:hidden fixed top-[72px] left-4 right-4 bg-eclipse-surface/90 backdrop-blur-2xl border border-black/10 rounded-2xl z-40 flex flex-col p-6 gap-3 shadow-2xl shadow-black/10"
             >
               <NavLink href="/darkpool" onClick={() => setIsMenuOpen(false)}>Darkpool dApp</NavLink>
               <NavLink href="/developers" onClick={() => setIsMenuOpen(false)}>Developers</NavLink>
               <NavLink href="/feedback" onClick={() => setIsMenuOpen(false)}>Feedback</NavLink>
               {isAdminMode && <NavLink href="/admin" onClick={() => setIsMenuOpen(false)}>Admin</NavLink>}
               
-              <div className="border-t border-white/5 pt-4 mt-2">
+              <div className="border-t border-black/5 pt-4 mt-2">
                 {!isConnected ? (
                   <button onClick={() => { connectWallet(); setIsMenuOpen(false); }} className="w-full neon-btn py-3 text-center">
                     <Zap size={16} /> Connect Wallet
@@ -230,7 +230,7 @@ export default function App() {
         </main>
         
         {/* ─── Footer ─── */}
-        <footer className="w-full flex flex-col items-center justify-center py-10 text-eclipse-muted text-xs border-t border-white/5 mt-auto gap-3 relative z-10">
+        <footer className="w-full flex flex-col items-center justify-center py-10 text-eclipse-muted text-xs border-t border-black/5 mt-auto gap-3 relative z-10">
           <p className="font-mono tracking-wider opacity-60">MIDNIGHT.NETWORK // ZK.IDENTITY.PROTOCOL // v2.0</p>
           <a href="https://x.com/EclipseID011" target="_blank" rel="noreferrer" className="hover:text-eclipse-cyan transition-colors flex items-center gap-1.5 opacity-60 hover:opacity-100">
             @EclipseID011

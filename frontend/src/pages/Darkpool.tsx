@@ -186,7 +186,7 @@ export default function Darkpool() {
     <div ref={container} className="max-w-6xl mx-auto mt-8 px-4">
       <div className="terminal-panel glass-card overflow-hidden">
         {/* Terminal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-black/5">
           <div className="flex items-center gap-3 text-eclipse-muted text-sm font-mono">
             <Terminal size={16} className="text-eclipse-cyan" />
             <span>ZK_AUTH_TERMINAL</span>
