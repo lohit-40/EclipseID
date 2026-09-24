@@ -6,9 +6,10 @@ import { Contract } from '../contract/index';
 type EclipseIdContract = Contract<any, any>;
 import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
 import { type EclipseIdProviders } from '../providers';
+import { Shield, Loader2 } from 'lucide-react';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-const MASTER_ADMIN_WALLET = import.meta.env.VITE_MASTER_ADMIN_WALLET; // The whitelisted wallet
+const MASTER_ADMIN_WALLET = import.meta.env.VITE_MASTER_ADMIN_WALLET;
 
 export default function Admin() {
   const { wallet, address, isConnected } = useWallet();
@@ -34,7 +35,7 @@ export default function Admin() {
     if (!wallet) return;
     try {
       setLoading(true); setError('');
-      setLoadingStep('Generating ZK Proof & Synchronizing Ledger... (This takes ~45 seconds on preview)');
+      setLoadingStep('Generating ZK Proof & Synchronizing Ledger... (~45s on preview)');
       
       const providers = await createMidnightProviders(wallet, {
         indexer: 'https://indexer.preview.midnight.network/api/v4/graphql',
@@ -49,7 +50,7 @@ export default function Admin() {
       
       const addr = deployed.deployTxData.public.contractAddress;
       
-      setLoadingStep('Registering Contract Address to Cloudflare...');
+      setLoadingStep('Registering Contract Address...');
       let discoveryMessage = 'Global Registry Updated!';
       try {
         const cfRes = await fetch(`${BACKEND_URL}/api/admin/set-contract`, {
@@ -63,8 +64,8 @@ export default function Admin() {
         const cfData = await cfRes.json();
         if (!cfData.success) throw new Error(cfData.error);
       } catch (cfErr: any) {
-        console.error('Cloudflare registry failed:', cfErr);
-        discoveryMessage = `Warning: Cloudflare registration failed (${cfErr.message}). Please retry deployment or set manually.`;
+        console.error('Registry failed:', cfErr);
+        discoveryMessage = `Warning: Registration failed (${cfErr.message}). Retry or set manually.`;
       }
       
       setDeployedAddress(addr);
@@ -83,7 +84,7 @@ export default function Admin() {
     if (!wallet) return;
     try {
       setLoading(true); setError('');
-      setLoadingStep('Authorizing Cloudflare Backend as KYC Issuer...');
+      setLoadingStep('Authorizing Backend as KYC Issuer...');
       
       const req = await fetch(`${BACKEND_URL}/api/issuer/public-key`);
       const data = await req.json();
@@ -111,63 +112,70 @@ export default function Admin() {
 
   if (!isConnected) {
     return (
-      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center font-sans">
-        <h2 className="text-4xl font-black text-brutal-text mb-4 uppercase tracking-widest">Admin Command Center</h2>
-        <p className="text-brutal-bg bg-brutal-orange border-4 border-brutal-text px-6 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">Connect your wallet to verify permissions.</p>
+      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center">
+        <div className="glass-card p-10 max-w-md text-center">
+          <div className="w-16 h-16 rounded-2xl bg-eclipse-violet/10 flex items-center justify-center mx-auto mb-4">
+            <Shield className="w-8 h-8 text-eclipse-violet" />
+          </div>
+          <h2 className="text-2xl font-bold text-eclipse-bright mb-2 tracking-tight">Admin Command Center</h2>
+          <p className="text-eclipse-muted text-sm">Connect your wallet to verify permissions.</p>
+        </div>
       </div>
     );
   }
 
   if (address !== MASTER_ADMIN_WALLET) {
     return (
-      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center font-sans">
-        <div className="bg-brutal-bg border-4 border-brutal-text p-8 shadow-[8px_8px_0px_0px_rgba(28,28,28,1)] max-w-md">
-          <h2 className="text-3xl font-black mb-4 uppercase tracking-widest text-brutal-orange">Unauthorized Access</h2>
-          <p className="text-sm font-mono break-all font-bold bg-white p-2 border-2 border-brutal-text">{address}</p>
-          <p className="mt-4 text-base font-bold">This wallet is not whitelisted for protocol administration.</p>
+      <div className="flex flex-col items-center justify-center pt-20 px-4 text-center">
+        <div className="glass-card p-10 max-w-md text-center !border-eclipse-pink/20">
+          <h2 className="text-2xl font-bold text-eclipse-pink mb-3 tracking-tight">Unauthorized</h2>
+          <p className="text-sm font-mono text-eclipse-muted break-all bg-eclipse-void/50 p-3 rounded-xl mb-3">{address}</p>
+          <p className="text-sm text-eclipse-muted">This wallet is not authorized for protocol administration.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto mt-12 font-sans px-4">
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-white border-4 border-brutal-text p-8 relative overflow-hidden shadow-[12px_12px_0px_0px_rgba(28,28,28,1)]">
-        <div className="absolute top-0 left-0 w-full h-2 bg-brutal-orange" />
-        <h3 className="text-3xl font-black text-brutal-text mb-2 uppercase tracking-widest">Protocol Command Center</h3>
-        <p className="text-base text-brutal-text mb-8 font-bold">Deploy the foundational contract and authorize the KYC issuer.</p>
+    <div className="max-w-3xl mx-auto mt-8 px-4">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="glass-card p-8 relative overflow-hidden">
+        {/* Top accent */}
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-eclipse-cyan/50 to-transparent" />
         
-        <div className="space-y-6">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between bg-brutal-bg p-6 border-4 border-brutal-text shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] gap-4">
+        <h3 className="text-2xl font-bold text-eclipse-bright mb-1 tracking-tight">Protocol Command Center</h3>
+        <p className="text-sm text-eclipse-muted mb-8">Deploy and configure the EclipseID contract infrastructure.</p>
+        
+        <div className="space-y-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between glass-card !rounded-xl p-5 gap-4">
             <div className="flex flex-col">
-              <span className="font-black text-lg uppercase">Global Contract Address</span>
-              <span className="font-mono text-sm font-bold bg-white px-2 py-1 border-2 border-brutal-text mt-2">{deployedAddress || 'NOT DEPLOYED'}</span>
+              <span className="font-semibold text-eclipse-bright text-sm">Global Contract Address</span>
+              <span className="font-mono text-xs text-eclipse-muted mt-1 bg-eclipse-void/50 px-2 py-1 rounded-lg inline-block">{deployedAddress || 'NOT DEPLOYED'}</span>
             </div>
-            <button onClick={handleAdminDeploy} disabled={loading} className="brutal-btn py-3 px-6 text-sm shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(28,28,28,1)] whitespace-nowrap">
-              Deploy Global Contract
+            <button onClick={handleAdminDeploy} disabled={loading} className="neon-btn py-2.5 px-5 text-xs whitespace-nowrap">
+              Deploy Contract
             </button>
           </div>
 
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between bg-brutal-bg p-6 border-4 border-brutal-text shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] gap-4">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between glass-card !rounded-xl p-5 gap-4">
             <div className="flex flex-col">
-              <span className="font-black text-lg uppercase">Register Backend Issuer</span>
-              <span className="text-sm font-bold mt-2">Authorizes the backend to issue credentials</span>
+              <span className="font-semibold text-eclipse-bright text-sm">Register Backend Issuer</span>
+              <span className="text-xs text-eclipse-muted mt-1">Authorizes the backend to issue credentials</span>
             </div>
-            <button onClick={handleAdminRegisterIssuer} disabled={loading || !deployedAddress} className="brutal-btn py-3 px-6 text-sm shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(28,28,28,1)] whitespace-nowrap bg-brutal-text text-white hover:bg-brutal-orange hover:text-brutal-text">
-              {isIssuerRegistered ? 'REGISTERED' : 'REGISTER BACKEND ISSUER'}
+            <button onClick={handleAdminRegisterIssuer} disabled={loading || !deployedAddress} className="ghost-btn py-2.5 px-5 text-xs !text-eclipse-violet !border-eclipse-violet/30 hover:!bg-eclipse-violet/10 whitespace-nowrap">
+              {isIssuerRegistered ? 'REGISTERED ✓' : 'Register Issuer'}
             </button>
           </div>
         </div>
 
         {loading && (
-          <div className="mt-8 flex flex-col items-center justify-center p-6 bg-white border-4 border-brutal-text shadow-[4px_4px_0px_0px_rgba(255,69,34,1)]">
-            <div className="w-8 h-8 border-4 border-brutal-orange border-t-brutal-text animate-spin mb-4" />
-            <p className="text-base font-black text-brutal-text animate-pulse uppercase tracking-widest text-center">{loadingStep}</p>
+          <div className="mt-6 flex items-center justify-center gap-3 p-5 glass-card !rounded-xl">
+            <Loader2 className="w-5 h-5 text-eclipse-cyan animate-spin" />
+            <p className="text-sm text-eclipse-text">{loadingStep}</p>
           </div>
         )}
 
         {error && !loading && (
-          <div className="mt-8 bg-brutal-orange border-4 border-brutal-text text-white p-6 text-center text-lg font-black uppercase shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
+          <div className="mt-6 text-sm text-eclipse-pink bg-eclipse-pink/10 border border-eclipse-pink/20 rounded-xl p-4 text-center">
             {error}
           </div>
         )}

@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: #F2F0EB;
+        font-family: 'Geist', sans-serif;
+        color: #1C1C1C;
+      }
+      #root {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        transform-origin: center center;
+      }
+      .scene {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+      }
+      .huge-text {
+        font-size: 130px;
+        font-weight: 900;
+        text-transform: uppercase;
+        text-align: center;
+        line-height: 0.9;
+        letter-spacing: -0.05em;
+        white-space: nowrap;
+      }
+      .glitch {
+        position: relative;
+      }
+      .brutal-card {
+        background: #F2F0EB;
+        border: 12px solid #1C1C1C;
+        padding: 80px;
+        box-shadow: 40px 40px 0px 0px #1C1C1C;
+        display: flex;
+        flex-direction: column;
+        gap: 60px;
+        width: 1200px;
+        transform-origin: center center;
+      }
+      .brutal-btn {
+        background: #FF4522;
+        color: #F2F0EB;
+        padding: 40px 60px;
+        font-size: 50px;
+        font-weight: 900;
+        text-transform: uppercase;
+        border: 8px solid #1C1C1C;
+        text-align: center;
+      }
+      .cursor {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="white" stroke="%231C1C1C" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>') no-repeat;
+        z-index: 100;
+        opacity: 0;
+      }
+      .stamp {
+        position: absolute;
+        font-size: 180px;
+        font-weight: 900;
+        color: #FF4522;
+        border: 20px solid #FF4522;
+        padding: 30px 60px;
+        transform: rotate(-15deg) scale(5);
+        opacity: 0;
+        text-align: center;
+        line-height: 1;
+        mix-blend-mode: multiply;
+      }
+      .progress-container {
+        width: 100%;
+        height: 60px;
+        border: 8px solid #1C1C1C;
+        background: #fff;
+        position: relative;
+      }
+      .progress-bar {
+        height: 100%;
+        background: #FF4522;
+        width: 0%;
+      }
+      #flash {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: #1C1C1C;
+        opacity: 0;
+        z-index: 50;
+        pointer-events: none;
+      }
+      #flash-orange {
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: #FF4522;
+        opacity: 0;
+        z-index: 51;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="19" data-width="1920" data-height="1080">
+      
+      <div id="flash"></div>
+      <div id="flash-orange"></div>
+
+      <!-- Scene 1 -->
+      <div id="scene1" class="scene">
+        <div id="s1-t1" class="huge-text glitch" style="opacity:0; transform: scale(5) rotate(-20deg)">WEB3 WANTS YOU TO<br>DOX YOURSELF.</div>
+        <div id="s1-t2" class="huge-text glitch" style="color: #FF4522; font-size: 200px; margin-top: 20px; opacity: 0; transform: scale(5) rotate(20deg)">WE DON'T.</div>
+      </div>
+
+      <!-- Scene 2 -->
+      <div id="scene2" class="scene">
+        <div id="s2-t1" class="huge-text" style="font-size: 150px;">EclipseID:</div>
+        <div id="s2-t1a" class="huge-text" style="font-size: 100px;">Zero-Knowledge Credentials.</div>
+        <div id="s2-t2" class="huge-text" style="color: #FF4522; margin-top: 40px; font-size: 100px;">On the Midnight Network.</div>
+      </div>
+
+      <!-- Scene 3 -->
+      <div id="scene3" class="scene">
+        <div class="brutal-card" id="s3-card">
+          <div class="huge-text" style="font-size: 80px;">ZK CREDENTIAL ISSUER</div>
+          <div class="brutal-btn" id="s3-btn">CONNECT LACE WALLET</div>
+          <div id="s3-progress-wrap" style="opacity: 0;">
+            <div style="font-size: 40px; font-weight: 900; margin-bottom: 20px;">ISSUING PRIVATE CREDENTIAL... <span id="s3-done" style="color:#FF4522; opacity:0; font-size: 60px;">DONE!</span></div>
+            <div class="progress-container"><div class="progress-bar" id="s3-bar"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scene 4 -->
+      <div id="scene4" class="scene">
+        <div class="brutal-card" id="s4-card">
+          <div class="huge-text" style="font-size: 100px;">DARKPOOL OTC</div>
+          <div class="brutal-btn" id="s4-btn">ACCESS ANONYMOUSLY</div>
+        </div>
+        <div id="s4-stamp" class="stamp">ZK PROOF<br>VERIFIED</div>
+      </div>
+
+      <!-- Scene 5 -->
+      <div id="scene5" class="scene">
+        <div class="huge-text" style="font-size: 120px;">Keep your identity off-chain.</div>
+        <div class="huge-text" id="s5-logo" style="color: #FF4522; font-size: 250px; margin-top: 40px;">EclipseID</div>
+        <div style="font-size: 70px; font-weight: 900; margin-top: 20px;" id="s5-handle">@EclipseID011</div>
+      </div>
+
+      <div id="cursor" class="cursor"></div>
+
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true });
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+
+      // Shake root sporadically for chaotic feel
+      tl.to("#root", {
+        x: () => Math.random() * 20 - 10,
+        y: () => Math.random() * 20 - 10,
+        rotation: () => Math.random() * 2 - 1,
+        duration: 0.05,
+        repeat: 380, // rough estimate for 19s
+        ease: "rough({ template: none.out, strength: 1, points: 20, taper: none, randomize: true, clamp: false })"
+      }, 0);
+
+      // Scene 1: 0 to 3.5s
+      tl.set("#scene1", { autoAlpha: 1 }, 0);
+      tl.to("#s1-t1", { opacity: 1, scale: 1, rotation: 0, duration: 0.15, ease: "power4.in" }, 0.2); 
+      tl.to("#flash", { opacity: 1, duration: 0.05, yoyo: true, repeat: 3 }, 0.35); // Glitch flash
+      
+      tl.to("#flash-orange", { opacity: 1, duration: 0.05 }, 1.5);
+      tl.to("#flash-orange", { opacity: 0, duration: 0.2 }, 1.6);
+      
+      tl.to("#s1-t2", { opacity: 1, scale: 1, rotation: 0, duration: 0.1, ease: "bounce.out" }, 1.55); 
+      tl.to("#s1-t2", { scale: 1.1, rotation: 2, duration: 0.05, yoyo: true, repeat: 5 }, 1.8); // Freak out text
+      tl.to("#scene1", { scale: 5, autoAlpha: 0, duration: 0.2 }, 3.3);
+
+      // Scene 2: 3.5s to 7.0s
+      tl.set("#scene2", { autoAlpha: 1 }, 3.5);
+      tl.fromTo("#s2-t1", { opacity: 0, x: -1000, skewX: 50 }, { opacity: 1, x: 0, skewX: 0, duration: 0.2, ease: "power4.out" }, 3.6);
+      tl.fromTo("#s2-t1a", { opacity: 0, x: 1000, skewX: -50 }, { opacity: 1, x: 0, skewX: 0, duration: 0.2, ease: "power4.out" }, 3.8);
+      
+      tl.fromTo("#s2-t2", { opacity: 0, y: 500, scale: 2 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(2)" }, 4.5);
+      tl.to("#s2-t2", { rotation: -5, duration: 0.1, yoyo: true, repeat: 10 }, 4.8);
+      
+      tl.to("#scene2", { scale: 0, opacity: 0, rotation: 90, duration: 0.3, ease: "power4.in" }, 6.7);
+
+      // Scene 3: 7.0s to 12.0s
+      tl.set("#scene3", { autoAlpha: 1 }, 7.0);
+      tl.fromTo("#s3-card", { scale: 0, rotation: -180 }, { scale: 1, rotation: 0, duration: 0.3, ease: "back.out(1.5)" }, 7.1);
+      
+      // Cursor moves and clicks (very fast)
+      tl.set("#cursor", { autoAlpha: 1, x: 1920, y: 1080 }, 7.4);
+      tl.to("#cursor", { x: 960, y: 580, duration: 0.2, ease: "power4.out" }, 7.4);
+      tl.to("#cursor", { scale: 0.5, duration: 0.05, yoyo: true, repeat: 1 }, 7.8);
+      tl.to("#s3-btn", { scale: 0.9, backgroundColor: "#1C1C1C", color: "#FF4522", duration: 0.05, yoyo: true, repeat: 1 }, 7.8);
+      tl.to("#cursor", { x: 2000, y: -200, duration: 0.2, ease: "power4.in" }, 7.9);
+
+      // Progress bar - erratic fill
+      tl.to("#s3-progress-wrap", { opacity: 1, duration: 0.1 }, 8.1);
+      tl.to("#s3-bar", { width: "40%", duration: 0.1 }, 8.2);
+      tl.to("#s3-bar", { width: "40%", duration: 0.4 }, 8.3); // pause
+      tl.to("#s3-bar", { width: "80%", duration: 0.1 }, 8.7);
+      tl.to("#s3-card", { x: 20, duration: 0.05, yoyo: true, repeat: 5 }, 8.8); // Card shakes while loading
+      tl.to("#s3-bar", { width: "100%", duration: 0.1 }, 9.5);
+      
+      tl.to("#s3-done", { opacity: 1, scale: 1.5, rotation: 10, duration: 0.1 }, 9.6);
+      tl.to("#flash", { opacity: 1, duration: 0.05, yoyo: true, repeat: 1 }, 9.6);
+
+      tl.to("#scene3", { y: -2000, duration: 0.3, ease: "power4.in" }, 11.7);
+
+      // Scene 4: 12.0s to 16.0s
+      tl.set("#scene4", { autoAlpha: 1 }, 12.0);
+      tl.fromTo("#s4-card", { y: 2000 }, { y: 0, duration: 0.3, ease: "power4.out" }, 12.0);
+
+      tl.set("#cursor", { autoAlpha: 1, x: -200, y: -200 }, 12.4);
+      tl.to("#cursor", { x: 960, y: 580, duration: 0.2, ease: "power4.out" }, 12.4);
+      tl.to("#cursor", { scale: 0.5, duration: 0.05, yoyo: true, repeat: 1 }, 12.8);
+      tl.to("#s4-btn", { scale: 0.9, backgroundColor: "#1C1C1C", color: "#FF4522", duration: 0.05, yoyo: true, repeat: 1 }, 12.8);
+      tl.to("#cursor", { x: -200, y: 1200, duration: 0.2 }, 12.9);
+
+      // Stamp slams incredibly hard
+      tl.to("#s4-stamp", { opacity: 1, scale: 1, rotation: -10, duration: 0.1, ease: "power4.in" }, 13.5);
+      tl.to("#root", { scale: 1.1, duration: 0.05, yoyo: true, repeat: 1 }, 13.6); // Entire screen bulges
+      tl.to("#flash-orange", { opacity: 1, duration: 0.05, yoyo: true, repeat: 1 }, 13.6);
+      
+      tl.to("#scene4", { autoAlpha: 0, scale: 5, filter: "blur(20px)", duration: 0.3 }, 15.7);
+
+      // Scene 5: 16.0s to 19.0s
+      tl.set("#scene5", { autoAlpha: 1 }, 16.0);
+      tl.fromTo("#scene5 > div", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.3, stagger: 0.1, ease: "back.out(2)" }, 16.1);
+      
+      // Heartbeat pulse on logo
+      tl.to("#s5-logo", { scale: 1.1, duration: 0.1, yoyo: true, repeat: 15 }, 16.5);
+
+      tl.seek(0);
+    </script>
+  </body>
+</html>

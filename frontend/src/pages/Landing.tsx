@@ -1,7 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Terminal, ShieldAlert, Fingerprint, LockKeyhole } from 'lucide-react';
+import { ShieldAlert, Fingerprint, LockKeyhole, Code2, Sparkles } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import ScrollTrigger from 'gsap/ScrollTrigger';
@@ -12,98 +12,175 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
 }
 
+const features = [
+  {
+    num: '01',
+    title: 'Off-chain Issuance',
+    desc: 'Authorized KYC nodes issue encrypted credentials directly into your local shielded vault. No public broadcast. Zero data exposure.',
+    color: 'cyan',
+    icon: <Sparkles className="w-6 h-6" />,
+  },
+  {
+    num: '02',
+    title: 'ZK Circuit Proof',
+    desc: 'Generate a local Zero-Knowledge proof confirming credential validity (age ≥ 18, accredited) without exposing any underlying personal data.',
+    color: 'violet',
+    icon: <Code2 className="w-6 h-6" />,
+  },
+  {
+    num: '03',
+    title: 'Confidential Access',
+    desc: 'Enter regulated DeFi darkpools anonymously. The smart contract verifies only the ZK mathematical footprint. Full privacy preserved.',
+    color: 'pink',
+    icon: <LockKeyhole className="w-6 h-6" />,
+  },
+];
+
+const colorMap: Record<string, { glow: string; text: string; bg: string; border: string }> = {
+  cyan: { glow: 'shadow-[0_0_30px_rgba(0,229,255,0.15)]', text: 'text-eclipse-cyan', bg: 'bg-eclipse-cyan/10', border: 'border-eclipse-cyan/20 hover:border-eclipse-cyan/40' },
+  violet: { glow: 'shadow-[0_0_30px_rgba(168,85,247,0.15)]', text: 'text-eclipse-violet', bg: 'bg-eclipse-violet/10', border: 'border-eclipse-violet/20 hover:border-eclipse-violet/40' },
+  pink: { glow: 'shadow-[0_0_30px_rgba(236,72,153,0.15)]', text: 'text-eclipse-pink', bg: 'bg-eclipse-pink/10', border: 'border-eclipse-pink/20 hover:border-eclipse-pink/40' },
+};
+
 export default function Landing() {
   const container = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    gsap.from('.glitch-item', {
-      y: 50,
+    gsap.from('.hero-item', {
+      y: 60,
       opacity: 0,
-      stagger: 0.1,
-      duration: 1,
+      stagger: 0.15,
+      duration: 1.2,
       ease: "power4.out",
-      delay: 0.2
+      delay: 0.1
     });
 
-    gsap.from('.feature-card', {
+    gsap.from('.feature-card-3d', {
       scrollTrigger: {
-        trigger: '.features-container',
+        trigger: '.features-section',
         start: 'top 80%',
       },
-      y: 40,
+      y: 60,
       opacity: 0,
+      rotateX: 15,
       stagger: 0.2,
-      duration: 0.8,
-      ease: "back.out(1.7)"
+      duration: 1,
+      ease: "power3.out"
     });
   }, { scope: container });
 
   return (
-    <div ref={container} className="flex flex-col items-center justify-center pt-24 px-4 text-center max-w-5xl mx-auto font-sans">
-      <div className="mb-16 flex flex-col items-center w-full">
+    <div ref={container} className="flex flex-col items-center pt-16 md:pt-24 px-4 max-w-6xl mx-auto">
+      {/* ─── Hero Section ─── */}
+      <section className="text-center mb-24 md:mb-32 flex flex-col items-center w-full perspective-container">
+        {/* 3D Floating Shield */}
         <motion.div 
-          className="relative w-32 h-32 md:w-48 md:h-48 flex items-center justify-center mb-8 glitch-item bg-brutal-orange border-4 border-brutal-text shadow-[8px_8px_0px_0px_rgba(28,28,28,1)]"
-          animate={{ y: [0, -10, 0] }}
-          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+          className="relative w-32 h-32 md:w-44 md:h-44 flex items-center justify-center mb-10 hero-item shield-3d"
           onMouseEnter={() => playSound('scan')}
         >
-          <Fingerprint className="absolute inset-0 text-brutal-bg w-full h-full opacity-50 p-4" strokeWidth={1} />
-          <LockKeyhole className="absolute inset-0 text-brutal-text w-full h-full scale-[0.4] z-10" strokeWidth={2.5} />
+          {/* Glow ring */}
+          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-eclipse-cyan/20 via-eclipse-violet/10 to-transparent blur-xl" />
+          {/* Glass container */}
+          <div className="relative w-full h-full rounded-3xl bg-eclipse-surface/50 backdrop-blur-xl border border-white/10 flex items-center justify-center overflow-hidden">
+            <Fingerprint className="absolute inset-0 w-full h-full opacity-10 text-eclipse-cyan p-6" strokeWidth={0.8} />
+            <LockKeyhole className="relative text-eclipse-cyan w-12 h-12 md:w-16 md:h-16 z-10 drop-shadow-[0_0_20px_rgba(0,229,255,0.5)]" strokeWidth={1.5} />
+            {/* Shimmer line */}
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent -skew-x-12"
+              animate={{ x: ['-200%', '200%'] }}
+              transition={{ repeat: Infinity, duration: 3, ease: "easeInOut", repeatDelay: 2 }}
+            />
+          </div>
         </motion.div>
         
-        <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-brutal-text pb-4 glitch-item uppercase drop-shadow-[4px_4px_0px_rgba(255,69,34,1)]">
-          <ScrambleText text="SYSTEM.ECLIPSE_ID" delayMs={300} />
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-eclipse-bright pb-2 hero-item leading-[0.95]">
+          <ScrambleText text="Eclipse" delayMs={300} />
+          <span className="gradient-text"><ScrambleText text="ID" delayMs={500} /></span>
         </h1>
-        <p className="text-xl md:text-2xl text-brutal-bg bg-brutal-text font-bold mt-4 tracking-widest uppercase glitch-item px-6 py-2 border-4 border-brutal-text shadow-[4px_4px_0px_0px_rgba(255,69,34,1)]">
-          <ScrambleText text="[ Zero-Knowledge Identity Protocol ]" delayMs={600} />
-        </p>
-      </div>
 
-      <div className="text-lg md:text-xl text-brutal-text leading-relaxed mb-16 max-w-3xl glitch-item text-left border-4 border-brutal-text p-6 bg-white shadow-[8px_8px_0px_0px_rgba(255,69,34,1)] font-bold uppercase">
-        <p className="mb-4">
-          &gt; WARNING: Current Web3 identity vectors are compromised. Linking real-world PII to public ledgers creates systemic privacy failure.
+        <p className="text-lg md:text-xl text-eclipse-muted mt-6 hero-item max-w-xl leading-relaxed">
+          <ScrambleText text="Zero-Knowledge Identity Protocol on Midnight Network" delayMs={600} />
         </p>
-        <p>
-          &gt; SOLUTION: EclipseID deploys a cryptographic shield between KYC providers and decentralized infrastructure. Prove strict compliance parameters (Age, Accreditation) using Midnight Network ZK-SNARKs. <span className="text-brutal-orange">Zero data leakage. Total anonymity.</span>
-        </p>
-      </div>
 
-      <div className="flex flex-col sm:flex-row gap-6 glitch-item w-full sm:w-auto">
-        <Link 
-          to="/darkpool" 
-          onMouseEnter={() => playSound('scan')}
-          className="brutal-btn shadow-[8px_8px_0px_0px_rgba(28,28,28,1)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] text-xl"
-        >
-          <ShieldAlert size={28} />
-          ENTER DARKPOOL
-        </Link>
-        <Link 
-          to="/developers" 
-          onMouseEnter={() => playSound('scan')}
-          className="px-10 py-5 bg-white border-4 border-brutal-text text-brutal-text font-bold tracking-widest text-xl transition-all shadow-[8px_8px_0px_0px_rgba(255,69,34,1)] hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-[4px_4px_0px_0px_rgba(255,69,34,1)] hover:bg-brutal-text hover:text-white flex items-center justify-center gap-3 uppercase"
-        >
-          <Terminal size={28} />
-          VIEW DOCS
-        </Link>
-      </div>
+        {/* Description glass card */}
+        <div className="glass-card p-6 md:p-8 mt-10 max-w-2xl text-left hero-item">
+          <p className="text-eclipse-text leading-relaxed text-sm md:text-base">
+            <span className="text-eclipse-cyan font-mono text-xs opacity-60 block mb-2">{'>'} STATUS: ACTIVE</span>
+            Current Web3 identity systems link real-world PII to public ledgers, creating systemic privacy failure. 
+            EclipseID deploys a cryptographic shield between KYC providers and decentralized infrastructure — prove compliance 
+            using <span className="text-eclipse-cyan font-semibold">Midnight Network ZK-SNARKs</span>. Zero data leakage. Total anonymity.
+          </p>
+        </div>
 
-      <div className="mt-40 grid grid-cols-1 md:grid-cols-3 gap-8 text-left w-full features-container mb-32">
-        <div className="feature-card brutal-card relative group">
-          <div className="text-brutal-orange font-black text-6xl absolute -right-4 -top-6 group-hover:scale-110 transition-transform">01</div>
-          <h3 className="text-2xl font-black text-brutal-text mb-4 tracking-widest uppercase">Off-chain Issuance</h3>
-          <p className="text-base text-brutal-text leading-relaxed font-bold">Execute traditional KYC vectors. Authorized nodes issue a secure cryptographic credential directly into your local shielded vault. No public broadcast.</p>
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 mt-10 hero-item w-full sm:w-auto">
+          <Link 
+            to="/darkpool" 
+            onMouseEnter={() => playSound('scan')}
+            className="neon-btn text-lg px-10 py-4"
+          >
+            <ShieldAlert size={22} />
+            Enter Darkpool
+          </Link>
+          <Link 
+            to="/developers" 
+            onMouseEnter={() => playSound('scan')}
+            className="ghost-btn text-lg px-10 py-4"
+          >
+            <Code2 size={22} />
+            View Docs
+          </Link>
         </div>
-        <div className="feature-card brutal-card relative group">
-          <div className="text-brutal-orange font-black text-6xl absolute -right-4 -top-6 group-hover:scale-110 transition-transform">02</div>
-          <h3 className="text-2xl font-black text-brutal-text mb-4 tracking-widest uppercase">ZK Circuit Proof</h3>
-          <p className="text-base text-brutal-text leading-relaxed font-bold">Synthesize a local Zero-Knowledge proof confirming credential validity and required attributes (e.g. age &gt;= 18) without exposing underlying values.</p>
+      </section>
+
+      {/* ─── Features Section ─── */}
+      <section className="w-full mb-32 features-section perspective-container">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {features.map((f) => {
+            const c = colorMap[f.color];
+            return (
+              <div 
+                key={f.num} 
+                className={`feature-card-3d tilt-card glass-card ${c.border} p-8 relative group cursor-default`}
+              >
+                {/* Number badge */}
+                <div className={`absolute -top-3 -right-3 w-12 h-12 rounded-xl ${c.bg} flex items-center justify-center font-black text-lg ${c.text} border border-current/20 group-hover:scale-110 transition-transform`}>
+                  {f.num}
+                </div>
+                
+                {/* Icon */}
+                <div className={`w-12 h-12 rounded-xl ${c.bg} flex items-center justify-center mb-5 ${c.text}`}>
+                  {f.icon}
+                </div>
+                
+                <h3 className="text-xl font-bold text-eclipse-bright mb-3 tracking-tight">{f.title}</h3>
+                <p className="text-sm text-eclipse-muted leading-relaxed">{f.desc}</p>
+              </div>
+            );
+          })}
         </div>
-        <div className="feature-card brutal-card relative group">
-          <div className="text-brutal-orange font-black text-6xl absolute -right-4 -top-6 group-hover:scale-110 transition-transform">03</div>
-          <h3 className="text-2xl font-black text-brutal-text mb-4 tracking-widest uppercase">Confidential Access</h3>
-          <p className="text-base text-brutal-text leading-relaxed font-bold">Infiltrate regulated DeFi darkpools entirely anonymously. The smart contract verifies the ZK mathematical footprint. Privacy preserved.</p>
+      </section>
+
+      {/* ─── Tech Stack Section ─── */}
+      <section className="w-full mb-32">
+        <div className="animated-border">
+          <div className="glass-card p-8 md:p-12 text-center">
+            <h2 className="text-2xl md:text-3xl font-bold text-eclipse-bright mb-4 tracking-tight">
+              Built on <span className="gradient-text">Midnight Network</span>
+            </h2>
+            <p className="text-eclipse-muted max-w-lg mx-auto mb-8 text-sm leading-relaxed">
+              Leveraging the Compact language, ZK-SNARKs, and the Midnight partner chain for privacy-preserving smart contracts.
+            </p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {['Compact', 'ZK-SNARKs', 'Midnight', 'React 19', 'TypeScript', 'Vite'].map((t) => (
+                <span key={t} className="px-4 py-2 rounded-full text-xs font-semibold text-eclipse-text bg-white/5 border border-white/5">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

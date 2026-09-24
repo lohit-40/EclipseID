@@ -13,6 +13,12 @@
       "skillPath": ".agents/skills/android-example-voting/SKILL.md",
       "computedHash": "0894a2a36b0b455932689804b2c2e1c864e329ce94423e2e0a66f602ca42686f"
     },
+    "brag": {
+      "source": "latent-spaces/brag",
+      "sourceType": "github",
+      "skillPath": "skills/brag/SKILL.md",
+      "computedHash": "aee9951572e78aec28d2268ba8f6fc181a80dad6ff7c7505104ba587f0a3d179"
+    },
     "compact": {
       "source": "Kali-Decoder/Midnight-skills",
       "sourceType": "github",

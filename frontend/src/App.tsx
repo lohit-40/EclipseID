@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useWallet } from './WalletContext';
-import { Shield, Menu, X } from 'lucide-react';
+import { Shield, Menu, X, Zap } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ScrambleText from './components/ScrambleText';
 import { playSound } from './utils/sounds';
@@ -22,19 +22,26 @@ const NavLink = ({ href, children, onClick }: { href: string; children: React.Re
     <Link 
       to={href}
       onClick={onClick}
-      className={`transition-all font-bold text-sm px-4 py-2 uppercase tracking-widest border-2 text-center ${isActive ? 'bg-brutal-orange text-brutal-bg border-brutal-orange shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]' : 'bg-brutal-bg text-brutal-text border-brutal-text hover:bg-brutal-text hover:text-brutal-bg shadow-[2px_2px_0px_0px_rgba(28,28,28,1)] hover:shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]'}`}
+      className={`relative text-sm font-semibold tracking-wide px-4 py-2 rounded-lg transition-all duration-300 ${isActive ? 'text-eclipse-cyan bg-eclipse-cyan/10' : 'text-eclipse-text hover:text-eclipse-bright hover:bg-white/5'}`}
     >
       {children}
+      {isActive && (
+        <motion.div 
+          layoutId="nav-indicator"
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-4 h-0.5 bg-eclipse-cyan rounded-full"
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+        />
+      )}
     </Link>
   );
 };
 
 const PageWrapper = ({ children }: { children: React.ReactNode }) => (
   <motion.div
-    initial={{ opacity: 0, y: 15 }}
-    animate={{ opacity: 1, y: 0 }}
-    exit={{ opacity: 0, y: -15 }}
-    transition={{ duration: 0.2, ease: "easeOut" }}
+    initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
+    animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+    exit={{ opacity: 0, y: -10, filter: 'blur(8px)' }}
+    transition={{ duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
   >
     {children}
   </motion.div>
@@ -44,9 +51,17 @@ export default function App() {
   const { wallet, setWallet, address, setAddress, isConnected, setIsConnected } = useWallet();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   
   const MASTER_ADMIN_WALLET = import.meta.env.VITE_MASTER_ADMIN_WALLET;
   const isAdminMode = address === MASTER_ADMIN_WALLET;
+
+  // Track scroll for navbar glass effect
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -113,43 +128,56 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-brutal-bg text-brutal-text selection:bg-brutal-orange selection:text-brutal-bg font-sans relative overflow-x-hidden">
-      <div className="grain-overlay" />
+    <div className="min-h-screen bg-eclipse-void text-eclipse-text relative overflow-x-hidden">
+      {/* Ambient Background */}
+      <div className="grid-bg" />
+      <div className="orb orb-cyan" />
+      <div className="orb orb-violet" />
+      <div className="orb orb-pink" />
+      <div className="scanline-overlay" />
 
       <div className="relative z-10 flex flex-col min-h-screen">
-        <nav className="flex items-center justify-between px-4 md:px-8 py-6 max-w-7xl mx-auto w-full sticky top-0 bg-brutal-bg z-50 border-b-4 border-brutal-text mb-8">
-          <Link to="/" className="text-2xl md:text-3xl font-black tracking-tighter flex items-center gap-3 group uppercase z-50">
-            <div className="relative w-10 h-10 flex items-center justify-center bg-brutal-orange text-brutal-bg border-2 border-brutal-text shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-[2px_2px_0px_0px_rgba(28,28,28,1)] transition-all">
-              <Shield className="absolute inset-0 w-full h-full p-2" strokeWidth={2.5} />
-            </div>
-            <ScrambleText text="EclipseID" className="text-brutal-text hidden sm:block" delayMs={100} />
-          </Link>
-          
-          <div className="hidden md:flex items-center gap-4">
-            <NavLink href="/darkpool">Darkpool dApp</NavLink>
-            <NavLink href="/developers">Developers</NavLink>
-            <NavLink href="/feedback">Give Feedback</NavLink>
-            {isAdminMode && <NavLink href="/admin">Command Center</NavLink>}
-          </div>
-
-          <div className="flex items-center gap-4 z-50">
-            {!isConnected ? (
-              <button onClick={connectWallet} className="hidden md:block brutal-btn py-2 px-4 shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_rgba(28,28,28,1)]">
-                CONNECT WALLET
-              </button>
-            ) : (
-              <div className="hidden md:flex items-center gap-4 bg-brutal-bg px-4 py-2 border-2 border-brutal-text shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
-                <div className="flex items-center gap-2 font-bold">
-                  <div className="w-3 h-3 rounded-none bg-brutal-orange border-2 border-brutal-text" />
-                  <span className="text-xs uppercase tracking-widest">{address.slice(0, 12)}...</span>
-                </div>
-                <button onClick={disconnectWallet} className="text-xs font-bold bg-brutal-text text-brutal-bg px-2 py-1 uppercase tracking-widest hover:bg-brutal-orange transition-colors border-2 border-transparent hover:border-brutal-text">DISCONNECT</button>
+        {/* ─── Glassmorphic Navbar ─── */}
+        <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-eclipse-void/70 backdrop-blur-2xl border-b border-white/5 shadow-lg shadow-black/20' : 'bg-transparent'}`}>
+          <div className="flex items-center justify-between px-6 md:px-10 py-4 max-w-7xl mx-auto w-full">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="relative w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-eclipse-cyan/20 to-eclipse-violet/20 border border-eclipse-cyan/20 group-hover:border-eclipse-cyan/40 group-hover:shadow-[0_0_20px_rgba(0,229,255,0.2)] transition-all duration-300">
+                <Shield className="w-5 h-5 text-eclipse-cyan" strokeWidth={2} />
               </div>
-            )}
+              <span className="text-lg font-bold text-eclipse-bright tracking-tight hidden sm:block">
+                <ScrambleText text="EclipseID" className="text-eclipse-bright" delayMs={100} />
+              </span>
+            </Link>
             
-            <button className="md:hidden brutal-btn p-2 border-2 border-brutal-text bg-white shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            <div className="hidden md:flex items-center gap-1">
+              <NavLink href="/darkpool">Darkpool</NavLink>
+              <NavLink href="/developers">Developers</NavLink>
+              <NavLink href="/feedback">Feedback</NavLink>
+              {isAdminMode && <NavLink href="/admin">Admin</NavLink>}
+            </div>
+
+            <div className="flex items-center gap-3 z-50">
+              {!isConnected ? (
+                <button onClick={connectWallet} className="hidden md:flex neon-btn text-sm py-2.5 px-5">
+                  <Zap size={16} />
+                  Connect Wallet
+                </button>
+              ) : (
+                <div className="hidden md:flex items-center gap-3">
+                  <div className="flex items-center gap-2 glass-card px-4 py-2 !rounded-xl">
+                    <div className="status-dot bg-eclipse-green" />
+                    <span className="text-xs text-eclipse-text font-mono">{address.slice(0, 10)}...{address.slice(-4)}</span>
+                  </div>
+                  <button onClick={disconnectWallet} className="text-xs font-semibold text-eclipse-muted hover:text-eclipse-pink px-3 py-2 rounded-lg hover:bg-eclipse-pink/10 transition-all">
+                    Disconnect
+                  </button>
+                </div>
+              )}
+              
+              <button className="md:hidden p-2 rounded-lg hover:bg-white/5 transition-colors text-eclipse-text" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
+              </button>
+            </div>
           </div>
         </nav>
 
@@ -157,29 +185,31 @@ export default function App() {
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div 
-              initial={{ y: -20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden fixed top-24 left-4 right-4 bg-white border-4 border-brutal-text shadow-[8px_8px_0px_0px_rgba(28,28,28,1)] z-40 flex flex-col p-6 gap-4"
+              initial={{ opacity: 0, y: -10, backdropFilter: 'blur(0px)' }}
+              animate={{ opacity: 1, y: 0, backdropFilter: 'blur(20px)' }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.3 }}
+              className="md:hidden fixed top-[72px] left-4 right-4 bg-eclipse-surface/90 backdrop-blur-2xl border border-white/10 rounded-2xl z-40 flex flex-col p-6 gap-3 shadow-2xl shadow-black/40"
             >
               <NavLink href="/darkpool" onClick={() => setIsMenuOpen(false)}>Darkpool dApp</NavLink>
               <NavLink href="/developers" onClick={() => setIsMenuOpen(false)}>Developers</NavLink>
-              <NavLink href="/feedback" onClick={() => setIsMenuOpen(false)}>Give Feedback</NavLink>
-              {isAdminMode && <NavLink href="/admin" onClick={() => setIsMenuOpen(false)}>Command Center</NavLink>}
+              <NavLink href="/feedback" onClick={() => setIsMenuOpen(false)}>Feedback</NavLink>
+              {isAdminMode && <NavLink href="/admin" onClick={() => setIsMenuOpen(false)}>Admin</NavLink>}
               
-              <div className="border-t-4 border-brutal-text pt-6 mt-2">
+              <div className="border-t border-white/5 pt-4 mt-2">
                 {!isConnected ? (
-                  <button onClick={() => { connectWallet(); setIsMenuOpen(false); }} className="w-full brutal-btn py-3 px-4 shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] text-center block">
-                    CONNECT WALLET
+                  <button onClick={() => { connectWallet(); setIsMenuOpen(false); }} className="w-full neon-btn py-3 text-center">
+                    <Zap size={16} /> Connect Wallet
                   </button>
                 ) : (
                   <div className="flex flex-col gap-3">
-                    <div className="flex items-center justify-center gap-2 font-bold bg-brutal-bg border-2 border-brutal-text py-3">
-                      <div className="w-3 h-3 rounded-none bg-brutal-orange border-2 border-brutal-text" />
-                      <span className="text-sm uppercase tracking-widest">{address.slice(0, 12)}...</span>
+                    <div className="flex items-center justify-center gap-2 glass-card px-4 py-3 !rounded-xl">
+                      <div className="status-dot bg-eclipse-green" />
+                      <span className="text-sm text-eclipse-text font-mono">{address.slice(0, 12)}...</span>
                     </div>
-                    <button onClick={() => { disconnectWallet(); setIsMenuOpen(false); }} className="w-full font-bold bg-brutal-text text-brutal-bg px-4 py-3 uppercase tracking-widest border-2 border-brutal-text">DISCONNECT</button>
+                    <button onClick={() => { disconnectWallet(); setIsMenuOpen(false); }} className="w-full text-sm font-semibold text-eclipse-muted hover:text-eclipse-pink py-3 rounded-lg hover:bg-eclipse-pink/10 transition-all">
+                      Disconnect
+                    </button>
                   </div>
                 )}
               </div>
@@ -187,7 +217,7 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        <main className="flex-1 w-full relative">
+        <main className="flex-1 w-full relative pt-20">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
               <Route path="/" element={<PageWrapper><Landing /></PageWrapper>} />
@@ -199,10 +229,11 @@ export default function App() {
           </AnimatePresence>
         </main>
         
-        <footer className="w-full flex flex-col items-center justify-center py-8 text-brutal-text text-xs border-t-4 border-brutal-text mt-auto gap-3 font-bold uppercase tracking-widest bg-brutal-orange bg-opacity-10">
-          <p>SYSTEM.CORE.MIDNIGHT_NETWORK // ZK.IDENTITY.PROTOCOL</p>
-          <a href="https://x.com/EclipseID011" target="_blank" rel="noreferrer" className="hover:text-brutal-orange transition-colors flex items-center gap-1.5 underline underline-offset-4 decoration-2">
-            [ FOLLOW X ]
+        {/* ─── Footer ─── */}
+        <footer className="w-full flex flex-col items-center justify-center py-10 text-eclipse-muted text-xs border-t border-white/5 mt-auto gap-3 relative z-10">
+          <p className="font-mono tracking-wider opacity-60">MIDNIGHT.NETWORK // ZK.IDENTITY.PROTOCOL // v2.0</p>
+          <a href="https://x.com/EclipseID011" target="_blank" rel="noreferrer" className="hover:text-eclipse-cyan transition-colors flex items-center gap-1.5 opacity-60 hover:opacity-100">
+            @EclipseID011
           </a>
         </footer>
       </div>

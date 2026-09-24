@@ -4,11 +4,12 @@ import { createMidnightProviders } from '../providers';
 import { Contract } from '../contract/index';
 type EclipseIdContract = Contract<any, any>;
 import { type EclipseIdProviders } from '../providers';
-import { ShieldCheck, Lock, Terminal, Activity, CheckCircle2 } from 'lucide-react';
+import { ShieldCheck, Lock, Activity, CheckCircle2, Terminal, ChevronRight } from 'lucide-react';
 import ScrambleText from '../components/ScrambleText';
 import { playSound } from '../utils/sounds';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { motion } from 'framer-motion';
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -32,8 +33,8 @@ export default function Darkpool() {
   const container = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    gsap.from('.terminal-window', {
-      y: 20,
+    gsap.from('.terminal-panel', {
+      y: 30,
       opacity: 0,
       duration: 0.8,
       ease: "power3.out",
@@ -139,7 +140,6 @@ export default function Darkpool() {
       addLog('Proving: is_accredited == true && age >= 18');
       playSound('scan');
       
-      // Call the Selective Disclosure circuit
       const tx = await contract.callTx.verify_and_claim(hexToBytes(data.publicKey), 18n, true);
       
       const step2 = 'Submitting ZK Proof to Blockchain...';
@@ -163,141 +163,163 @@ export default function Darkpool() {
 
   if (!isConnected) {
     return (
-      <div className="flex flex-col items-center justify-center pt-32 px-4 text-center font-sans">
-        <Lock className="w-24 h-24 text-brutal-text mb-6 drop-shadow-[4px_4px_0px_rgba(255,69,34,1)]" />
-        <h2 className="text-4xl font-black text-brutal-text mb-4 tracking-widest uppercase">ENCRYPTED SECTOR</h2>
-        <p className="text-brutal-bg mb-8 border-4 border-brutal-text bg-brutal-orange px-6 py-3 font-bold shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">CONNECTION REQUIRED FOR ZK_AUTH</p>
+      <div className="flex flex-col items-center justify-center pt-32 px-4 text-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="glass-card p-12 max-w-md text-center"
+        >
+          <div className="w-20 h-20 rounded-2xl bg-eclipse-violet/10 flex items-center justify-center mx-auto mb-6">
+            <Lock className="w-10 h-10 text-eclipse-violet" />
+          </div>
+          <h2 className="text-2xl font-bold text-eclipse-bright mb-3 tracking-tight">Encrypted Sector</h2>
+          <p className="text-eclipse-muted text-sm mb-6">Connect your Midnight wallet to access the ZK Authentication Terminal</p>
+          <div className="px-4 py-2 rounded-full bg-eclipse-violet/10 border border-eclipse-violet/20 text-eclipse-violet text-xs font-semibold inline-block">
+            CONNECTION REQUIRED
+          </div>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div ref={container} className="max-w-5xl mx-auto mt-12 px-4 font-sans">
-      <div className="terminal-window bg-white rounded-none border-4 border-brutal-text shadow-[8px_8px_0px_0px_rgba(28,28,28,1)] relative overflow-hidden">
-        {/* Hacker Terminal Header */}
-        <div className="bg-brutal-bg border-b-4 border-brutal-text p-3 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-brutal-text text-sm tracking-widest font-bold">
-            <Terminal size={16} />
-            <span>ZK_AUTH_TERMINAL_V1.0</span>
+    <div ref={container} className="max-w-6xl mx-auto mt-8 px-4">
+      <div className="terminal-panel glass-card overflow-hidden">
+        {/* Terminal Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-white/5">
+          <div className="flex items-center gap-3 text-eclipse-muted text-sm font-mono">
+            <Terminal size={16} className="text-eclipse-cyan" />
+            <span>ZK_AUTH_TERMINAL</span>
+            <span className="text-eclipse-cyan/40">v2.0</span>
           </div>
-          <div className="flex gap-2">
-            <div className="w-4 h-4 rounded-none bg-brutal-bg border-2 border-brutal-text" />
-            <div className="w-4 h-4 rounded-none bg-brutal-bg border-2 border-brutal-text" />
-            <div className="w-4 h-4 rounded-none bg-brutal-orange border-2 border-brutal-text" />
+          <div className="flex gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-eclipse-pink/60" />
+            <div className="w-3 h-3 rounded-full bg-eclipse-amber/60" />
+            <div className="w-3 h-3 rounded-full bg-eclipse-green/60" />
           </div>
         </div>
 
-        <div className="p-8">
-          <div className="mb-8 border-l-4 border-brutal-orange pl-4 py-2 bg-brutal-bg shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
-             <h2 className="text-3xl font-black text-brutal-text mb-2 uppercase tracking-widest"><ScrambleText text="Authentication Protocol" delayMs={100} /></h2>
-             <p className="text-brutal-text font-bold text-sm uppercase">Execute local KYC shielding and generate zero-knowledge proof of compliance to access the Darkpool.</p>
+        <div className="p-6 md:p-8">
+          {/* Header */}
+          <div className="mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-eclipse-bright mb-2 tracking-tight">
+              <ScrambleText text="Authentication Protocol" delayMs={100} />
+            </h2>
+            <p className="text-eclipse-muted text-sm">Execute local KYC shielding and generate zero-knowledge proof of compliance.</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Action Panel */}
-            <div className="space-y-8">
+            <div className="space-y-5">
               {/* Step 1 */}
-              <div className={`p-6 border-4 transition-all bg-white shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] ${isVerified ? 'border-brutal-orange bg-brutal-bg' : 'border-brutal-text'}`}>
+              <div className={`glass-card p-6 transition-all ${isVerified ? '!border-eclipse-green/30' : ''}`}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-black text-brutal-text flex items-center gap-2 text-xl">
-                    <span className="text-sm bg-brutal-text px-2 py-1 text-brutal-bg uppercase">STEP 01</span>
+                  <h3 className="font-bold text-eclipse-bright flex items-center gap-3 text-lg">
+                    <span className="text-xs px-2.5 py-1 rounded-lg bg-eclipse-cyan/10 text-eclipse-cyan font-mono">01</span>
                     Local KYC Shield
                   </h3>
-                  {isVerified && <CheckCircle2 className="text-brutal-orange w-8 h-8" />}
+                  {isVerified && <CheckCircle2 className="text-eclipse-green w-6 h-6" />}
                 </div>
                 
                 {!isVerified ? (
                   <>
-                    <p className="text-sm text-brutal-text font-bold mb-4 uppercase">Simulate KYC API to fetch and shield attributes locally.</p>
-                    <div className="flex flex-col gap-3 mb-6">
+                    <p className="text-sm text-eclipse-muted mb-4">Simulate KYC API to fetch and shield attributes locally.</p>
+                    <div className="flex flex-col gap-3 mb-5">
                       <input
                         type="email"
-                        placeholder="ENTER_EMAIL_ADDRESS"
-                        className="bg-white border-4 border-brutal-text px-4 py-3 font-sans text-lg focus:outline-none focus:border-brutal-orange focus:shadow-[4px_4px_0px_0px_rgba(255,69,34,1)] shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]"
+                        placeholder="Enter email address"
+                        className="glass-input"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
-                      <div className="flex flex-col sm:flex-row gap-4">
+                      <div className="flex flex-col sm:flex-row gap-3">
                         <input
                           type="number"
-                          placeholder="AGE"
-                          className="bg-white border-4 border-brutal-text px-4 py-3 font-sans text-lg focus:outline-none focus:border-brutal-orange shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] sm:w-1/3"
+                          placeholder="Age"
+                          className="glass-input sm:w-1/3"
                           value={age}
                           onChange={(e) => setAge(e.target.value)}
                         />
-                        <label className="flex items-center gap-3 cursor-pointer bg-white border-4 border-brutal-text px-4 py-3 shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] flex-1 select-none focus-within:border-brutal-orange">
+                        <label className="flex items-center gap-3 cursor-pointer glass-input flex-1 select-none !py-3">
                           <input
                             type="checkbox"
-                            className="w-5 h-5 accent-brutal-orange cursor-pointer border-2 border-brutal-text"
+                            className="w-4 h-4 accent-eclipse-cyan cursor-pointer rounded"
                             checked={isAccredited}
                             onChange={(e) => setIsAccredited(e.target.checked)}
                           />
-                          <span className="font-bold uppercase text-sm">Accredited Investor</span>
+                          <span className="text-sm text-eclipse-text">Accredited Investor</span>
                         </label>
                       </div>
                     </div>
                     <button
                       onClick={handleVerify}
                       disabled={loading || !email}
-                      className="w-full bg-brutal-orange border-4 border-brutal-text text-brutal-bg font-black py-4 hover:bg-brutal-text hover:text-white transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group text-lg shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] uppercase"
+                      className="w-full neon-btn py-3.5 text-sm"
                     >
-                      <ShieldCheck className="group-hover:translate-x-1 transition-transform" size={24} />
-                      EXECUTE SHIELDING
+                      <ShieldCheck size={18} />
+                      Execute Shielding
                     </button>
                   </>
                 ) : (
-                  <p className="text-base text-brutal-text font-bold p-4 bg-white border-2 border-brutal-text shadow-[2px_2px_0px_0px_rgba(28,28,28,1)]">KYC attributes successfully shielded in local Midnight vault.</p>
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-eclipse-green/5 border border-eclipse-green/10">
+                    <CheckCircle2 className="text-eclipse-green w-5 h-5 shrink-0" />
+                    <p className="text-sm text-eclipse-green">KYC attributes successfully shielded in local vault.</p>
+                  </div>
                 )}
               </div>
 
               {/* Step 2 */}
-              <div className={`p-6 border-4 transition-all bg-white shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] ${!isVerified ? 'opacity-50 border-brutal-text/30 shadow-none' : 'border-brutal-text'} ${hasAccess ? 'border-brutal-orange bg-brutal-bg' : ''}`}>
+              <div className={`glass-card p-6 transition-all ${!isVerified ? 'opacity-40 pointer-events-none' : ''} ${hasAccess ? '!border-eclipse-green/30' : ''}`}>
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="font-black text-brutal-text flex items-center gap-2 text-xl">
-                    <span className="text-sm bg-brutal-text px-2 py-1 text-brutal-bg uppercase">STEP 02</span>
+                  <h3 className="font-bold text-eclipse-bright flex items-center gap-3 text-lg">
+                    <span className="text-xs px-2.5 py-1 rounded-lg bg-eclipse-violet/10 text-eclipse-violet font-mono">02</span>
                     ZK Compliance Proof
                   </h3>
-                  {hasAccess && <CheckCircle2 className="text-brutal-orange w-8 h-8" />}
+                  {hasAccess && <CheckCircle2 className="text-eclipse-green w-6 h-6" />}
                 </div>
                 
-                <p className="text-sm text-brutal-text font-bold mb-4 uppercase">Prove `age &gt;= 18` and `is_accredited == true` via ZK circuit.</p>
+                <p className="text-sm text-eclipse-muted mb-4">Prove <code className="text-eclipse-cyan text-xs bg-eclipse-cyan/5 px-1.5 py-0.5 rounded">age ≥ 18</code> and <code className="text-eclipse-violet text-xs bg-eclipse-violet/5 px-1.5 py-0.5 rounded">is_accredited</code> via ZK circuit.</p>
                 <button
                   onClick={handleEnterDarkpool}
                   disabled={loading || !isVerified || hasAccess}
-                  className="w-full bg-brutal-text border-4 border-brutal-text text-brutal-bg font-black py-4 hover:bg-brutal-orange hover:text-brutal-text transition-all disabled:opacity-50 tracking-widest flex items-center justify-center gap-2 group text-lg shadow-[4px_4px_0px_0px_rgba(28,28,28,1)] uppercase"
+                  className="w-full ghost-btn py-3.5 text-sm !text-eclipse-violet !border-eclipse-violet/30 hover:!bg-eclipse-violet/10 hover:!border-eclipse-violet/60"
                 >
-                  <Activity className="group-hover:translate-x-1 transition-transform" size={24} />
-                  GENERATE PROOF
+                  <Activity size={18} />
+                  Generate Proof
+                  <ChevronRight size={16} />
                 </button>
               </div>
             </div>
 
             {/* Terminal Output Panel */}
-            <div className="bg-brutal-bg border-4 border-brutal-text p-6 font-mono text-sm flex flex-col relative h-[450px] shadow-[8px_8px_0px_0px_rgba(28,28,28,1)]">
-              <div className="absolute top-0 right-0 bg-brutal-text px-4 py-2 text-white font-bold tracking-widest uppercase">OUTPUT LOG</div>
-              <div className="flex-1 overflow-y-auto space-y-4 mt-8 pr-4 custom-scrollbar font-bold">
-                <div className="text-brutal-text">SYSTEM READY. AWAITING COMMANDS...</div>
+            <div className="terminal-glass p-5 flex flex-col h-[450px]">
+              <div className="flex items-center gap-2 mb-4 text-xs text-eclipse-muted font-mono">
+                <div className="w-2 h-2 rounded-full bg-eclipse-cyan/50 animate-pulse" />
+                OUTPUT LOG
+              </div>
+              <div className="flex-1 overflow-y-auto space-y-2 pr-2 font-mono text-xs">
+                <div className="text-eclipse-muted/60">$ awaiting commands...</div>
                 {logs.map((log, i) => (
-                  <div key={i} className={log.includes('ERROR') || log.includes('DENIED') ? 'text-white bg-brutal-orange px-2 py-1 border-2 border-brutal-text' : 'text-brutal-text border-l-4 border-brutal-text pl-2'}>
+                  <div key={i} className={log.includes('ERROR') || log.includes('DENIED') ? 'text-eclipse-pink bg-eclipse-pink/10 px-3 py-2 rounded-lg border border-eclipse-pink/20' : 'text-eclipse-text pl-3 border-l-2 border-eclipse-cyan/20 py-1'}>
                     <ScrambleText text={log} delayMs={0} />
                   </div>
                 ))}
                 
                 {loading && (
-                  <div className="flex items-center gap-2 text-brutal-text mt-4">
-                    <span className="animate-pulse font-black text-xl">_</span>
+                  <div className="flex items-center gap-2 text-eclipse-cyan mt-2">
+                    <span className="animate-pulse text-lg">▊</span>
                     <ScrambleText text={loadingStep} delayMs={50} />
                   </div>
                 )}
                 
                 {error && (
-                  <div className="text-white border-4 border-brutal-text pl-4 mt-4 bg-brutal-orange py-4 font-black text-base shadow-[4px_4px_0px_0px_rgba(28,28,28,1)]">
+                  <div className="text-eclipse-pink border border-eclipse-pink/20 bg-eclipse-pink/10 rounded-xl px-4 py-3 mt-2">
                     <ScrambleText text={error} />
                   </div>
                 )}
                 
                 {txResult && (
-                  <div className="text-brutal-text border-4 border-brutal-text pl-4 mt-4 bg-white py-4 font-black shadow-[4px_4px_0px_0px_rgba(255,69,34,1)] text-base">
+                  <div className="text-eclipse-green border border-eclipse-green/20 bg-eclipse-green/10 rounded-xl px-4 py-3 mt-2 font-semibold">
                     <ScrambleText text={txResult} />
                   </div>
                 )}
