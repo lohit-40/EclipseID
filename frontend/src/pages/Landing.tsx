@@ -93,17 +93,17 @@ export default function Landing() {
           </div>
         </motion.div>
         
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-eclipse-bright pb-2 hero-item leading-[0.95]">
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-eclipse-bright mb-6 hero-item leading-tight flex items-center justify-center gap-2">
           <ScrambleText text="Eclipse" delayMs={300} />
           <span className="gradient-text"><ScrambleText text="ID" delayMs={500} /></span>
         </h1>
 
-        <p className="text-lg md:text-xl text-eclipse-muted mt-6 hero-item max-w-xl leading-relaxed">
+        <p className="text-lg md:text-xl text-eclipse-muted mb-12 hero-item max-w-xl leading-relaxed">
           <ScrambleText text="Zero-Knowledge Identity Protocol on Midnight Network" delayMs={600} />
         </p>
 
         {/* Description glass card */}
-        <div className="glass-card p-6 md:p-8 mt-10 max-w-2xl text-left hero-item">
+        <div className="glass-card p-6 md:p-8 mb-12 max-w-2xl text-left hero-item">
           <p className="text-eclipse-text leading-relaxed text-sm md:text-base">
             <span className="text-eclipse-cyan font-mono text-xs opacity-60 block mb-2">{'>'} STATUS: ACTIVE</span>
             Current Web3 identity systems link real-world PII to public ledgers, creating systemic privacy failure. 
@@ -113,7 +113,7 @@ export default function Landing() {
         </div>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 mt-10 hero-item w-full sm:w-auto">
+        <div className="flex flex-col sm:flex-row gap-4 hero-item w-full sm:w-auto relative z-10 mt-4">
           <Link 
             to="/darkpool" 
             onMouseEnter={() => playSound('scan')}
