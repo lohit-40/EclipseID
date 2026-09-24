@@ -388,16 +388,55 @@ body {
   }
 }
 
-@layer components {
-  .brutal-btn {
-    @apply bg-eclipse-cyan text-eclipse-void px-8 py-4 tracking-widest font-bold uppercase transition-all duration-300 flex items-center justify-center gap-2 rounded-xl;
-  }
+.brutal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: #00e5ff;
+  color: #05060f;
+  border-radius: 0.75rem;
+  transition: all 0.3s;
+}
 
-  .brutal-input {
-    @apply w-full bg-transparent border-b border-eclipse-border px-0 py-4 outline-none text-2xl md:text-5xl tracking-tight text-eclipse-bright placeholder:text-eclipse-muted focus:border-eclipse-cyan transition-colors rounded-none appearance-none;
-  }
+.brutal-input {
+  width: 100%;
+  background: transparent;
+  border-bottom: 1px solid #1e2345;
+  padding: 1rem 0;
+  outline: none;
+  font-size: 1.5rem;
+  letter-spacing: -0.025em;
+  color: #eef0ff;
+  border-radius: 0;
+  appearance: none;
+  transition: border-color 0.3s;
+}
 
-  .brutal-card {
-    @apply glass-card p-8;
-  }
+.brutal-input:focus {
+  border-color: #00e5ff;
+}
+
+.brutal-input::placeholder {
+  color: #3a3f5c;
+}
+
+.brutal-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2rem;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.brutal-card:hover {
+  border-color: rgba(0, 229, 255, 0.15);
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-4px);
 }
