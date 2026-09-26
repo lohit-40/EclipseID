@@ -2,13 +2,14 @@ import { setNetworkId } from '@midnight-ntwrk/midnight-js-network-id';
 import { deployContract } from '@midnight-ntwrk/midnight-js-contracts';
 import pino from 'pino';
 import { getConfig } from './config.js';
-import { MidnightWalletProvider, syncWallet, type WalletSecret } from './wallet.js';
+import { MidnightWalletProvider, type WalletSecret } from './wallet.js';
 import { buildProviders, type EclipseIDProviders } from './providers.js';
 import { Contract } from '../managed/contract/index.js';
 import { CompiledContract } from '@midnight-ntwrk/midnight-js-protocol/compact-js';
-import { waitForFunds } from '@midnight-ntwrk/testkit-js';
 import * as dotenv from 'dotenv';
 import path from 'path';
+import * as Rx from 'rxjs';
+import type { FacadeState } from '@midnight-ntwrk/wallet-sdk';
 
 dotenv.config({ path: '.env.preview' });
 process.env.MIDNIGHT_NETWORK = 'preview';
@@ -50,25 +51,53 @@ async function main() {
     logger.info("Building Wallet Provider...");
     const wallet = await MidnightWalletProvider.build(logger, envConfig, secret);
     await wallet.start();
-    await syncWallet(logger, wallet.wallet, 3600000); // 60m timeout
 
-    try {
-        logger.info("Auto-registering NIGHT into DUST if needed (this might take a few seconds)...");
-        await waitForFunds(wallet.wallet, envConfig, false, wallet.unshieldedKeystore);
-    } catch (err) {
-        logger.warn(`waitForFunds timed out or errored: ${err}. Waiting 15s for chain to settle and proceeding anyway...`);
-        await new Promise(resolve => setTimeout(resolve, 15000));
-    }
+    // ponytail: Wait for unshielded + dust sync. Shielded sync skipped — not needed for deployment.
+    // DUST sync still needs ~255k blocks but is faster than shielded. Upgrade path: persistent wallet state.
+    logger.info("Waiting for unshielded + dust wallet sync (shielded skipped for deployment)...");
+    let emissionCount = 0;
+    const syncStart = Date.now();
+    await Rx.firstValueFrom(
+        wallet.wallet.state().pipe(
+            Rx.tap((state: FacadeState) => {
+                emissionCount++;
+                const unshieldedDone = (state.unshielded?.progress as any)?.isStrictlyComplete?.() ?? false;
+                const dustDone = (state.dust?.state?.progress as any)?.isStrictlyComplete?.() ?? false;
+                if (emissionCount % 2000 === 0) {
+                    const elapsed = Math.round((Date.now() - syncStart) / 1000);
+                    const dustProgress = state.dust?.state?.progress as any;
+                    const applied = dustProgress?.appliedIndex ?? '?';
+                    const target = dustProgress?.highestRelevantWalletIndex ?? '?';
+                    logger.info(`Sync [${emissionCount}] ${elapsed}s: unshielded=${unshieldedDone}, dust=${dustDone} (${applied}/${target})`);
+                }
+            }),
+            Rx.filter((state: FacadeState) => {
+                const unshieldedDone = (state.unshielded?.progress as any)?.isStrictlyComplete?.() ?? false;
+                const dustDone = (state.dust?.state?.progress as any)?.isStrictlyComplete?.() ?? false;
+                return unshieldedDone && dustDone;
+            }),
+            Rx.timeout({ each: 7_200_000, with: () => Rx.throwError(() => new Error('Wallet sync timeout (2hr)')) }),
+        ),
+    );
+    logger.info(`Wallet synced (unshielded+dust) after ${emissionCount} emissions, ${Math.round((Date.now() - syncStart) / 1000)}s`);
+
+    // waitForFunds skipped — its internal syncWallet also requires full sync and times out.
+    // DUST is already available after the sync above completes.
 
     const zkConfigPath = path.resolve(process.cwd(), 'managed');
     const providers = buildProviders(wallet, zkConfigPath, config);
+
+    const dummyWitnesses = {
+        user_credential: (context: any) => [context.currentPrivateState, { secret_id: 0n, issuer_pk: new Uint8Array(32), is_accredited: false, age: 0n }],
+        msgSender: (context: any) => [context.currentPrivateState, new Uint8Array(32)]
+    };
 
     logger.info("Wallet synced. Reading compiled contract...");
     const compiledContract = CompiledContract.make(
         'EclipseIdContract',
         Contract
     ).pipe(
-        CompiledContract.withVacantWitnesses,
+        CompiledContract.withWitnesses(dummyWitnesses),
         CompiledContract.withCompiledFileAssets(zkConfigPath)
     );
 

@@ -19,7 +19,7 @@ export function buildProviders(
 
     return {
         privateStateProvider: levelPrivateStateProvider({
-            privateStateStoreName: `eclipse-id-${Date.now()}`,
+            privateStateStoreName: `eclipse-id-preview`,
             privateStoragePasswordProvider: () => 'Eclipse-ID-Test-Password',
             accountId: wallet.getCoinPublicKey(),
         }),

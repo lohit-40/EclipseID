@@ -11,7 +11,7 @@ app.get('/health', (c) => {
 
 // Global in-memory storage for the contract address
 // (For a production system this would be KV/Durable Objects, but this is perfect for a hackathon demo)
-let GLOBAL_CONTRACT_ADDRESS = '';
+let GLOBAL_CONTRACT_ADDRESS = 'aeb09b9977405c0928c3d63f9766fe0a600dcef75b1921fafb7fa537392f777f';
 
 const SECRET_ADMIN_KEY = 'eclipse-hackathon-2026-secure-key';
 

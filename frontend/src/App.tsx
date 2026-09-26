@@ -232,9 +232,6 @@ export default function App() {
         {/* ─── Footer ─── */}
         <footer className="w-full flex flex-col items-center justify-center py-10 text-eclipse-muted text-xs border-t border-black/5 mt-auto gap-3 relative z-10">
           <p className="font-mono tracking-wider opacity-60">MIDNIGHT.NETWORK // ZK.IDENTITY.PROTOCOL // v2.0</p>
-          <a href="https://x.com/EclipseID011" target="_blank" rel="noreferrer" className="hover:text-eclipse-cyan transition-colors flex items-center gap-1.5 opacity-60 hover:opacity-100">
-            @EclipseID011
-          </a>
         </footer>
       </div>
     </div>

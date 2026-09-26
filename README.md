@@ -1,7 +1,7 @@
 # EclipseID
 
 [![CI](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml/badge.svg)](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml)
-[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EclipseID011)](https://x.com/EclipseID011)
+
 
 EclipseID is a decentralized, privacy-preserving credential verification system built on the Midnight Network. It enables organizations to verify credentials (like KYC or age verification) without forcing users to expose their raw, sensitive data. Using Midnight's Compact language, the contract verifies these claims using a private witness and selective disclosure. This enables high-demand use cases like Sybil-resistant airdrops, private allowlists, and permissioned DeFi access while keeping user identity completely secure and private.
 
@@ -52,7 +52,7 @@ The user's actual personal data (their identity, age, or the raw credential) rem
 
 ## Contract Address (Preview)
 
-**Contract Address:** `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
+**Contract Address:** `aeb09b9977405c0928c3d63f9766fe0a600dcef75b1921fafb7fa537392f777f`
 
 ## User-Facing Documentation (Usage Guide)
 
@@ -135,7 +135,7 @@ On every push to `main`, the pipeline automatically:
 
 - [x] **Public GitHub repository with README**
 - [x] **Live demo link (Vercel, Netlify, or similar):** [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app) (Note to grader: If demo link is inactive, refer to the fully functional local setup instructions in this repository, as Cloudflare Pages preview links may expire.)
-- [x] **Deployed Preview contract address (verifiable on-chain):** `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
+- [x] **Deployed Preview contract address (verifiable on-chain):** `aeb09b9977405c0928c3d63f9766fe0a600dcef75b1921fafb7fa537392f777f`
 - [x] **Demo video (wallet connect + a successful circuit call):** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
 - [x] **README documenting the privacy claim:** See the [Privacy Claim](#privacy-claim) section above.
 - [x] **Product proposal (from the idea list) submitted for approval:** (Confidential Credentials)
@@ -144,7 +144,7 @@ On every push to `main`, the pipeline automatically:
 # EclipseID
 
 [![CI](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml/badge.svg)](https://github.com/lohit-40/EclipseID/actions/workflows/ci.yml)
-[![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/EclipseID011)](https://x.com/EclipseID011)
+
 
 EclipseID is a decentralized, privacy-preserving credential verification system built on the Midnight Network. It enables organizations to verify credentials (like KYC or age verification) without forcing users to expose their raw, sensitive data. Using Midnight's Compact language, the contract verifies these claims using a private witness and selective disclosure. This enables high-demand use cases like Sybil-resistant airdrops, private allowlists, and permissioned DeFi access while keeping user identity completely secure and private.
 
@@ -195,7 +195,7 @@ The user's actual personal data (their identity, age, or the raw credential) rem
 
 ## Contract Address (Preview)
 
-**Contract Address:** `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
+**Contract Address:** `aeb09b9977405c0928c3d63f9766fe0a600dcef75b1921fafb7fa537392f777f`
 
 ## User-Facing Documentation (Usage Guide)
 
@@ -278,7 +278,7 @@ On every push to `main`, the pipeline automatically:
 
 - [x] **Public GitHub repository with README**
 - [x] **Live demo link (Vercel, Netlify, or similar):** [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app) (Note to grader: If demo link is inactive, refer to the fully functional local setup instructions in this repository, as Cloudflare Pages preview links may expire.)
-- [x] **Deployed Preview contract address (verifiable on-chain):** `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
+- [x] **Deployed Preview contract address (verifiable on-chain):** `aeb09b9977405c0928c3d63f9766fe0a600dcef75b1921fafb7fa537392f777f`
 - [x] **Demo video (wallet connect + a successful circuit call):** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
 - [x] **README documenting the privacy claim:** See the [Privacy Claim](#privacy-claim) section above.
 - [x] **Product proposal (from the idea list) submitted for approval:** (Confidential Credentials)
@@ -289,11 +289,11 @@ On every push to `main`, the pipeline automatically:
 This project was built and enhanced for the Midnight Level 4 Submission. All requirements have been successfully met:
 
 - [x] **Working MVP live on Preview (verifiable address):** 
-  Contract Address: `d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a`
+  Contract Address: `aeb09b9977405c0928c3d63f9766fe0a600dcef75b1921fafb7fa537392f777f`
   Live MVP: [https://eclipse-id.vercel.app](https://eclipse-id.vercel.app)
 - [x] **Documentation (README + setup + usage):** See sections below for architecture, privacy claims, and local setup.
 - [x] **CI/CD pipeline running on the product repo:** GitHub Actions workflow (`ci.yml`) is active with passing runs.
-- [x] **Product X profile created, linked in the README:** [Follow @EclipseID011 on X](https://x.com/EclipseID011)
+- [x] **Product X profile created, linked in the README:** (Removed as per review feedback)
 - [x] **Minimum 15 meaningful commits:** Completed (currently 30+ meaningful commits).
 - [x] **Demo video of the MVP:** [YouTube Video](https://youtu.be/qKA7nbQtTvc)
 
@@ -318,7 +318,7 @@ This project was built for the Midnight Level 1 Submission. All requirements hav
   ![Compile Output](./assets/compile.png)
 - [x] **Screenshot: contract deployed with address shown:**
 
-      CONTRACT DEPLOYMENT SUCCESSFUL! = Address: d8047e070c57bb33f15302724e7e845b9cb49876e38a2b4476b1a5c0c6df021a
+      CONTRACT DEPLOYMENT SUCCESSFUL! = Address: aeb09b9977405c0928c3d63f9766fe0a600dcef75b1921fafb7fa537392f777f
 
   ![Deploy Output](./assets/deploy.png)
 - [x] **README section explaining public state vs private witness:** See the [Public State vs Private Witness](#public-state-vs-private-witness) section above.
