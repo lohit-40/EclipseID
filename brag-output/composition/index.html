@@ -4,170 +4,143 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1920, height=1080" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body {
-        margin: 0;
         width: 1920px;
         height: 1080px;
         overflow: hidden;
-        background: #F2F0EB;
-        font-family: 'Geist', sans-serif;
-        color: #1C1C1C;
+        background: #050505; /* Obsidian Black */
+        font-family: 'Space Grotesk', sans-serif;
+        color: #FFFFFF;
+        perspective: 1200px;
       }
       #root {
-        width: 100%;
-        height: 100%;
-        position: relative;
-        transform-origin: center center;
+        width: 100%; height: 100%; position: relative;
+        transform-style: preserve-3d;
       }
       .scene {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        visibility: hidden;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        opacity: 0; visibility: hidden;
+        transform-style: preserve-3d;
       }
-      .huge-text {
-        font-size: 130px;
-        font-weight: 900;
-        text-transform: uppercase;
-        text-align: center;
-        line-height: 0.9;
-        letter-spacing: -0.05em;
-        white-space: nowrap;
+      /* 3D Glass City elements */
+      .glass-city {
+        position: absolute; width: 300%; height: 300%;
+        background: repeating-linear-gradient(90deg, transparent, transparent 100px, rgba(255,255,255,0.05) 100px, rgba(255,255,255,0.05) 102px),
+                    repeating-linear-gradient(0deg, transparent, transparent 100px, rgba(255,255,255,0.05) 100px, rgba(255,255,255,0.05) 102px);
+        transform: rotateX(75deg) translateZ(-500px);
       }
-      .glitch {
-        position: relative;
+      .data-stream {
+        position: absolute; font-family: 'JetBrains Mono', monospace; font-size: 24px; color: #FF4522;
+        opacity: 0.6; white-space: nowrap;
       }
+      
+      /* Brutalist / Cinematic Text */
+      .cinematic-text {
+        font-size: 140px; font-weight: 900; text-transform: uppercase; text-align: center;
+        line-height: 1.1; letter-spacing: -0.05em; text-shadow: 0 0 40px rgba(255,255,255,0.2);
+        transform: translateZ(200px);
+      }
+      .accent { color: #FF4522; text-shadow: 0 0 60px rgba(255,69,34,0.6); }
+      
+      /* Captions */
+      .caption-container {
+        position: absolute; bottom: 80px; width: 100%; text-align: center; z-index: 100;
+      }
+      .caption {
+        font-family: 'JetBrains Mono', monospace; font-size: 50px; font-weight: 700;
+        color: #FF4522; background: #1C1C1C; padding: 15px 40px; border: 4px solid #FF4522;
+        display: inline-block; opacity: 0; transform: translateY(50px);
+      }
+      
+      /* 3D Elements */
+      .monolith {
+        width: 600px; height: 1000px; background: #0A0A0A; border: 2px solid #333;
+        box-shadow: 0 0 100px rgba(0,0,0,1), inset 0 0 50px rgba(255,255,255,0.05);
+        transform: translateZ(0px) rotateY(0deg);
+      }
+      .vault-door {
+        width: 800px; height: 800px; border-radius: 50%; border: 40px solid #FF4522;
+        display: flex; align-items: center; justify-content: center;
+        transform: rotateY(0deg) translateZ(300px);
+      }
+      .vault-core {
+        width: 400px; height: 400px; border-radius: 50%; background: #FF4522;
+        box-shadow: 0 0 200px #FF4522;
+      }
+      
+      /* UI Elements */
       .brutal-card {
-        background: #F2F0EB;
-        border: 12px solid #1C1C1C;
-        padding: 80px;
-        box-shadow: 40px 40px 0px 0px #1C1C1C;
-        display: flex;
-        flex-direction: column;
-        gap: 60px;
-        width: 1200px;
-        transform-origin: center center;
-      }
-      .brutal-btn {
-        background: #FF4522;
-        color: #F2F0EB;
-        padding: 40px 60px;
-        font-size: 50px;
-        font-weight: 900;
-        text-transform: uppercase;
-        border: 8px solid #1C1C1C;
-        text-align: center;
-      }
-      .cursor {
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="white" stroke="%231C1C1C" stroke-width="2"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>') no-repeat;
-        z-index: 100;
-        opacity: 0;
+        background: #0A0A0A; border: 8px solid #FF4522; padding: 80px;
+        box-shadow: 20px 20px 0px 0px #FF4522; display: flex; flex-direction: column; gap: 40px;
+        width: 1200px; transform: translateZ(100px);
       }
       .stamp {
-        position: absolute;
-        font-size: 180px;
-        font-weight: 900;
-        color: #FF4522;
-        border: 20px solid #FF4522;
-        padding: 30px 60px;
-        transform: rotate(-15deg) scale(5);
-        opacity: 0;
-        text-align: center;
-        line-height: 1;
-        mix-blend-mode: multiply;
+        position: absolute; font-size: 180px; font-weight: 900; color: #FF4522;
+        border: 20px solid #FF4522; padding: 30px 60px; transform: rotate(-15deg) scale(5);
+        opacity: 0; text-align: center; line-height: 1; z-index: 200;
+        background: rgba(10,10,10,0.9);
       }
-      .progress-container {
-        width: 100%;
-        height: 60px;
-        border: 8px solid #1C1C1C;
-        background: #fff;
-        position: relative;
-      }
-      .progress-bar {
-        height: 100%;
-        background: #FF4522;
-        width: 0%;
-      }
-      #flash {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: #1C1C1C;
-        opacity: 0;
-        z-index: 50;
-        pointer-events: none;
-      }
-      #flash-orange {
-        position: absolute;
-        top: 0; left: 0; width: 100%; height: 100%;
-        background: #FF4522;
-        opacity: 0;
-        z-index: 51;
-        pointer-events: none;
-      }
+      #flash-white { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #FFF; opacity: 0; z-index: 500; pointer-events: none; }
+      #flash-orange { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #FF4522; opacity: 0; z-index: 501; pointer-events: none; }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="19" data-width="1920" data-height="1080">
+    <!-- data-duration = 60s for the 1 min requirement -->
+    <div id="root" data-composition-id="main" data-start="0" data-duration="60" data-width="1920" data-height="1080">
       
-      <div id="flash"></div>
+      <audio id="bg-music" src="./assets/music.mp3" autoplay loop preload="auto"></audio>
+
+      <div id="flash-white"></div>
       <div id="flash-orange"></div>
+      
+      <div class="caption-container"><div id="caption-box" class="caption"></div></div>
 
-      <!-- Scene 1 -->
+      <!-- Scene 1: Glass City (0-12s) -->
       <div id="scene1" class="scene">
-        <div id="s1-t1" class="huge-text glitch" style="opacity:0; transform: scale(5) rotate(-20deg)">WEB3 WANTS YOU TO<br>DOX YOURSELF.</div>
-        <div id="s1-t2" class="huge-text glitch" style="color: #FF4522; font-size: 200px; margin-top: 20px; opacity: 0; transform: scale(5) rotate(20deg)">WE DON'T.</div>
+        <div class="glass-city" id="city"></div>
+        <div class="data-stream" style="top:20%; left:10%;">Tx: 0x8f3...a1 ➔ 45.2 ETH</div>
+        <div class="data-stream" style="top:40%; left:60%;">KYC: Alice M. (DOB: 1990)</div>
+        <div class="data-stream" style="top:70%; left:20%;">Wallet: mn_preview1...doxxed</div>
+        <div class="data-stream" style="top:80%; left:80%;">Balance: 1.2M USDC</div>
+        
+        <div id="s1-t1" class="cinematic-text" style="opacity:0; transform: translateZ(500px);">WEB3 WANTS YOU<br>TO DOX YOURSELF.</div>
+        <div id="s1-t2" class="cinematic-text accent" style="opacity:0; transform: translateZ(-200px); font-size:220px; margin-top:20px;">THEY CAN SEE EVERYTHING.</div>
       </div>
 
-      <!-- Scene 2 -->
+      <!-- Scene 2: The Monolith / Darkpool (12-25s) -->
       <div id="scene2" class="scene">
-        <div id="s2-t1" class="huge-text" style="font-size: 150px;">EclipseID:</div>
-        <div id="s2-t1a" class="huge-text" style="font-size: 100px;">Zero-Knowledge Credentials.</div>
-        <div id="s2-t2" class="huge-text" style="color: #FF4522; margin-top: 40px; font-size: 100px;">On the Midnight Network.</div>
+        <div id="monolith" class="monolith"></div>
+        <div id="s2-t1" class="cinematic-text" style="position:absolute; opacity:0;">WELCOME TO<br>THE DARKPOOL</div>
       </div>
 
-      <!-- Scene 3 -->
+      <!-- Scene 3: Minting (25-40s) -->
       <div id="scene3" class="scene">
-        <div class="brutal-card" id="s3-card">
-          <div class="huge-text" style="font-size: 80px;">ZK CREDENTIAL ISSUER</div>
-          <div class="brutal-btn" id="s3-btn">CONNECT LACE WALLET</div>
-          <div id="s3-progress-wrap" style="opacity: 0;">
-            <div style="font-size: 40px; font-weight: 900; margin-bottom: 20px;">ISSUING PRIVATE CREDENTIAL... <span id="s3-done" style="color:#FF4522; opacity:0; font-size: 60px;">DONE!</span></div>
-            <div class="progress-container"><div class="progress-bar" id="s3-bar"></div></div>
-          </div>
+        <div id="vault" class="vault-door">
+          <div id="vault-core" class="vault-core"></div>
         </div>
+        <div id="s3-t1" class="cinematic-text" style="position:absolute; opacity:0; bottom: 200px; font-size:100px;">ZERO-KNOWLEDGE CREDENTIALS</div>
       </div>
 
-      <!-- Scene 4 -->
+      <!-- Scene 4: Validation UI (40-52s) -->
       <div id="scene4" class="scene">
         <div class="brutal-card" id="s4-card">
-          <div class="huge-text" style="font-size: 100px;">DARKPOOL OTC</div>
-          <div class="brutal-btn" id="s4-btn">ACCESS ANONYMOUSLY</div>
+          <div class="cinematic-text" style="font-size: 80px; text-align:left;">DARKPOOL OTC</div>
+          <div style="font-family:'JetBrains Mono'; font-size: 40px;">Proving Identity without revealing data...</div>
+          <div style="height:40px; background:#FF4522; width:0%;" id="s4-bar"></div>
         </div>
         <div id="s4-stamp" class="stamp">ZK PROOF<br>VERIFIED</div>
       </div>
 
-      <!-- Scene 5 -->
+      <!-- Scene 5: Outro (52-60s) -->
       <div id="scene5" class="scene">
-        <div class="huge-text" style="font-size: 120px;">Keep your identity off-chain.</div>
-        <div class="huge-text" id="s5-logo" style="color: #FF4522; font-size: 250px; margin-top: 40px;">EclipseID</div>
-        <div style="font-size: 70px; font-weight: 900; margin-top: 20px;" id="s5-handle">@EclipseID011</div>
+        <div id="s5-t1" class="cinematic-text" style="font-size:100px;">Keep your identity off-chain.</div>
+        <div id="s5-logo" class="cinematic-text accent" style="font-size: 250px; margin-top: 40px;">EclipseID</div>
+        <div id="s5-url" style="font-family:'JetBrains Mono'; font-size:60px; margin-top: 20px; opacity:0;">x.com/EclipseID011</div>
       </div>
-
-      <div id="cursor" class="cursor"></div>
 
     </div>
     <script>
@@ -175,85 +148,103 @@
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = tl;
 
-      // Shake root sporadically for chaotic feel
-      tl.to("#root", {
-        x: () => Math.random() * 20 - 10,
-        y: () => Math.random() * 20 - 10,
-        rotation: () => Math.random() * 2 - 1,
-        duration: 0.05,
-        repeat: 380, // rough estimate for 19s
-        ease: "rough({ template: none.out, strength: 1, points: 20, taper: none, randomize: true, clamp: false })"
-      }, 0);
+      function setCaption(text, time) {
+        tl.to("#caption-box", { opacity: 0, y: 50, duration: 0.2 }, time - 0.2);
+        tl.set("#caption-box", { innerHTML: text }, time);
+        tl.to("#caption-box", { opacity: 1, y: 0, duration: 0.2 }, time);
+      }
+      function clearCaption(time) {
+        tl.to("#caption-box", { opacity: 0, y: 50, duration: 0.2 }, time);
+      }
 
-      // Scene 1: 0 to 3.5s
+      /* ====== SCENE 1: GLASS CITY (0 - 12s) ====== */
       tl.set("#scene1", { autoAlpha: 1 }, 0);
-      tl.to("#s1-t1", { opacity: 1, scale: 1, rotation: 0, duration: 0.15, ease: "power4.in" }, 0.2); 
-      tl.to("#flash", { opacity: 1, duration: 0.05, yoyo: true, repeat: 3 }, 0.35); // Glitch flash
       
-      tl.to("#flash-orange", { opacity: 1, duration: 0.05 }, 1.5);
-      tl.to("#flash-orange", { opacity: 0, duration: 0.2 }, 1.6);
+      // Fake 3D Camera flight
+      tl.fromTo("#city", { translateZ: -2000, rotationX: 75, rotationZ: 0 }, { translateZ: 500, rotationZ: 20, duration: 12, ease: "linear" }, 0);
+      tl.to(".data-stream", { y: -1000, duration: 12, ease: "linear", stagger: 0.5 }, 0);
       
-      tl.to("#s1-t2", { opacity: 1, scale: 1, rotation: 0, duration: 0.1, ease: "bounce.out" }, 1.55); 
-      tl.to("#s1-t2", { scale: 1.1, rotation: 2, duration: 0.05, yoyo: true, repeat: 5 }, 1.8); // Freak out text
-      tl.to("#scene1", { scale: 5, autoAlpha: 0, duration: 0.2 }, 3.3);
-
-      // Scene 2: 3.5s to 7.0s
-      tl.set("#scene2", { autoAlpha: 1 }, 3.5);
-      tl.fromTo("#s2-t1", { opacity: 0, x: -1000, skewX: 50 }, { opacity: 1, x: 0, skewX: 0, duration: 0.2, ease: "power4.out" }, 3.6);
-      tl.fromTo("#s2-t1a", { opacity: 0, x: 1000, skewX: -50 }, { opacity: 1, x: 0, skewX: 0, duration: 0.2, ease: "power4.out" }, 3.8);
+      setCaption("Web3 is fully transparent.", 1);
+      tl.to("#s1-t1", { opacity: 1, z: 0, duration: 2, ease: "power4.out" }, 1);
       
-      tl.fromTo("#s2-t2", { opacity: 0, y: 500, scale: 2 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(2)" }, 4.5);
-      tl.to("#s2-t2", { rotation: -5, duration: 0.1, yoyo: true, repeat: 10 }, 4.8);
+      setCaption("Maybe a little too transparent.", 4);
+      tl.to("#s1-t1", { opacity: 0, scale: 2, filter: "blur(20px)", duration: 1 }, 4);
       
-      tl.to("#scene2", { scale: 0, opacity: 0, rotation: 90, duration: 0.3, ease: "power4.in" }, 6.7);
-
-      // Scene 3: 7.0s to 12.0s
-      tl.set("#scene3", { autoAlpha: 1 }, 7.0);
-      tl.fromTo("#s3-card", { scale: 0, rotation: -180 }, { scale: 1, rotation: 0, duration: 0.3, ease: "back.out(1.5)" }, 7.1);
+      tl.to("#flash-orange", { opacity: 1, duration: 0.1, yoyo: true, repeat: 1 }, 6);
+      setCaption("THEY CAN SEE EVERYTHING.", 6);
+      tl.to("#s1-t2", { opacity: 1, z: 0, duration: 1, ease: "bounce.out" }, 6);
       
-      // Cursor moves and clicks (very fast)
-      tl.set("#cursor", { autoAlpha: 1, x: 1920, y: 1080 }, 7.4);
-      tl.to("#cursor", { x: 960, y: 580, duration: 0.2, ease: "power4.out" }, 7.4);
-      tl.to("#cursor", { scale: 0.5, duration: 0.05, yoyo: true, repeat: 1 }, 7.8);
-      tl.to("#s3-btn", { scale: 0.9, backgroundColor: "#1C1C1C", color: "#FF4522", duration: 0.05, yoyo: true, repeat: 1 }, 7.8);
-      tl.to("#cursor", { x: 2000, y: -200, duration: 0.2, ease: "power4.in" }, 7.9);
-
-      // Progress bar - erratic fill
-      tl.to("#s3-progress-wrap", { opacity: 1, duration: 0.1 }, 8.1);
-      tl.to("#s3-bar", { width: "40%", duration: 0.1 }, 8.2);
-      tl.to("#s3-bar", { width: "40%", duration: 0.4 }, 8.3); // pause
-      tl.to("#s3-bar", { width: "80%", duration: 0.1 }, 8.7);
-      tl.to("#s3-card", { x: 20, duration: 0.05, yoyo: true, repeat: 5 }, 8.8); // Card shakes while loading
-      tl.to("#s3-bar", { width: "100%", duration: 0.1 }, 9.5);
+      // Glitchy freakout before transition
+      tl.to("#s1-t2", { scale: 1.1, rotation: 2, duration: 0.1, yoyo: true, repeat: 10 }, 9);
       
-      tl.to("#s3-done", { opacity: 1, scale: 1.5, rotation: 10, duration: 0.1 }, 9.6);
-      tl.to("#flash", { opacity: 1, duration: 0.05, yoyo: true, repeat: 1 }, 9.6);
+      clearCaption(11);
+      tl.to("#scene1", { scale: 5, autoAlpha: 0, filter: "blur(50px)", duration: 1 }, 11);
 
-      tl.to("#scene3", { y: -2000, duration: 0.3, ease: "power4.in" }, 11.7);
-
-      // Scene 4: 12.0s to 16.0s
-      tl.set("#scene4", { autoAlpha: 1 }, 12.0);
-      tl.fromTo("#s4-card", { y: 2000 }, { y: 0, duration: 0.3, ease: "power4.out" }, 12.0);
-
-      tl.set("#cursor", { autoAlpha: 1, x: -200, y: -200 }, 12.4);
-      tl.to("#cursor", { x: 960, y: 580, duration: 0.2, ease: "power4.out" }, 12.4);
-      tl.to("#cursor", { scale: 0.5, duration: 0.05, yoyo: true, repeat: 1 }, 12.8);
-      tl.to("#s4-btn", { scale: 0.9, backgroundColor: "#1C1C1C", color: "#FF4522", duration: 0.05, yoyo: true, repeat: 1 }, 12.8);
-      tl.to("#cursor", { x: -200, y: 1200, duration: 0.2 }, 12.9);
-
-      // Stamp slams incredibly hard
-      tl.to("#s4-stamp", { opacity: 1, scale: 1, rotation: -10, duration: 0.1, ease: "power4.in" }, 13.5);
-      tl.to("#root", { scale: 1.1, duration: 0.05, yoyo: true, repeat: 1 }, 13.6); // Entire screen bulges
-      tl.to("#flash-orange", { opacity: 1, duration: 0.05, yoyo: true, repeat: 1 }, 13.6);
+      /* ====== SCENE 2: MONOLITH (12 - 25s) ====== */
+      tl.set("#scene2", { autoAlpha: 1 }, 12);
       
-      tl.to("#scene4", { autoAlpha: 0, scale: 5, filter: "blur(20px)", duration: 0.3 }, 15.7);
-
-      // Scene 5: 16.0s to 19.0s
-      tl.set("#scene5", { autoAlpha: 1 }, 16.0);
-      tl.fromTo("#scene5 > div", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.3, stagger: 0.1, ease: "back.out(2)" }, 16.1);
+      // Impact dive into darkpool
+      tl.to("#flash-white", { opacity: 1, duration: 0.1, yoyo: true, repeat: 1 }, 12);
       
-      // Heartbeat pulse on logo
-      tl.to("#s5-logo", { scale: 1.1, duration: 0.1, yoyo: true, repeat: 15 }, 16.5);
+      tl.fromTo("#monolith", { translateZ: -3000, rotationY: -90 }, { translateZ: 500, rotationY: 0, duration: 8, ease: "power2.out" }, 12);
+      
+      setCaption("Enter the Darkpool.", 15);
+      tl.fromTo("#s2-t1", { opacity: 0, scale: 0.5, letterSpacing: "200px" }, { opacity: 1, scale: 1, letterSpacing: "-5px", duration: 3, ease: "power4.out" }, 15);
+      
+      clearCaption(23);
+      tl.to("#scene2", { autoAlpha: 0, rotationY: 90, duration: 2 }, 23);
+
+      /* ====== SCENE 3: MINTING (25 - 40s) ====== */
+      tl.set("#scene3", { autoAlpha: 1 }, 25);
+      
+      // Vault Door unlocking
+      tl.fromTo("#vault", { scale: 0.1, rotationZ: -180 }, { scale: 1, rotationZ: 0, duration: 3, ease: "back.out(1.2)" }, 25);
+      tl.to("#vault-core", { scale: 1.2, boxShadow: "0 0 300px #FF4522", duration: 1, yoyo: true, repeat: 10 }, 28);
+      
+      setCaption("Zero-Knowledge Credentials.", 28);
+      tl.fromTo("#s3-t1", { opacity: 0, y: 100 }, { opacity: 1, y: 0, duration: 1, ease: "power3.out" }, 28);
+      
+      setCaption("Prove who you are, without revealing data.", 32);
+      
+      // 3D rotation of vault
+      tl.to("#vault", { rotationY: 360, duration: 5, ease: "power2.inOut" }, 33);
+      
+      clearCaption(38);
+      tl.to("#scene3", { autoAlpha: 0, z: -1000, duration: 2 }, 38);
+
+      /* ====== SCENE 4: VALIDATION UI (40 - 52s) ====== */
+      tl.set("#scene4", { autoAlpha: 1 }, 40);
+      
+      // 3D Card flips in
+      tl.fromTo("#s4-card", { rotationX: 90, z: -500 }, { rotationX: 0, z: 100, duration: 2, ease: "elastic.out(1, 0.5)" }, 40);
+      
+      setCaption("Permissioned DeFi...", 42);
+      
+      // Progress bar scanning
+      tl.to("#s4-bar", { width: "100%", duration: 4, ease: "power1.inOut" }, 43);
+      
+      setCaption("...Without the Doxing.", 46);
+      
+      // Mega stamp impact
+      tl.to("#s4-stamp", { opacity: 1, scale: 1, rotation: -10, duration: 0.2, ease: "power4.in" }, 47.5);
+      tl.to("#root", { scale: 1.05, duration: 0.1, yoyo: true, repeat: 3 }, 47.7); // Screen shake
+      tl.to("#flash-orange", { opacity: 1, duration: 0.1, yoyo: true, repeat: 1 }, 47.7);
+      
+      clearCaption(51);
+      tl.to("#scene4", { autoAlpha: 0, scale: 3, filter: "blur(20px)", duration: 1 }, 51);
+
+      /* ====== SCENE 5: OUTRO (52 - 60s) ====== */
+      tl.set("#scene5", { autoAlpha: 1 }, 52);
+      
+      tl.fromTo("#s5-t1", { opacity: 0, y: -100 }, { opacity: 1, y: 0, duration: 1.5, ease: "power3.out" }, 52);
+      tl.fromTo("#s5-logo", { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 2, ease: "elastic.out(1, 0.5)" }, 53);
+      
+      // Pulse logo
+      tl.to("#s5-logo", { scale: 1.05, textShadow: "0 0 100px rgba(255,69,34,1)", duration: 0.5, yoyo: true, repeat: 10 }, 55);
+      
+      tl.to("#s5-url", { opacity: 1, duration: 1 }, 55);
+      
+      tl.to("#root", { autoAlpha: 0, duration: 2 }, 58); // Fade to black
 
       tl.seek(0);
     </script>
