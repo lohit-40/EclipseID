@@ -104,12 +104,12 @@ export default function Landing() {
 
         {/* Description glass card */}
         <div className="glass-card p-6 md:p-8 mb-12 max-w-2xl text-left hero-item">
-          <p className="text-eclipse-text leading-relaxed text-sm md:text-base font-light">
-            <span className="text-eclipse-cyan font-mono text-xs opacity-80 block mb-3 tracking-widest font-semibold">{'>'} STATUS: ACTIVE</span>
+          <p className="text-eclipse-bright leading-relaxed text-base md:text-lg font-medium">
+            <span className="text-eclipse-cyan font-mono text-xs opacity-90 block mb-3 tracking-widest font-bold">{'>'} STATUS: ACTIVE</span>
             Current Web3 identity systems link real-world PII to public ledgers, creating systemic privacy failure. 
             EclipseID deploys a cryptographic shield between KYC providers and decentralized infrastructure — prove compliance 
             using <span className="font-bold text-eclipse-cyan">Midnight Network ZK-SNARKs</span>. 
-            <span className="font-serif italic font-semibold text-eclipse-bright text-lg ml-1">Zero data leakage. Total anonymity.</span>
+            <span className="font-serif italic font-bold text-eclipse-bright text-xl md:text-2xl ml-1 block mt-4">Zero data leakage. Total anonymity.</span>
           </p>
         </div>
 
