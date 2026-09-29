@@ -99,7 +99,7 @@ export default function Landing() {
         </h1>
 
         <p className="text-xl md:text-2xl text-eclipse-muted mb-12 hero-item max-w-2xl leading-relaxed font-light">
-          <span className="font-bold text-eclipse-text text-2xl md:text-3xl pr-1">Zero-Knowledge</span> Identity Protocol on <span className="font-bold text-eclipse-text">Midnight Network</span>
+          <span className="font-serif italic font-medium text-eclipse-text text-2xl md:text-3xl pr-1">Zero-Knowledge</span> Identity Protocol on <span className="font-bold text-eclipse-text">Midnight Network</span>
         </p>
 
         {/* Description glass card */}
@@ -109,7 +109,7 @@ export default function Landing() {
             Current Web3 identity systems link real-world PII to public ledgers, creating systemic privacy failure. 
             EclipseID deploys a cryptographic shield between KYC providers and decentralized infrastructure — prove compliance 
             using <span className="font-bold text-eclipse-cyan">Midnight Network ZK-SNARKs</span>. 
-            <span className="font-semibold text-eclipse-bright text-lg ml-1">Zero data leakage. Total anonymity.</span>
+            <span className="font-serif italic font-semibold text-eclipse-bright text-lg ml-1">Zero data leakage. Total anonymity.</span>
           </p>
         </div>
 
@@ -154,7 +154,7 @@ export default function Landing() {
                   {f.icon}
                 </div>
                 
-                <h3 className="text-2xl font-black text-eclipse-bright mb-3 tracking-tight">{f.title}</h3>
+                <h3 className="text-2xl font-black text-eclipse-bright mb-3 tracking-tight font-serif italic">{f.title}</h3>
                 <p className="text-sm text-eclipse-muted leading-relaxed font-light">{f.desc}</p>
               </div>
             );
