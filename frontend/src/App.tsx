@@ -86,10 +86,19 @@ export default function App() {
                connectedApi = await api.requestAuthorization();
             }
             setWallet(connectedApi);
-            connectedApi.state().then((state: any) => {
+            
+            // Try standard DApp Connector API v4
+            if (connectedApi.walletAddress) {
               setIsConnected(true);
-              setAddress(state.unshieldedAddress);
-            }).catch(console.error);
+              setAddress(connectedApi.walletAddress);
+            } 
+            // Fallback for older implementations
+            else if (typeof connectedApi.state === 'function') {
+              connectedApi.state().then((state: any) => {
+                setIsConnected(true);
+                setAddress(state.unshieldedAddress || state.address);
+              }).catch(console.error);
+            }
           }).catch((err: any) => console.log('Wallet not auto-connected', err));
         }
       }
@@ -115,10 +124,23 @@ export default function App() {
       }
       
       setWallet(connectedApi);
-      const state = await connectedApi.state();
-      setIsConnected(true);
-      setAddress(state.unshieldedAddress);
-      playSound('success');
+      
+      // Get address safely depending on API version
+      let userAddress = "";
+      if (connectedApi.walletAddress) {
+        userAddress = connectedApi.walletAddress;
+      } else if (typeof connectedApi.state === 'function') {
+        const state = await connectedApi.state();
+        userAddress = state.unshieldedAddress || state.address;
+      }
+      
+      if (userAddress) {
+        setIsConnected(true);
+        setAddress(userAddress);
+        playSound('success');
+      } else {
+        throw new Error("Could not retrieve wallet address from connector API");
+      }
     } catch (err) {
       playSound('error');
       console.error("User rejected connection or connection failed", err);
