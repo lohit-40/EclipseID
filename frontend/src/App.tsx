@@ -5,6 +5,7 @@ import { Shield, Menu, X, Zap } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import ScrambleText from './components/ScrambleText';
 import { playSound } from './utils/sounds';
+import Footer from './components/Footer';
 
 // Pages
 import Landing from './pages/Landing';
@@ -12,6 +13,10 @@ import Darkpool from './pages/Darkpool';
 import Admin from './pages/Admin';
 import Developers from './pages/Developers';
 import Feedback from './pages/Feedback';
+import Privacy from './pages/Privacy';
+import Terms from './pages/Terms';
+import Cookies from './pages/Cookies';
+import Disclaimer from './pages/Disclaimer';
 
 // Link Component for Navbar
 const NavLink = ({ href, children, onClick }: { href: string; children: React.ReactNode, onClick?: () => void }) => {
@@ -225,14 +230,16 @@ export default function App() {
               <Route path="/admin" element={<PageWrapper><Admin /></PageWrapper>} />
               <Route path="/developers" element={<PageWrapper><Developers /></PageWrapper>} />
               <Route path="/feedback" element={<PageWrapper><Feedback /></PageWrapper>} />
+              <Route path="/privacy" element={<PageWrapper><Privacy /></PageWrapper>} />
+              <Route path="/terms" element={<PageWrapper><Terms /></PageWrapper>} />
+              <Route path="/cookies" element={<PageWrapper><Cookies /></PageWrapper>} />
+              <Route path="/disclaimer" element={<PageWrapper><Disclaimer /></PageWrapper>} />
             </Routes>
           </AnimatePresence>
         </main>
         
         {/* ─── Footer ─── */}
-        <footer className="w-full flex flex-col items-center justify-center py-10 text-eclipse-muted text-xs border-t border-black/5 mt-auto gap-3 relative z-10">
-          <p className="font-mono tracking-wider opacity-60">MIDNIGHT.NETWORK // ZK.IDENTITY.PROTOCOL // v2.0</p>
-        </footer>
+        <Footer />
       </div>
     </div>
   );
