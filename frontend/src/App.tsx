@@ -77,10 +77,11 @@ export default function App() {
   useEffect(() => {
     try {
       if (window.midnight) {
-        // window.midnight itself acts as the connector API in v4
-        const connector = window.midnight;
-        if (connector.connect) {
-          connector.connect().then(async (api: any) => {
+        // Lace injects as window.midnight.mnLace with an enable() method
+        const connector = window.midnight.mnLace || window.midnight;
+        if (connector.enable || connector.connect) {
+          const connectPromise = connector.enable ? connector.enable() : connector.connect();
+          connectPromise.then(async (api: any) => {
             let connectedApi = api;
             if (api.requestAuthorization) {
              connectedApi = await api.requestAuthorization();
@@ -115,8 +116,8 @@ export default function App() {
       return;
     }
     try {
-      const connector = window.midnight;
-      const api = await connector.connect();
+      const connector = window.midnight.mnLace || window.midnight;
+      const api = await (connector.enable ? connector.enable() : connector.connect());
       
       let connectedApi = api;
       if (api.requestAuthorization) {
