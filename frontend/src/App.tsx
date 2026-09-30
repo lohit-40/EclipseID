@@ -77,9 +77,17 @@ export default function App() {
   useEffect(() => {
     try {
       if (window.midnight) {
-        // Lace injects as window.midnight.mnLace with an enable() method
-        const connector = window.midnight.mnLace || window.midnight;
-        if (connector.enable || connector.connect) {
+        // Discover the correct wallet connector object injected into window.midnight
+        let connector: any = null;
+        if (window.midnight.mnLace) connector = window.midnight.mnLace;
+        else if (window.midnight.lace) connector = window.midnight.lace;
+        else if (window.midnight.enable || window.midnight.connect) connector = window.midnight;
+        else {
+          const wallets = Object.values(window.midnight);
+          if (wallets.length > 0) connector = wallets[0];
+        }
+
+        if (connector && (connector.enable || connector.connect)) {
           const connectPromise = connector.enable ? connector.enable() : connector.connect();
           connectPromise.then(async (api: any) => {
             let connectedApi = api;
@@ -116,7 +124,20 @@ export default function App() {
       return;
     }
     try {
-      const connector = window.midnight.mnLace || window.midnight;
+      let connector: any = null;
+      if (window.midnight.mnLace) connector = window.midnight.mnLace;
+      else if (window.midnight.lace) connector = window.midnight.lace;
+      else if (window.midnight.enable || window.midnight.connect) connector = window.midnight;
+      else {
+        const wallets = Object.values(window.midnight);
+        if (wallets.length > 0) connector = wallets[0];
+        else connector = window.midnight;
+      }
+
+      if (!connector.enable && !connector.connect) {
+        throw new Error("Found Midnight object, but no valid connection method (enable or connect) exists. Make sure your wallet is unlocked.");
+      }
+
       const api = await (connector.enable ? connector.enable() : connector.connect());
       
       let connectedApi = api;
