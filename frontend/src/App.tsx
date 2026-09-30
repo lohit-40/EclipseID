@@ -6,7 +6,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import ScrambleText from './components/ScrambleText';
 import { playSound } from './utils/sounds';
 import Footer from './components/Footer';
-import { DAppConnectorAPI } from '@midnight-ntwrk/dapp-connector-api';
 
 // Pages
 import Landing from './pages/Landing';
@@ -78,10 +77,12 @@ export default function App() {
   useEffect(() => {
     try {
       if (window.midnight) {
-        const connector = new DAppConnectorAPI(window.midnight);
-        connector.connect().then(async (api: any) => {
-          let connectedApi = api;
-          if (api.requestAuthorization) {
+        // window.midnight itself acts as the connector API in v4
+        const connector = window.midnight;
+        if (connector.connect) {
+          connector.connect().then(async (api: any) => {
+            let connectedApi = api;
+            if (api.requestAuthorization) {
              connectedApi = await api.requestAuthorization();
           }
           setWallet(connectedApi);
@@ -98,7 +99,8 @@ export default function App() {
                 setAddress(state.unshieldedAddress || state.address);
               }).catch(console.error);
             }
-        }).catch((err: any) => console.log('Wallet not auto-connected', err));
+          }).catch((err: any) => console.log('Wallet not auto-connected', err));
+        }
       }
     } catch (e) {
       console.error('Wallet detection error:', e);
@@ -113,7 +115,7 @@ export default function App() {
       return;
     }
     try {
-      const connector = new DAppConnectorAPI(window.midnight);
+      const connector = window.midnight;
       const api = await connector.connect();
       
       let connectedApi = api;
